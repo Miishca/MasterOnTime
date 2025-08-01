@@ -1,0 +1,32 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--background-color);
+  color: var(--primary-color);
+  a {
+    text-decoration: none;
+    color: var(--primary-color);
+  }
+
+  .logoContainer {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .logo {
+    font-size: 32px;
+    line-height: 150%;
+    font-family: var(--logo-font-family);
+    font-weight: 900;
+  }
+
+  nav {
+    display: flex;
+    gap: 10px;
+  }
+
+  button {
+    width: 82px;
+  }
+}

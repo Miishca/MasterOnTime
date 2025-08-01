@@ -1,0 +1,33 @@
+.container {
+  padding: 20px;
+}
+
+.galleryCarousel {
+  margin-top: 40px;
+  position: relative;
+
+  h1 {
+    max-width: 1150px;
+    font-size: 88px;
+    font-weight: 400;
+    text-align: center;
+    margin: 0 auto;
+    margin-bottom: 60px;
+  }
+
+  p {
+    text-align: center;
+    margin: 0 auto;
+    margin-top: 40px;
+    width: 700px;
+    height: 120px;
+  }
+
+  @media (max-width: 768px) {
+    p {
+      margin-top: 20px;
+      width: 95%;
+    }
+  }
+}
+

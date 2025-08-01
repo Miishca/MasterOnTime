@@ -1,0 +1,31 @@
+.container {
+  padding: 50px 40px;
+  display: flex;
+  justify-content: flex-start;
+  gap: 20px;
+}
+
+.searchBar {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: 811px;
+  background-color: #fff;
+  border-radius: var(--border-radius);
+  padding: 10px 10px 10px 20px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+
+}
+
+.inputGroup {
+  display: flex;
+  flex-grow: 1;
+  align-items: center;
+}
+
+.divider {
+  width: 1px;
+  height: 24px;
+  background-color: #525252;
+  margin: 0 10px;
+}

@@ -1,0 +1,85 @@
+
+.discover {
+  padding-left: 30px;
+
+  h1 {
+    margin-bottom: 50px;
+    font-size: 88px;
+    font-weight: 400;
+  }
+}
+
+.discoverContent {
+  padding: 20px;
+  margin-bottom: 120px;
+  text-align: center;
+  display: flex;
+  justify-content: space-between;
+  gap: 80px;
+}
+
+.discoverLink {
+  text-decoration: none;
+  color: var(--text-color);
+  transition:
+    transform 0.3s ease,
+    color 0.3s ease;
+
+  img {
+    width: 48px;
+    height: 48px;
+    transition: transform 0.3s ease;
+  }
+
+  h4 {
+    font-size: 32px;
+    font-weight: 400;
+    transition:
+      transform 0.3s ease,
+      color 0.3s ease;
+  }
+
+  &:hover {
+    color: var(--primary-color);
+    transform: scale(1.05);
+
+    img {
+      color: var(--primary-color);
+      transform: scale(1.05);
+    }
+  }
+}
+
+
+.section {
+  scroll-margin-top: 100px;
+
+  h2 {
+    font-size: 48px;
+    font-weight: 500;
+    margin-top: 80px;
+    margin-bottom: 20px;
+    text-align: start;
+  }
+}
+
+.cardGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(20px, 1fr));
+  gap: 24px;
+}
+
+.serviceCard {
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  background-color: #fff;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 5px rgba(0, 0, 0, 0.08);
+
+    &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  }
+}

@@ -1,0 +1,52 @@
+.carousel {
+  width: 100vw;
+  margin-left: calc(-20px);
+  padding: 20px 0;
+  overflow-x: auto;
+  white-space: nowrap;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x mandatory;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.carouselItem {
+  display: inline-block;
+  padding: 20px;
+  width: 900px;
+  margin-right: 100px;
+  vertical-align: middle;
+  scroll-snap-align: center;
+  position: relative;
+  box-sizing: border-box;
+
+  &:last-child {
+    margin-right: 0;
+  }
+}
+
+.carouselImage {
+  width: 100%;
+  height: 600px;
+  object-fit: cover;
+  border-radius: 20px;
+  display: block;
+  position: relative;
+  z-index: 1;
+  transition: transform 0.3s ease;
+
+  &.active {
+    transform: scale(1.14);
+    z-index: 2;
+  }
+}
+
+@media (max-width: 768px) {
+  .carouselItem {
+    width: 500px;
+    margin-right: 60px;
+  }
+}

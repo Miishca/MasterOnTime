@@ -1,0 +1,44 @@
+.button {
+  padding: 12px 10px;
+  border: none;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  font-family: var(--font-family);
+  font-weight: 400;
+  transition: background-color 0.3s;
+}
+
+.primary {
+  background-color: var(--primary-color);
+  color: var(--text-color-footer);
+  &:hover {
+    background-color: #104E8B;
+  }
+}
+
+.secondary {
+  color: var(--text-color);
+  background-color: var(--background-color);
+  &:hover {
+    color: var(--primary-color);
+  }
+}
+
+.secondaryFooter {
+  font-size: 14px;
+  color: var(--text-color-footer);
+  background-color: var(--footer-background-color);
+  &:hover {
+    color: var(--primary-color);
+  }
+}
+
+.searchButton {
+  width: 142px;
+  color: #fff;
+  background-color: var(--primary-color);
+  &:hover {
+    background-color: #104E8B;
+  }
+}
+
