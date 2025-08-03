@@ -1,28 +1,29 @@
 import React, { useEffect, useRef } from 'react';
 import styles from './ServiceCarousel.module.scss';
 import type { Service } from '../../../types';
+import imageMap from '../../../utils/imageLoader';
 
 const services: Service[] = [
   {
-    image: '/src/assets/service-image1.png',
+    image: 'service-image1',
   },
   {
-    image: '/src/assets/service-image2.png',
+    image: 'service-image2',
   },
   {
-    image: '/src/assets/service-image3.png',
+    image: 'service-image3',
   },
   {
-    image: '/src/assets/service-image4.png',
+    image: 'service-image4',
   },
   {
-    image: '/src/assets/service-image5.png',
+    image: 'service-image5',
   },
   {
-    image: '/src/assets/service-image6.png',
+    image: 'service-image6',
   },
   {
-    image: '/src/assets/service-image7.png',
+    image: 'service-image7',
   },
 ];
 
@@ -70,7 +71,7 @@ const ServiceCarousel: React.FC = () => {
       {services.map((service, index) => (
         <div key={index} className={styles.carouselItem}>
           <img
-            src={service.image}
+            src={imageMap[service.image]}
             alt={service.title}
             className={styles.carouselImage}
           />

@@ -3,6 +3,7 @@ import styles from './SpecialistsPage.module.scss';
 import Header from '../../../components/Layout/Header';
 import Footer from '../../../components/Layout/Footer';
 import LandingCarousel from '../components/LandingCarousel';
+import imageMap from '../../../utils/imageLoader';
 
 const SpecialistsPage: React.FC = () => {
   return (
@@ -10,32 +11,32 @@ const SpecialistsPage: React.FC = () => {
       <Header />
       <div className={styles.imagesSection}>
         <img
-          src="/src/assets/image1.png"
+          src={imageMap['image1']}
           alt="Profession type 1"
           className={styles.image1}
         />
         <img
-          src="/src/assets/image2.png"
+          src={imageMap['image2']}
           alt="Profession type 2"
           className={styles.image2}
         />
         <img
-          src="/src/assets/image3.png"
+          src={imageMap['image3']}
           alt="Profession type 3"
           className={styles.image3}
         />
         <img
-          src="/src/assets/image4.png"
+          src={imageMap['image4']}
           alt="Profession type 4"
           className={styles.image4}
         />
         <img
-          src="/src/assets/image5.png"
+          src={imageMap['image5']}
           alt="Profession type 5"
           className={styles.image5}
         />
         <img
-          src="/src/assets/image6.png"
+          src={imageMap['image6']}
           alt="Profession type 6"
           className={styles.image6}
         />
@@ -54,7 +55,7 @@ const SpecialistsPage: React.FC = () => {
         <div className={styles.howItWorksContent}>
           <div className={styles.step}>
             <img
-              src="/src/assets/step1-icon.png"
+              src={imageMap['step1-icon']}
               alt="Find the master"
               className={styles.stepIcon}
             />
@@ -66,7 +67,7 @@ const SpecialistsPage: React.FC = () => {
           </div>
           <div className={styles.step}>
             <img
-              src="/src/assets/step2-icon.png"
+              src={imageMap['step2-icon']}
               alt="View profile"
               className={styles.stepIcon}
             />
@@ -78,7 +79,7 @@ const SpecialistsPage: React.FC = () => {
           </div>
           <div className={styles.step}>
             <img
-              src="/src/assets/step3-icon.png"
+              src={imageMap['step3-icon']}
               alt="Book time"
               className={styles.stepIcon}
             />
@@ -90,13 +91,12 @@ const SpecialistsPage: React.FC = () => {
           </div>
         </div>
       </div>
-
       <div className={styles.topRated}>
         <h1>Top Rated Specialists</h1>
         <div className={styles.topRatedContent}>
           <div className={styles.stepTopRated}>
             <img
-              src="/src/assets/top-rated1.png"
+              src={imageMap['top-rated1']}
               alt="Top Rated Specialists Alex"
               className={styles.topRatedIcon}
             />
@@ -109,7 +109,7 @@ const SpecialistsPage: React.FC = () => {
           </div>
           <div className={styles.stepTopRated}>
             <img
-              src="/src/assets/top-rated2.png"
+              src={imageMap['top-rated2']}
               alt="Top Rated Specialists Mykhailo"
               className={styles.topRatedIcon}
             />
@@ -122,7 +122,7 @@ const SpecialistsPage: React.FC = () => {
           </div>
           <div className={styles.stepTopRated}>
             <img
-              src="/src/assets/top-rated3.png"
+              src={imageMap['top-rated3']}
               alt="Top Rated Specialists Daniel"
               className={styles.topRatedIcon}
             />
@@ -135,7 +135,6 @@ const SpecialistsPage: React.FC = () => {
           </div>
         </div>
       </div>
-
       <div className={styles.trustedByPeople}>
         <h1>Trusted by people</h1>
         <div className={styles.trustedByPeopleContent}>
@@ -148,7 +147,7 @@ const SpecialistsPage: React.FC = () => {
             </p>
             <div className={styles.personInfo}>
               <img
-                src="/src/assets/trustedPerson1.png"
+                src={imageMap['trustedPerson1']}
                 alt="Anna marketing specialist"
                 className={styles.personIcon}
               />
@@ -163,11 +162,12 @@ const SpecialistsPage: React.FC = () => {
               “With two kids and work, I don’t have time to search for services
               the old-fashioned way. I found a great cleaning specialist in
               minutes — professional, polite, and super efficient. It felt good
-              to trust the process and get such great results.”
+              to trust the process and get such great results. MasterOnTime
+              saved me time and stress! ”
             </p>
             <div className={styles.personInfo}>
               <img
-                src="/src/assets/trustedPerson2.png"
+                src={imageMap['trustedPerson2']}
                 alt="Dmytro busy parent"
                 className={styles.personIcon}
               />
@@ -186,7 +186,7 @@ const SpecialistsPage: React.FC = () => {
             </p>
             <div className={styles.personInfo}>
               <img
-                src="/src/assets/trustedPerson3.png"
+                src={imageMap['trustedPerson3']}
                 alt="Sofia freelance designer"
                 className={styles.personIcon}
               />

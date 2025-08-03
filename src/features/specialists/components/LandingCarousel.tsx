@@ -1,40 +1,41 @@
 import React from 'react';
 import styles from './LandingCarousel.module.scss';
 import type { Landing } from '../../../types';
+import imageMap from '../../../utils/imageLoader';
 
 const services: Landing[] = [
   {
-    image: '/src/assets/carousel1-tutoring.png',
+    image: 'carousel1-tutoring',
     title: 'Tutoring services',
     tags: ['math tutor', 'language tutor', 'exam prep'],
   },
   {
-    image: '/src/assets/carousel2-cleaning.png',
+    image: 'carousel2-cleaning',
     title: 'Cleaning services',
     tags: ['home clean', 'deep cleaning', 'office clean'],
   },
   {
-    image: '/src/assets/carousel3-design.png',
+    image: 'carousel3-design',
     title: 'Design services',
     tags: ['UI/UX design', 'logo creation', 'illustration'],
   },
   {
-    image: '/src/assets/carousel4-beauty.png',
+    image: 'carousel4-beauty',
     title: 'Beauty services',
     tags: ['makeup', 'blow dry', 'colorist'],
   },
   {
-    image: '/src/assets/carousel5-handyman.png',
+    image: 'carousel5-handyman',
     title: 'Renovation services',
     tags: ['painting', 'plumbing', 'electrical'],
   },
   {
-    image: '/src/assets/carousel6-photographer.png',
+    image: 'carousel6-photographer',
     title: 'Photo services',
     tags: ['portrait', 'product photos', 'event shoots'],
   },
   {
-    image: '/src/assets/carousel7-fitness.png',
+    image: 'carousel7-fitness',
     title: 'Trainer services',
     tags: ['training', 'weight loss', 'fitness coaching'],
   },
@@ -45,7 +46,7 @@ const LandingCarousel: React.FC = () => {
     <div className={styles.carousel}>
       {services.map((service, index) => (
         <div key={index} className={styles.carouselItem}>
-          <img src={service.image} alt={service.title} className={styles.carouselImage} />
+          <img src={imageMap[service.image]} alt={service.title} className={styles.carouselImage} />
           <h3 className={styles.carouselTitle}>{service.title}</h3>
           <div className={styles.carouselTags}>
             {service.tags.map((tag, tagIndex) => (

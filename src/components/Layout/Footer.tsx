@@ -3,6 +3,7 @@ import styles from './Footer.module.scss';
 import { FaFacebookF, FaInstagram } from 'react-icons/fa';
 import Button from '../Button/Button';
 import { Link } from 'react-router-dom';
+import imageMap from '../../utils/imageLoader';
 
 const Footer: React.FC = () => {
   return (
@@ -33,7 +34,7 @@ const Footer: React.FC = () => {
             </a>
           </div>
           <Link to="/" className={styles.logoContainer}>
-            <img src="/src/assets/logo.png" alt="MasterOnTime logo" />
+            <img src={imageMap['logo']} alt="MasterOnTime logo" />
             <div className={styles.logo}>MasterOnTime</div>
           </Link>
           <nav>
