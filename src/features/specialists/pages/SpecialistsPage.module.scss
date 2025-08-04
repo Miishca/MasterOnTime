@@ -174,7 +174,7 @@
   .topRatedText {
     display: flex;
     justify-content: space-around;
-    font-size: 20px;
+    font-size: 18px;
     margin-right: 10px;
     font-weight: 400;
   }
@@ -208,7 +208,8 @@
     text-align: start;
     border-radius: 10px;
     background-image: url('/src/assets/background-person1.png');
-    
+    background-repeat: no-repeat;
+
     p {
       padding: 24px;
       display: flex;
@@ -234,12 +235,74 @@
       display: flex;
       font-size: 20px;
       font-weight: 400;
-      
     }
 
     span {
       font-size: 14px;
       color: var(--text-color-secondary);
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 30px;
+  }
+
+  .topRated {
+    flex-direction: row;
+
+  }
+  .hero,
+  .howItWorks,
+  .topRated {
+    h1 {
+      font-size: 50px;
+    }
+
+    p {
+      font-size: 16px;
+    }
+  }
+  .trustedByPeople {
+    h1 {
+      font-size: 50px;
+      text-align: center;
+    }
+
+    .trustedByPeopleContent {
+      flex-direction: column;
+      gap: 20px;
+      align-items: center;
+    }
+
+    .step {
+      width: 100%;
+      max-width: 95%;
+      background-size: cover;
+      background-position: center;
+
+      p {
+        font-size: 16px;
+      }
+    }
+
+    .personInfo {
+      flex-direction: row;
+      margin-top: 20px;
+
+      img {
+        width: 36px;
+        height: 36px;
+      }
+
+      h3 {
+        font-size: 18px;
+      }
+
+      span {
+        font-size: 12px;
+      }
     }
   }
 }

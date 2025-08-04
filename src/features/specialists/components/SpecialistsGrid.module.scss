@@ -1,0 +1,39 @@
+.gridContainer {
+  max-width: 1329px;
+  margin: 40px auto;
+  padding: 10px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+  width: 100%;
+}
+
+.paginationWrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+@media (max-width: 768px) {
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    height: auto;
+    gap: 10px;
+
+    img {
+      max-width: fit-content;
+    }
+  }
+
+  .gridContainer {
+    width: 95%;
+  }
+
+  .paginationWrapper {
+    margin-top: 10px;
+  }
+}

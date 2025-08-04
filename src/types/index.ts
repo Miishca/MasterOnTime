@@ -1,10 +1,23 @@
 export interface Specialist {
   id: string;
   name: string;
-  category: string;
+  lastname: string;
+  profession: string;
   city: string;
+  tags: string[];
+  category: 'Home & Garden' | 'Health & Wellbeing' | 'Weddings & Events' | 'Business Services' | 'Lessons & Training';
+  image?: string;
 }
 
+export interface PaginationProps {
+  currentPage: number;
+  totalPages: number;
+  onPageChange: (page: number) => void;
+}
+export interface SpecialistsGridProps {
+  filters?: { category?: string; city?: string };
+  itemsPerPage?: number;
+}
 export interface Landing {
   image: string;
   title: string;

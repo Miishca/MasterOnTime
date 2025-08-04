@@ -1,3 +1,74 @@
+@use '/src/styles/variables.scss' as *;
+
 .container {
   padding: 20px;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+h1 {
+  font-size: 88px;
+  font-weight: 400;
+  text-align: center;
+  margin-top: 60px;
+  margin-bottom: 30px;
+}
+
+.textContent {
+  text-align: center;
+  color: var(--text-color-secondary);
+  font-size: 22px;
+  font-weight: 400;
+  margin: 0 auto;
+  max-width: 800px;
+  height: 90px;
+}
+
+.findIndustries {
+  h1 {
+    font-size: 88px;
+    text-align: left;
+  }
+}
+
+.findIndustriesContent {
+  margin-top: 100px;
+  display: flex;
+  gap: 90px;
+}
+
+.contentHeaders {
+  h2 {
+    margin-bottom: 60px;
+    font-weight: 500;
+    font-size: 40px;
+    cursor: pointer;
+    transition: color 0.3s ease;
+
+    &:hover {
+      color: var(--primary-color);
+    }
+  }
+
+  .activeCategory {
+    color: var(--primary-color);
+    font-weight: 600;
+  }
+}
+
+@media (max-width: 768px) {
+  .mainContent {
+    padding: 0;
+  }
+
+  .findIndustries {
+    h1 {
+      font-size: 50px;
+    }
+  }
+
+  .findIndustriesContent {
+    flex-direction: column;
+  }
 }
