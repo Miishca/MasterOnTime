@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styles from './SpecialistsGrid.module.scss';
 import SpecialistCard from './SpecialistCard';
 import { getSpecialists } from '../services/specialistsApi';
@@ -12,8 +12,10 @@ const SpecialistsGrid: React.FC<SpecialistsGridProps> = ({
   const [specialists, setSpecialists] = useState<Specialist[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const gridRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    setCurrentPage(1);
     const fetchSpecialists = async () => {
       const response = await getSpecialists(filters);
       const filteredSpecialists = response.data || [];
@@ -31,11 +33,13 @@ const SpecialistsGrid: React.FC<SpecialistsGridProps> = ({
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (gridRef.current) {
+      gridRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   };
 
   return (
-    <div className={styles.gridContainer}>
+    <div className={styles.gridContainer} ref={gridRef}>
       <div className={styles.grid}>
         {paginatedSpecialists.map((specialist) => (
           <SpecialistCard
@@ -53,7 +57,6 @@ const SpecialistsGrid: React.FC<SpecialistsGridProps> = ({
         currentPage={currentPage}
         totalPages={totalPages}
         onPageChange={handlePageChange}
-
       />
     </div>
   );

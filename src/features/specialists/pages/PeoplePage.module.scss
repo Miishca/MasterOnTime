@@ -26,6 +26,7 @@ h1 {
 }
 
 .findIndustries {
+  margin-left: 40px;
   h1 {
     font-size: 88px;
     text-align: left;
@@ -60,6 +61,7 @@ h1 {
 @media (max-width: 768px) {
   .mainContent {
     padding: 0;
+    margin: 0 auto;
   }
 
   .findIndustries {

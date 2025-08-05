@@ -1,7 +1,11 @@
-// import axios from 'axios';
 import type { Specialist } from '../../../types';
 
-export const getSpecialists = async (filters: { category?: string; city?: string }) => {
+export const getSpecialists = async (filters: {
+  category?: string;
+  city?: string;
+  experience?: number;
+  rating?: number;
+}) => {
   await new Promise((resolve) => setTimeout(resolve, 1000));
   let data: Specialist[] = [
     {
@@ -13,6 +17,8 @@ export const getSpecialists = async (filters: { category?: string; city?: string
       tags: ['makeup artist', 'hair stylist', 'wedding services'],
       category: 'Weddings & Events',
       image: 'specialist1',
+      experience: 5,
+      rating: 4.5,
     },
     {
       id: '2',
@@ -23,6 +29,8 @@ export const getSpecialists = async (filters: { category?: string; city?: string
       tags: ['Fitness Coach', 'Personal Training', 'nutrition'],
       category: 'Health & Wellbeing',
       image: 'specialist2',
+      experience: 3,
+      rating: 4.0,
     },
     {
       id: '3',
@@ -33,6 +41,8 @@ export const getSpecialists = async (filters: { category?: string; city?: string
       tags: ['graphic design', 'ui/ux', 'branding'],
       category: 'Business Services',
       image: 'specialist3',
+      experience: 7,
+      rating: 4.8,
     },
     {
       id: '4',
@@ -43,16 +53,20 @@ export const getSpecialists = async (filters: { category?: string; city?: string
       tags: ['Relaxation', 'Therapeutic', 'Sports Massage'],
       category: 'Health & Wellbeing',
       image: 'specialist4',
+      experience: 4,
+      rating: 4.2,
     },
     {
       id: '5',
       name: 'Marta',
       lastname: 'Tkachenko',
-      profession: 'Event Planner',
+      profession: 'Math Tutor',
       city: 'Dnipro',
       tags: ['tutor', 'math help', 'test prep'],
       category: 'Lessons & Training',
       image: 'specialist5',
+      experience: 2,
+      rating: 3.8,
     },
     {
       id: '6',
@@ -63,36 +77,44 @@ export const getSpecialists = async (filters: { category?: string; city?: string
       tags: ['handyman', 'repairs', 'assembly'],
       category: 'Home & Garden',
       image: 'specialist6',
+      experience: 6,
+      rating: 4.3,
     },
     {
       id: '7',
       name: 'Nazar',
       lastname: 'Symonenko',
-      profession: 'Hair Stylist',
+      profession: 'Gardener',
       city: 'Kyiv',
       tags: ['gardening', 'landscaping', 'lawn care'],
       category: 'Home & Garden',
       image: 'specialist7',
+      experience: 8,
+      rating: 4.7,
     },
     {
       id: '8',
       name: 'Kateryna',
       lastname: 'Lysenko',
-      profession: 'Hair Stylist',
+      profession: 'Event Planner',
       city: 'Kyiv',
       tags: ['event planner', 'decor', 'catering'],
       category: 'Weddings & Events',
       image: 'specialist8',
+      experience: 3,
+      rating: 4.1,
     },
     {
       id: '9',
       name: 'Maksym',
       lastname: 'Kravchuk',
-      profession: 'massage therapist',
+      profession: 'Massage Therapist',
       city: 'Kyiv',
       tags: ['massage therapist', 'pain relief', 'relaxation'],
       category: 'Health & Wellbeing',
       image: 'specialist9',
+      experience: 5,
+      rating: 4.6,
     },
     {
       id: '10',
@@ -103,6 +125,8 @@ export const getSpecialists = async (filters: { category?: string; city?: string
       tags: ['makeup artist', 'hair stylist', 'wedding services'],
       category: 'Weddings & Events',
       image: 'specialist10',
+      experience: 4,
+      rating: 4.0,
     },
     {
       id: '11',
@@ -113,6 +137,8 @@ export const getSpecialists = async (filters: { category?: string; city?: string
       tags: ['makeup artist', 'hair stylist', 'wedding services'],
       category: 'Weddings & Events',
       image: 'specialist11',
+      experience: 2,
+      rating: 3.5,
     },
     {
       id: '12',
@@ -123,6 +149,8 @@ export const getSpecialists = async (filters: { category?: string; city?: string
       tags: ['makeup artist', 'hair stylist', 'wedding services'],
       category: 'Weddings & Events',
       image: 'specialist1',
+      experience: 1,
+      rating: 2.5,
     },
     {
       id: '13',
@@ -133,6 +161,8 @@ export const getSpecialists = async (filters: { category?: string; city?: string
       tags: ['graphic design', 'ui/ux', 'branding'],
       category: 'Business Services',
       image: 'specialist10',
+      experience: 5,
+      rating: 4.5,
     },
     {
       id: '14',
@@ -143,6 +173,8 @@ export const getSpecialists = async (filters: { category?: string; city?: string
       tags: ['Cutting', 'Coloring', 'Styling'],
       category: 'Weddings & Events',
       image: 'specialist11',
+      experience: 4,
+      rating: 2.5,
     },
   ];
 

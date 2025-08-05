@@ -13,8 +13,11 @@
     background: none;
     cursor: pointer;
     border-radius: 50%;
-    font-size: 24px;
+    font-size: 30px;
     font-weight: 400;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
     &:disabled {
       cursor: not-allowed;
@@ -25,5 +28,18 @@
       color: var(--primary-color);
       border: 2px solid var(--primary-color);
     }
+  }
+
+  .ellipsis {
+    display: flex;
+    align-items: center;
+    font-size: 30px;
+    color: var(--text-color);
+    width: 50px;
+    height: 50px;
+    border: 2px solid var(--text-color);
+    border-radius: 50%;
+    padding: 10px;
+    opacity: 0.5;
   }
 }

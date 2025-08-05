@@ -8,8 +8,16 @@ interface PaginationProps {
   onPageChange: (page: number) => void;
 }
 
-const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages, onPageChange }) => {
-  const pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1);
+const Pagination: React.FC<PaginationProps> = ({
+  currentPage,
+  totalPages,
+  onPageChange,
+}) => {
+  if (totalPages <= 1) return null;
+
+  const nextPage = currentPage + 1;
+  const showEllipsis =
+    nextPage < totalPages - 1 && currentPage < totalPages - 1;
 
   return (
     <div className={styles.pagination}>
@@ -18,23 +26,37 @@ const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages, onPage
         disabled={currentPage === 1}
         className={styles.pageButton}
       >
-        <BiChevronLeft size={20} /> 
+        <BiChevronLeft />
       </button>
-      {pageNumbers.map((number) => (
+      <button
+        onClick={() => onPageChange(currentPage)}
+        className={`${styles.pageButton} ${styles.active}`}
+      >
+        {currentPage}
+      </button>
+      {nextPage <= totalPages && nextPage < totalPages && (
         <button
-          key={number}
-          onClick={() => onPageChange(number)}
-          className={`${styles.pageButton} ${currentPage === number ? styles.active : ''}`}
+          onClick={() => onPageChange(nextPage)}
+          className={styles.pageButton}
         >
-          {number}
+          {nextPage}
         </button>
-      ))}
+      )}
+      {showEllipsis && <span className={styles.ellipsis}>...</span>}
+      {totalPages > currentPage && (
+        <button
+          onClick={() => onPageChange(totalPages)}
+          className={`${styles.pageButton} ${currentPage === totalPages ? styles.active : ''}`}
+        >
+          {totalPages}
+        </button>
+      )}
       <button
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
         className={styles.pageButton}
       >
-        <BiChevronRight size={20} />
+        <BiChevronRight />
       </button>
     </div>
   );

@@ -7,6 +7,8 @@ export interface Specialist {
   tags: string[];
   category: 'Home & Garden' | 'Health & Wellbeing' | 'Weddings & Events' | 'Business Services' | 'Lessons & Training';
   image?: string;
+  experience: number;
+  rating: number;
 }
 
 export interface PaginationProps {
@@ -15,7 +17,12 @@ export interface PaginationProps {
   onPageChange: (page: number) => void;
 }
 export interface SpecialistsGridProps {
-  filters?: { category?: string; city?: string };
+  filters?: { 
+    category?: string; 
+    city?: string; 
+    experience?: number; 
+    rating?: number;
+  };
   itemsPerPage?: number;
 }
 export interface Landing {
