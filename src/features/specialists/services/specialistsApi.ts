@@ -1,11 +1,6 @@
-import type { Specialist } from '../../../types';
+import type { SearchFilters, Specialist } from '../../../types';
 
-export const getSpecialists = async (filters: {
-  category?: string;
-  city?: string;
-  experience?: number;
-  rating?: number;
-}) => {
+export const getSpecialists = async (filters: SearchFilters) => {
   await new Promise((resolve) => setTimeout(resolve, 1000));
   let data: Specialist[] = [
     {
@@ -18,7 +13,7 @@ export const getSpecialists = async (filters: {
       category: 'Weddings & Events',
       image: 'specialist1',
       experience: 5,
-      rating: 4.5,
+      rating: 5,
     },
     {
       id: '2',
@@ -181,8 +176,29 @@ export const getSpecialists = async (filters: {
   if (filters.category) {
     data = data.filter((s) => s.category === filters.category);
   }
+  if (filters.name) {
+    const nameLower = filters.name.toLowerCase();
+    data = data.filter(
+      (s) =>
+        s.name.toLowerCase().includes(nameLower) ||
+        s.lastname.toLowerCase().includes(nameLower)
+    );
+  }
   if (filters.city) {
-    data = data.filter((s) => s.city === filters.city);
+    const cityFilter = filters.city.trim().toLowerCase();
+    data = data.filter((s) => s.city.trim().toLowerCase().includes(cityFilter));
+  }
+  if (filters.experience) {
+    const exp = parseInt(filters.experience, 10);
+    if (!isNaN(exp)) {
+      data = data.filter((s) => s.experience >= exp);
+    }
+  }
+  if (filters.rating) {
+    const rating = parseFloat(filters.rating);
+    if (!isNaN(rating)) {
+      data = data.filter((s) => s.rating >= rating);
+    }
   }
 
   return { data };

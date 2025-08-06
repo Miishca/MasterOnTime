@@ -5,23 +5,41 @@ export interface Specialist {
   profession: string;
   city: string;
   tags: string[];
-  category: 'Home & Garden' | 'Health & Wellbeing' | 'Weddings & Events' | 'Business Services' | 'Lessons & Training';
+  category:
+    | 'Home & Garden'
+    | 'Health & Wellbeing'
+    | 'Weddings & Events'
+    | 'Business Services'
+    | 'Lessons & Training';
   image?: string;
   experience: number;
   rating: number;
 }
 
+export interface SearchBarProps {
+  onSearch: (filters: SearchFilters) => void;
+  pageType: 'services' | 'people';
+}
+
+export interface SearchFilters {
+  category?: string;
+  name?: string;
+  city?: string;
+  experience?: string;
+  rating?: string;
+}
 export interface PaginationProps {
   currentPage: number;
   totalPages: number;
   onPageChange: (page: number) => void;
 }
 export interface SpecialistsGridProps {
-  filters?: { 
-    category?: string; 
-    city?: string; 
-    experience?: number; 
-    rating?: number;
+  filters?: {
+    name?: string;
+    category?: string;
+    city?: string;
+    experience?: string;
+    rating?: string;
   };
   itemsPerPage?: number;
 }
@@ -35,4 +53,3 @@ export interface Service {
   image: string;
   title?: string;
 }
-

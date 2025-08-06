@@ -5,13 +5,14 @@ import SearchBar from '../components/SearchBar';
 import SpecialistsGrid from '../components/SpecialistsGrid';
 import styles from './PeoplePage.module.scss';
 import imageMap from '../../../utils/imageLoader';
+import { type SearchFilters } from '../../../types';
 
 const PeoplePage: React.FC = () => {
-  const [filters, setFilters] = useState({ category: '', city: '' });
+  const [filters, setFilters] = useState<SearchFilters>({ name: '', city: '', experience: '', rating: ''});
   const gridRef = useRef<HTMLDivElement>(null); 
 
-  const handleSearch = (filters: { category: string; city: string }) => {
-    setFilters(filters);
+  const handleSearch = (newFilters: SearchFilters) => {
+    setFilters(newFilters);
   };
   const handleCategoryClick = (category: string) => {
     setFilters((prevFilters) => ({
@@ -26,7 +27,7 @@ const PeoplePage: React.FC = () => {
   return (
     <div className={styles.container}>
       <Header />
-      <SearchBar onSearch={handleSearch} />
+      <SearchBar onSearch={handleSearch} pageType="people" />
       <h1>Meet Our Professionals</h1>
       <p className={styles.textContent}>
         Browse a diverse community of trusted specialists ready to help you.
