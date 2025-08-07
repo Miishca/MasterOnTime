@@ -27,6 +27,7 @@ export interface SearchFilters {
   city?: string;
   experience?: string;
   rating?: string;
+  tags?: string;
 }
 export interface PaginationProps {
   currentPage: number;
@@ -34,14 +35,13 @@ export interface PaginationProps {
   onPageChange: (page: number) => void;
 }
 export interface SpecialistsGridProps {
-  filters?: {
-    name?: string;
-    category?: string;
-    city?: string;
-    experience?: string;
-    rating?: string;
-  };
+  filters?: SearchFilters;
   itemsPerPage?: number;
+}
+
+export interface LocationState {
+  filterTag?: string;
+  scrollToGrid?: boolean;
 }
 export interface Landing {
   image: string;

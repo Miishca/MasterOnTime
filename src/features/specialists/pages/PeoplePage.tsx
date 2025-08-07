@@ -1,19 +1,38 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Footer from '../../../components/Layout/Footer';
 import Header from '../../../components/Layout/Header';
 import SearchBar from '../components/SearchBar';
 import SpecialistsGrid from '../components/SpecialistsGrid';
 import styles from './PeoplePage.module.scss';
 import imageMap from '../../../utils/imageLoader';
-import { type SearchFilters } from '../../../types';
+import { type LocationState, type SearchFilters } from '../../../types';
+import { useLocation } from 'react-router-dom';
 
 const PeoplePage: React.FC = () => {
-  const [filters, setFilters] = useState<SearchFilters>({ name: '', city: '', experience: '', rating: ''});
-  const gridRef = useRef<HTMLDivElement>(null); 
+  const [filters, setFilters] = useState<SearchFilters>({
+    name: '',
+    city: '',
+    experience: '',
+    rating: '',
+  });
+  const gridRef = useRef<HTMLDivElement>(null);
+  const location = useLocation();
 
-  const handleSearch = (newFilters: SearchFilters) => {
-    setFilters(newFilters);
+  useEffect(() => {
+    const { filterTag, scrollToGrid } = (location.state as LocationState) || {};
+    if (filterTag) {
+      setFilters((prevFilters) => ({ ...prevFilters, tags: filterTag }));
+    }
+
+    if (scrollToGrid && gridRef.current) {
+      gridRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, [location.state]);
+
+  const handleSearch = (filters: SearchFilters) => {
+    setFilters((prevFilters) => ({ ...prevFilters, ...filters }));
   };
+
   const handleCategoryClick = (category: string) => {
     setFilters((prevFilters) => ({
       ...prevFilters,
@@ -45,31 +64,51 @@ const PeoplePage: React.FC = () => {
           <div className={styles.contentHeaders}>
             <h2
               onClick={() => handleCategoryClick('Home & Garden')}
-              className={filters.category === 'Home & Garden' ? styles.activeCategory : ''}
+              className={
+                filters.category === 'Home & Garden'
+                  ? styles.activeCategory
+                  : ''
+              }
             >
               Home & Garden
             </h2>
             <h2
               onClick={() => handleCategoryClick('Health & Wellbeing')}
-              className={filters.category === 'Health & Wellbeing' ? styles.activeCategory : ''}
+              className={
+                filters.category === 'Health & Wellbeing'
+                  ? styles.activeCategory
+                  : ''
+              }
             >
               Health & Wellbeing
             </h2>
             <h2
               onClick={() => handleCategoryClick('Weddings & Events')}
-              className={filters.category === 'Weddings & Events' ? styles.activeCategory : ''}
+              className={
+                filters.category === 'Weddings & Events'
+                  ? styles.activeCategory
+                  : ''
+              }
             >
               Weddings & Events
             </h2>
             <h2
               onClick={() => handleCategoryClick('Business Services')}
-              className={filters.category === 'Business Services' ? styles.activeCategory : ''}
+              className={
+                filters.category === 'Business Services'
+                  ? styles.activeCategory
+                  : ''
+              }
             >
               Business Services
             </h2>
             <h2
               onClick={() => handleCategoryClick('Lessons & Training')}
-              className={filters.category === 'Lessons & Training' ? styles.activeCategory : ''}
+              className={
+                filters.category === 'Lessons & Training'
+                  ? styles.activeCategory
+                  : ''
+              }
             >
               Lessons & Training
             </h2>

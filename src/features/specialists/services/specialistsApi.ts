@@ -9,7 +9,7 @@ export const getSpecialists = async (filters: SearchFilters) => {
       lastname: 'Shevchenko',
       profession: 'Makeup Artist',
       city: 'Kyiv',
-      tags: ['makeup artist', 'hair stylist', 'wedding services'],
+      tags: ['event photography', 'makeup styling', 'event planning'],
       category: 'Weddings & Events',
       image: 'specialist1',
       experience: 5,
@@ -21,7 +21,7 @@ export const getSpecialists = async (filters: SearchFilters) => {
       lastname: 'Kovalenko',
       profession: 'Fitness Coach',
       city: 'Lviv',
-      tags: ['Fitness Coach', 'Personal Training', 'nutrition'],
+      tags: ['personal training', 'nutrition consulting', 'emotional wellness'],
       category: 'Health & Wellbeing',
       image: 'specialist2',
       experience: 3,
@@ -33,7 +33,7 @@ export const getSpecialists = async (filters: SearchFilters) => {
       lastname: 'Bondarenko',
       profession: 'Graphic Designer',
       city: 'Odesa',
-      tags: ['graphic design', 'ui/ux', 'branding'],
+      tags: ['business consulting', 'it support', 'legal assistance'],
       category: 'Business Services',
       image: 'specialist3',
       experience: 7,
@@ -45,7 +45,7 @@ export const getSpecialists = async (filters: SearchFilters) => {
       lastname: 'Melnyk',
       profession: 'Massage Therapist',
       city: 'Kharkiv',
-      tags: ['Relaxation', 'Therapeutic', 'Sports Massage'],
+      tags: ['massage therapy', 'emotional wellness', 'nutrition consulting'],
       category: 'Health & Wellbeing',
       image: 'specialist4',
       experience: 4,
@@ -57,7 +57,7 @@ export const getSpecialists = async (filters: SearchFilters) => {
       lastname: 'Tkachenko',
       profession: 'Math Tutor',
       city: 'Dnipro',
-      tags: ['tutor', 'math help', 'test prep'],
+      tags: ['school tutoring', 'language lessons', 'music classes'],
       category: 'Lessons & Training',
       image: 'specialist5',
       experience: 2,
@@ -69,7 +69,7 @@ export const getSpecialists = async (filters: SearchFilters) => {
       lastname: 'Petryk',
       profession: 'Handyman',
       city: 'Zaporizhzhia',
-      tags: ['handyman', 'repairs', 'assembly'],
+      tags: ['handyman services', 'furniture assembly', 'house cleaning'],
       category: 'Home & Garden',
       image: 'specialist6',
       experience: 6,
@@ -81,7 +81,7 @@ export const getSpecialists = async (filters: SearchFilters) => {
       lastname: 'Symonenko',
       profession: 'Gardener',
       city: 'Kyiv',
-      tags: ['gardening', 'landscaping', 'lawn care'],
+      tags: ['gardening', 'house cleaning', 'handyman services'],
       category: 'Home & Garden',
       image: 'specialist7',
       experience: 8,
@@ -93,7 +93,7 @@ export const getSpecialists = async (filters: SearchFilters) => {
       lastname: 'Lysenko',
       profession: 'Event Planner',
       city: 'Kyiv',
-      tags: ['event planner', 'decor', 'catering'],
+      tags: ['event planning', 'catering services', 'makeup styling'],
       category: 'Weddings & Events',
       image: 'specialist8',
       experience: 3,
@@ -105,7 +105,7 @@ export const getSpecialists = async (filters: SearchFilters) => {
       lastname: 'Kravchuk',
       profession: 'Massage Therapist',
       city: 'Kyiv',
-      tags: ['massage therapist', 'pain relief', 'relaxation'],
+      tags: ['massage therapy', 'emotional wellness', 'personal training'],
       category: 'Health & Wellbeing',
       image: 'specialist9',
       experience: 5,
@@ -117,7 +117,7 @@ export const getSpecialists = async (filters: SearchFilters) => {
       lastname: 'Zakharchuk',
       profession: 'Hair Stylist',
       city: 'Kyiv',
-      tags: ['makeup artist', 'hair stylist', 'wedding services'],
+      tags: ['makeup styling', 'event planning', 'catering services'],
       category: 'Weddings & Events',
       image: 'specialist10',
       experience: 4,
@@ -129,7 +129,7 @@ export const getSpecialists = async (filters: SearchFilters) => {
       lastname: 'Koval',
       profession: 'Hair Stylist',
       city: 'Kyiv',
-      tags: ['makeup artist', 'hair stylist', 'wedding services'],
+      tags: ['makeup styling', 'event photography', 'event planning'],
       category: 'Weddings & Events',
       image: 'specialist11',
       experience: 2,
@@ -141,7 +141,7 @@ export const getSpecialists = async (filters: SearchFilters) => {
       lastname: 'Marchenko',
       profession: 'Hair Stylist',
       city: 'Kyiv',
-      tags: ['makeup artist', 'hair stylist', 'wedding services'],
+      tags: ['makeup styling', 'event photography', 'event planning'],
       category: 'Weddings & Events',
       image: 'specialist1',
       experience: 1,
@@ -153,7 +153,7 @@ export const getSpecialists = async (filters: SearchFilters) => {
       lastname: 'Bondarenko',
       profession: 'Graphic Designer',
       city: 'Odesa',
-      tags: ['graphic design', 'ui/ux', 'branding'],
+      tags: ['business consulting', 'accounting help', 'it support'],
       category: 'Business Services',
       image: 'specialist10',
       experience: 5,
@@ -165,7 +165,7 @@ export const getSpecialists = async (filters: SearchFilters) => {
       lastname: 'Hryshchenko',
       profession: 'Hair Stylist',
       city: 'Kyiv',
-      tags: ['Cutting', 'Coloring', 'Styling'],
+      tags: ['makeup styling', 'event planning', 'event photography'],
       category: 'Weddings & Events',
       image: 'specialist11',
       experience: 4,
@@ -199,6 +199,12 @@ export const getSpecialists = async (filters: SearchFilters) => {
     if (!isNaN(rating)) {
       data = data.filter((s) => s.rating >= rating);
     }
+  }
+  if (filters.tags) {
+    const tagLower = filters.tags.toLowerCase();
+    data = data.filter((s) =>
+      s.tags.some((tag) => tag.toLowerCase().includes(tagLower))
+    );
   }
 
   return { data };
