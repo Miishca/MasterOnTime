@@ -122,7 +122,7 @@ const DiscoverSection: React.FC = () => {
               handleServiceClick('emotional-wellness');
             }}
           >
-            <img src={imageMap['service-health3']} alt="Emotional Wellness" />
+            <img src={imageMap['service-health4']} alt="Emotional Wellness" />
           </a>
         </div>
       </section>
