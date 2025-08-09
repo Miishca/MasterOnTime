@@ -1,6 +1,7 @@
 import React from 'react';
 import styles from './SpecialistCard.module.scss';
 import imageMap from '../../../utils/imageLoader';
+import { useNavigate } from 'react-router-dom';
 
 interface SpecialistCardProps {
   id: string;
@@ -12,12 +13,18 @@ interface SpecialistCardProps {
 }
 
 const SpecialistCard: React.FC<SpecialistCardProps> = ({
+  id,
   name,
   tags,
   image = 'specialist-1',
 }) => {
+  const navigate = useNavigate();
+  const handleCardClick = () => {
+    navigate(`/profile/${id}`, { state: { scrollToTop: true } });
+  };
+
   return (
-    <div className={styles.card}>
+    <div className={styles.card} onClick={handleCardClick}>
       <img
         src={imageMap[image]}
         alt={`${name}'s profile`}

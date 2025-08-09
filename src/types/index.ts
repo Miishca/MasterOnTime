@@ -5,6 +5,7 @@ export interface Specialist {
   profession: string;
   city: string;
   tags: string[];
+  issues: string[];
   category:
     | 'Home & Garden'
     | 'Health & Wellbeing'
@@ -14,6 +15,10 @@ export interface Specialist {
   image?: string;
   experience: number;
   rating: number;
+  price: string;
+  phone: string;
+  about: string;
+
 }
 
 export interface SearchBarProps {
