@@ -4,6 +4,7 @@ import styles from './ProfilePage.module.scss';
 import { Link, useLocation } from 'react-router-dom';
 import ProfileSection from '../features/specialists/components/ProfileSection';
 import { useEffect } from 'react';
+import ProfileContent from '../features/specialists/components/ProfileContent';
 
 const ProfilePage: React.FC = () => {
   const location = useLocation();
@@ -28,6 +29,7 @@ const ProfilePage: React.FC = () => {
         &lt; People
       </Link>
       <ProfileSection />
+      <ProfileContent />
       <Footer />
     </div>
   );

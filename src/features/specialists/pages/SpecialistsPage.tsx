@@ -1,11 +1,36 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './SpecialistsPage.module.scss';
 import Header from '../../../components/Layout/Header';
 import Footer from '../../../components/Layout/Footer';
 import LandingCarousel from '../components/LandingCarousel';
 import imageMap from '../../../utils/imageLoader';
+import { type Specialist } from '../../../types';
+import { getSpecialists } from '../services/specialistsApi';
+import SpecialistCard from '../components/SpecialistCard';
 
 const SpecialistsPage: React.FC = () => {
+  const [topSpecialists, setTopSpecialists] = useState<Specialist[]>([]);
+  useEffect(() => {
+    const fetchSpecialists = async () => {
+      try {
+        const { data } = await getSpecialists({});
+        const top3 = [...data]
+          .sort((a, b) => {
+            if (b.rating === a.rating) {
+              return (b.experience || 0) - (a.experience || 0);
+            }
+            return b.rating - a.rating;
+          })
+          .slice(0, 3);
+        setTopSpecialists(top3);
+      } catch (error) {
+        console.error('Failed to fetch specialists:', error);
+      }
+    };
+
+    fetchSpecialists();
+  }, []);
+
   return (
     <div className={styles.container}>
       <Header />
@@ -91,48 +116,21 @@ const SpecialistsPage: React.FC = () => {
           </div>
         </div>
       </div>
+
       <div className={styles.topRated}>
         <h1>Top Rated Specialists</h1>
         <div className={styles.topRatedContent}>
-          <div className={styles.stepTopRated}>
-            <img
-              src={imageMap['top-rated1']}
-              alt="Top Rated Specialists Alex"
-              className={styles.topRatedIcon}
+          {topSpecialists.map((spec) => (
+            <SpecialistCard
+              key={spec.id}
+              id={spec.id}
+              name={`${spec.name} ${spec.lastname}`}
+              profession={spec.profession}
+              city={spec.city}
+              tags={spec.tags}
+              image={spec.image}
             />
-            <h3>Alex</h3>
-            <div className={styles.topRatedText}>
-              <span>graphic designer</span>
-              <span>logo creation</span>
-              <span>branding</span>
-            </div>
-          </div>
-          <div className={styles.stepTopRated}>
-            <img
-              src={imageMap['top-rated2']}
-              alt="Top Rated Specialists Mykhailo"
-              className={styles.topRatedIcon}
-            />
-            <h3>Mykhailo</h3>
-            <div className={styles.topRatedText}>
-              <span>fitness coach</span>
-              <span>personal training</span>
-              <span>weight loss</span>
-            </div>
-          </div>
-          <div className={styles.stepTopRated}>
-            <img
-              src={imageMap['top-rated3']}
-              alt="Top Rated Specialists Daniel"
-              className={styles.topRatedIcon}
-            />
-            <h3>Daniel</h3>
-            <div className={styles.topRatedText}>
-              <span>photographer</span>
-              <span>event photos</span>
-              <span>product photos</span>
-            </div>
-          </div>
+          ))}
         </div>
       </div>
       <div className={styles.trustedByPeople}>

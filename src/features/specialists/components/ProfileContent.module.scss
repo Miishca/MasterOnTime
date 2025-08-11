@@ -1,0 +1,58 @@
+.testimonials {
+  max-width: 1328px;
+
+  margin: 0 auto;
+  padding: 60px 20px;
+}
+
+.title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 32px;
+  font-weight: 400;
+  margin-bottom: 40px;
+  color: var(--text-color);
+}
+
+.cards {
+  display: flex;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+
+.card {
+  background: var(--accent-color);
+  border-radius: 16px;
+  padding: 24px;
+  flex: 1;
+  min-width: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.text {
+  font-size: 16px;
+  margin-bottom: 120px;
+}
+
+.author {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.name {
+  font-size: 20px;
+}
+
+.role {
+  font-size: 14px;
+  color: var(--text-color-secondary);
+}
