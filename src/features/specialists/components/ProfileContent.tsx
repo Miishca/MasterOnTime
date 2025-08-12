@@ -1,34 +1,67 @@
+import Calendar from "react-calendar";
+import "react-calendar/dist/Calendar.css";
+import type { Specialist } from '../../../types';
 import styles from './ProfileContent.module.scss'
+import imageMap from '../../../utils/imageLoader';
 
-const testimonials = [
-    {
-      text: "Elena is a magician. I didn’t just look beautiful — I felt confident every minute of my wedding. Everything looked natural and classy.",
-      name: "Maria",
-      role: "Bride",
-      image: "/src/assets/testimonials1.png",
-    },
-    {
-      text: "Working with Elena is easy and efficient. She instantly understands the creative vision and always makes clients feel comfortable on set.",
-      name: "Inna",
-      role: "Photographer",
-      image: "/src/assets/testimonials2.png",
-    },
-    {
-      text: "I booked a consultation to improve my skincare and presentation for meetings — and it turned into a complete transformation. I’m truly grateful!",
-      name: "Daria",
-      role: "Marketing Manager",
-      image: "/src/assets/testimonials3.png",
-    },
-  ];
+interface ProfileContentProps {
+  specialist: Specialist;
+}
 
 
-const ProfileContent = () => {
+export default function ProfileContent({ specialist }: ProfileContentProps) {
+  const availableDates = specialist.availability?.filter(d => d.isAvailable)
+    .map(d => new Date(d.date)) || [];
+
   return (
-    <div className={styles.content}>
-      <section className={styles.testimonials}>
+    <div className={styles.profileContent}>
+      {specialist.workHistory && specialist.workHistory.length > 0 && (
+        <section className={styles.workHistory}>
+          <h4>Work history</h4>
+          <div className={styles.workList}>
+            {specialist.workHistory.map(work => (
+              <div key={work.id} className={styles.workCard}>
+                <img src={work.image ?? imageMap['default']} alt={work.title} />
+                <h5>{work.title}</h5>
+                <p>{work.description}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {specialist.services && specialist.services.length > 0 && (
+        <section className={styles.actionsList}>
+          <h4>Actions You Can Take</h4>
+          {specialist.services.map(service => (
+            <details key={service.id}>
+              <summary>{service.title}</summary>
+              {service.description && <p>{service.description}</p>}
+            </details>
+          ))}
+        </section>
+      )}
+
+      {specialist.availability && (
+        <section className={styles.calendarSection}>
+          <h4>Availability Calendar</h4>
+          <Calendar
+            tileClassName={({ date }) =>
+              availableDates.some(
+                d => d.toDateString() === date.toDateString()
+              )
+                ? styles.available
+                : ""
+            }
+          />
+        </section>
+      )}
+
+      {specialist.testimonials && specialist.testimonials.length > 0 && (
+        <section className={styles.testimonials}>
         <h2 className={styles.title}>Testimonials</h2>
         <div className={styles.cards}>
-          {testimonials.map((t, i) => (
+          {specialist.testimonials.map((t, i) => (
             <div className={styles.card} key={i}>
               <p className={styles.text}>"{t.text}"</p>
               <div className={styles.author}>
@@ -42,8 +75,7 @@ const ProfileContent = () => {
           ))}
         </div>
       </section>
+      )}
     </div>
   );
-};
-
-export default ProfileContent;
+}

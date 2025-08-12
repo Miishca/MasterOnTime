@@ -1,4 +1,5 @@
 import type { SearchFilters, Specialist } from '../../../types';
+import imageMap from '../../../utils/imageLoader';
 
 export const getSpecialists = async (filters: SearchFilters) => {
   await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -24,6 +25,87 @@ export const getSpecialists = async (filters: SearchFilters) => {
       price: '$80-$100',
       phone: '+380671234567',
       about: `Anna is a certified makeup artist with a deep understanding of beauty techniques and image psychology. Her goal is to help clients feel confident by highlighting their individuality through carefully crafted looks.`,
+      workHistory: [
+        {
+          id: 'w1',
+          image: imageMap['specialist1-work-history1'],
+          title: 'Bridal Makeup for Destination Wedding in Tuscany',
+          description:
+            'Elena worked with an international couple planning their dream wedding in Italy. She created a natural and elegant bridal look that lasted through the ceremony, photo shoot, and evening celebration.',
+        },
+        {
+          id: 'w2',
+          image: imageMap['specialist1-work-history2'],
+          title: 'Makeup for Fashion Campaign – Modern Streetwear Brand',
+          description:
+            'Collaborated with a local streetwear brand to create bold and expressive looks for their seasonal campaign. Elena focused on edgy eyes and clean skin tones to match the brand’s aesthetic.',
+        },
+        {
+          id: 'w3',
+          image: imageMap['specialist1-work-history3'],
+          title: 'Photoshoot Makeup for Personal Branding',
+          description:
+            'Provided camera-ready makeup for a series of personal branding portraits. The goal was to emphasize professionalism and authenticity without overdoing it.',
+        },
+      ],
+      services: [
+        {
+          id: 's1',
+          title: 'Book a Makeup Session',
+          description:
+            'Get a professional makeup session for weddings, photoshoots, or events.',
+        },
+        {
+          id: 's2',
+          title: 'Request a styled look for your event or shoot',
+          description:
+            'Discuss your style goals and receive tailored fashion advice.',
+        },
+        {
+          id: 's3',
+          title: 'Schedule a personal online consultation',
+          description:
+            'Complete bridal makeup and styling package for your special day.',
+        },
+        {
+          id: 's4',
+          title: 'Enroll in her makeup basics mini-course',
+          description:
+            'Complete bridal makeup and styling package for your special day.',
+        },
+      ],
+      availability: [
+        { date: '2024-07-28', isAvailable: true },
+        { date: '2024-07-30', isAvailable: true },
+      ],
+      reviews: [
+        {
+          id: 'r1',
+          userName: 'Olga',
+          comment: 'Fantastic work!',
+          rating: 5,
+        },
+      ],
+      testimonials: [
+        {
+          text: 'Elena is a magician. I didn’t just look beautiful — I felt confident every minute of my wedding. Everything looked natural and classy.',
+          name: 'Maria',
+          role: 'Bride',
+          image: '/src/assets/testimonials1.png',
+        },
+        {
+          text: 'Working with Elena is easy and efficient. She instantly understands the creative vision and always makes clients feel comfortable on set.',
+          name: 'Inna',
+          role: 'Photographer',
+          image: '/src/assets/testimonials2.png',
+        },
+        {
+          text: 'I booked a consultation to improve my skincare and presentation for meetings — and it turned into a complete transformation. I’m truly grateful!',
+          name: 'Daria',
+          role: 'Marketing Manager',
+          image: '/src/assets/testimonials3.png',
+        },
+      ],
     },
     {
       id: '2',
@@ -45,6 +127,88 @@ export const getSpecialists = async (filters: SearchFilters) => {
       price: '$50-$70',
       phone: '+380671234568',
       about: `Mykhailo designs personalized workout programs and nutrition plans to help clients reach their fitness goals, while maintaining long-term health and motivation.`,
+      workHistory: [
+        {
+          id: 'w1',
+          image: imageMap['specialist1-work-history1'],
+          title: 'Bridal Makeup for Destination Wedding in Tuscany',
+          description:
+            'Elena worked with an international couple planning their dream wedding in Italy. She created a natural and elegant bridal look that lasted through the ceremony, photo shoot, and evening celebration.',
+        },
+        {
+          id: 'w2',
+          image: imageMap['specialist1-work-history2'],
+          title: 'Makeup for Fashion Campaign – Modern Streetwear Brand',
+          description:
+            'Collaborated with a local streetwear brand to create bold and expressive looks for their seasonal campaign. Elena focused on edgy eyes and clean skin tones to match the brand’s aesthetic.',
+        },
+        {
+          id: 'w3',
+          image: imageMap['specialist1-work-history3'],
+          title: 'Photoshoot Makeup for Personal Branding',
+          description:
+            'Provided camera-ready makeup for a series of personal branding portraits. The goal was to emphasize professionalism and authenticity without overdoing it.',
+        },
+      ],
+      services: [
+        {
+          id: 's1',
+          title: 'Book a Makeup Session',
+          description:
+            'Get a professional makeup session for weddings, photoshoots, or events.',
+        },
+        {
+          id: 's2',
+          title: 'Request a styled look for your event or shoot',
+          description:
+            'Discuss your style goals and receive tailored fashion advice.',
+        },
+        {
+          id: 's3',
+          title: 'Schedule a personal online consultation',
+          description:
+            'Complete bridal makeup and styling package for your special day.',
+        },
+        {
+          id: 's4',
+          title: 'Enroll in her makeup basics mini-course',
+          description:
+            'Complete bridal makeup and styling package for your special day.',
+        },
+      ],
+      availability: [
+        { date: '2024-08-03', isAvailable: true },
+        { date: '2024-08-05', isAvailable: false },
+        { date: '2024-08-08', isAvailable: true },
+      ],
+      reviews: [
+        {
+          id: 'r1',
+          userName: 'Ivan',
+          comment: 'Great motivator and professional!',
+          rating: 5,
+        },
+      ],
+      testimonials: [
+        {
+          text: 'Elena is a magician. I didn’t just look beautiful — I felt confident every minute of my wedding. Everything looked natural and classy.',
+          name: 'Maria',
+          role: 'Bride',
+          image: '/src/assets/testimonials1.png',
+        },
+        {
+          text: 'Working with Elena is easy and efficient. She instantly understands the creative vision and always makes clients feel comfortable on set.',
+          name: 'Inna',
+          role: 'Photographer',
+          image: '/src/assets/testimonials2.png',
+        },
+        {
+          text: 'I booked a consultation to improve my skincare and presentation for meetings — and it turned into a complete transformation. I’m truly grateful!',
+          name: 'Daria',
+          role: 'Marketing Manager',
+          image: '/src/assets/testimonials3.png',
+        },
+      ],
     },
     {
       id: '3',
@@ -61,6 +225,88 @@ export const getSpecialists = async (filters: SearchFilters) => {
       price: '$150-$300',
       phone: '+380671234569',
       about: `Sofia is a creative graphic designer specializing in brand identity, marketing materials, and digital illustrations, ensuring each project tells a compelling story.`,
+      workHistory: [
+        {
+          id: 'w1',
+          image: imageMap['specialist1-work-history1'],
+          title: 'Bridal Makeup for Destination Wedding in Tuscany',
+          description:
+            'Elena worked with an international couple planning their dream wedding in Italy. She created a natural and elegant bridal look that lasted through the ceremony, photo shoot, and evening celebration.',
+        },
+        {
+          id: 'w2',
+          image: imageMap['specialist1-work-history2'],
+          title: 'Makeup for Fashion Campaign – Modern Streetwear Brand',
+          description:
+            'Collaborated with a local streetwear brand to create bold and expressive looks for their seasonal campaign. Elena focused on edgy eyes and clean skin tones to match the brand’s aesthetic.',
+        },
+        {
+          id: 'w3',
+          image: imageMap['specialist1-work-history3'],
+          title: 'Photoshoot Makeup for Personal Branding',
+          description:
+            'Provided camera-ready makeup for a series of personal branding portraits. The goal was to emphasize professionalism and authenticity without overdoing it.',
+        },
+      ],
+      services: [
+        {
+          id: 's1',
+          title: 'Book a Makeup Session',
+          description:
+            'Get a professional makeup session for weddings, photoshoots, or events.',
+        },
+        {
+          id: 's2',
+          title: 'Request a styled look for your event or shoot',
+          description:
+            'Discuss your style goals and receive tailored fashion advice.',
+        },
+        {
+          id: 's3',
+          title: 'Schedule a personal online consultation',
+          description:
+            'Complete bridal makeup and styling package for your special day.',
+        },
+        {
+          id: 's4',
+          title: 'Enroll in her makeup basics mini-course',
+          description:
+            'Complete bridal makeup and styling package for your special day.',
+        },
+      ],
+      availability: [
+        { date: '2024-08-01', isAvailable: false },
+        { date: '2024-08-04', isAvailable: true },
+        { date: '2024-08-06', isAvailable: true },
+      ],
+      reviews: [
+        {
+          id: 'r1',
+          userName: 'Olena',
+          comment: 'Amazing creativity and fast delivery!',
+          rating: 5,
+        },
+      ],
+      testimonials: [
+        {
+          text: 'Elena is a magician. I didn’t just look beautiful — I felt confident every minute of my wedding. Everything looked natural and classy.',
+          name: 'Maria',
+          role: 'Bride',
+          image: '/src/assets/testimonials1.png',
+        },
+        {
+          text: 'Working with Elena is easy and efficient. She instantly understands the creative vision and always makes clients feel comfortable on set.',
+          name: 'Inna',
+          role: 'Photographer',
+          image: '/src/assets/testimonials2.png',
+        },
+        {
+          text: 'I booked a consultation to improve my skincare and presentation for meetings — and it turned into a complete transformation. I’m truly grateful!',
+          name: 'Daria',
+          role: 'Marketing Manager',
+          image: '/src/assets/testimonials3.png',
+        },
+      ],
     },
     {
       id: '4',
@@ -77,6 +323,88 @@ export const getSpecialists = async (filters: SearchFilters) => {
       price: '$40-$60',
       phone: '+380671234570',
       about: `Oleksandr provides therapeutic massages aimed at reducing muscle pain, improving mobility, and promoting overall relaxation.`,
+      workHistory: [
+        {
+          id: 'w1',
+          image: imageMap['specialist1-work-history1'],
+          title: 'Bridal Makeup for Destination Wedding in Tuscany',
+          description:
+            'Elena worked with an international couple planning their dream wedding in Italy. She created a natural and elegant bridal look that lasted through the ceremony, photo shoot, and evening celebration.',
+        },
+        {
+          id: 'w2',
+          image: imageMap['specialist1-work-history2'],
+          title: 'Makeup for Fashion Campaign – Modern Streetwear Brand',
+          description:
+            'Collaborated with a local streetwear brand to create bold and expressive looks for their seasonal campaign. Elena focused on edgy eyes and clean skin tones to match the brand’s aesthetic.',
+        },
+        {
+          id: 'w3',
+          image: imageMap['specialist1-work-history3'],
+          title: 'Photoshoot Makeup for Personal Branding',
+          description:
+            'Provided camera-ready makeup for a series of personal branding portraits. The goal was to emphasize professionalism and authenticity without overdoing it.',
+        },
+      ],
+      services: [
+        {
+          id: 's1',
+          title: 'Book a Makeup Session',
+          description:
+            'Get a professional makeup session for weddings, photoshoots, or events.',
+        },
+        {
+          id: 's2',
+          title: 'Request a styled look for your event or shoot',
+          description:
+            'Discuss your style goals and receive tailored fashion advice.',
+        },
+        {
+          id: 's3',
+          title: 'Schedule a personal online consultation',
+          description:
+            'Complete bridal makeup and styling package for your special day.',
+        },
+        {
+          id: 's4',
+          title: 'Enroll in her makeup basics mini-course',
+          description:
+            'Complete bridal makeup and styling package for your special day.',
+        },
+      ],
+      availability: [
+        { date: '2024-08-01', isAvailable: false },
+        { date: '2024-08-04', isAvailable: true },
+        { date: '2024-08-06', isAvailable: true },
+      ],
+      reviews: [
+        {
+          id: 'r1',
+          userName: 'Olena',
+          comment: 'Amazing creativity and fast delivery!',
+          rating: 5,
+        },
+      ],
+      testimonials: [
+        {
+          text: 'Elena is a magician. I didn’t just look beautiful — I felt confident every minute of my wedding. Everything looked natural and classy.',
+          name: 'Maria',
+          role: 'Bride',
+          image: '/src/assets/testimonials1.png',
+        },
+        {
+          text: 'Working with Elena is easy and efficient. She instantly understands the creative vision and always makes clients feel comfortable on set.',
+          name: 'Inna',
+          role: 'Photographer',
+          image: '/src/assets/testimonials2.png',
+        },
+        {
+          text: 'I booked a consultation to improve my skincare and presentation for meetings — and it turned into a complete transformation. I’m truly grateful!',
+          name: 'Daria',
+          role: 'Marketing Manager',
+          image: '/src/assets/testimonials3.png',
+        },
+      ],
     },
     {
       id: '5',
@@ -93,6 +421,88 @@ export const getSpecialists = async (filters: SearchFilters) => {
       price: '$20-$35',
       phone: '+380671234571',
       about: `Marta helps students of all levels build strong mathematical foundations, preparing them for exams and improving confidence in problem-solving.`,
+      workHistory: [
+        {
+          id: 'w1',
+          image: imageMap['specialist1-work-history1'],
+          title: 'Bridal Makeup for Destination Wedding in Tuscany',
+          description:
+            'Elena worked with an international couple planning their dream wedding in Italy. She created a natural and elegant bridal look that lasted through the ceremony, photo shoot, and evening celebration.',
+        },
+        {
+          id: 'w2',
+          image: imageMap['specialist1-work-history2'],
+          title: 'Makeup for Fashion Campaign – Modern Streetwear Brand',
+          description:
+            'Collaborated with a local streetwear brand to create bold and expressive looks for their seasonal campaign. Elena focused on edgy eyes and clean skin tones to match the brand’s aesthetic.',
+        },
+        {
+          id: 'w3',
+          image: imageMap['specialist1-work-history3'],
+          title: 'Photoshoot Makeup for Personal Branding',
+          description:
+            'Provided camera-ready makeup for a series of personal branding portraits. The goal was to emphasize professionalism and authenticity without overdoing it.',
+        },
+      ],
+      services: [
+        {
+          id: 's1',
+          title: 'Book a Makeup Session',
+          description:
+            'Get a professional makeup session for weddings, photoshoots, or events.',
+        },
+        {
+          id: 's2',
+          title: 'Request a styled look for your event or shoot',
+          description:
+            'Discuss your style goals and receive tailored fashion advice.',
+        },
+        {
+          id: 's3',
+          title: 'Schedule a personal online consultation',
+          description:
+            'Complete bridal makeup and styling package for your special day.',
+        },
+        {
+          id: 's4',
+          title: 'Enroll in her makeup basics mini-course',
+          description:
+            'Complete bridal makeup and styling package for your special day.',
+        },
+      ],
+      availability: [
+        { date: '2024-08-01', isAvailable: false },
+        { date: '2024-08-04', isAvailable: true },
+        { date: '2024-08-06', isAvailable: true },
+      ],
+      reviews: [
+        {
+          id: 'r1',
+          userName: 'Olena',
+          comment: 'Amazing creativity and fast delivery!',
+          rating: 5,
+        },
+      ],
+      testimonials: [
+        {
+          text: 'Elena is a magician. I didn’t just look beautiful — I felt confident every minute of my wedding. Everything looked natural and classy.',
+          name: 'Maria',
+          role: 'Bride',
+          image: '/src/assets/testimonials1.png',
+        },
+        {
+          text: 'Working with Elena is easy and efficient. She instantly understands the creative vision and always makes clients feel comfortable on set.',
+          name: 'Inna',
+          role: 'Photographer',
+          image: '/src/assets/testimonials2.png',
+        },
+        {
+          text: 'I booked a consultation to improve my skincare and presentation for meetings — and it turned into a complete transformation. I’m truly grateful!',
+          name: 'Daria',
+          role: 'Marketing Manager',
+          image: '/src/assets/testimonials3.png',
+        },
+      ],
     },
     {
       id: '6',
@@ -109,6 +519,89 @@ export const getSpecialists = async (filters: SearchFilters) => {
       price: '$15-$50',
       phone: '+380671234572',
       about: `Ivan offers reliable handyman services, from quick repairs to furniture assembly, ensuring your home stays in top condition.`,
+      workHistory: [
+        {
+          id: 'w1',
+          image: imageMap['specialist1-work-history1'],
+          title: 'Bridal Makeup for Destination Wedding in Tuscany',
+          description:
+            'Elena worked with an international couple planning their dream wedding in Italy. She created a natural and elegant bridal look that lasted through the ceremony, photo shoot, and evening celebration.',
+        },
+        {
+          id: 'w2',
+          image: imageMap['specialist1-work-history2'],
+          title: 'Makeup for Fashion Campaign – Modern Streetwear Brand',
+          description:
+            'Collaborated with a local streetwear brand to create bold and expressive looks for their seasonal campaign. Elena focused on edgy eyes and clean skin tones to match the brand’s aesthetic.',
+        },
+        {
+          id: 'w3',
+          image: imageMap['specialist1-work-history3'],
+          title: 'Photoshoot Makeup for Personal Branding',
+          description:
+            'Provided camera-ready makeup for a series of personal branding portraits. The goal was to emphasize professionalism and authenticity without overdoing it.',
+        },
+      ],
+      services: [
+        {
+          id: 's1',
+          title: 'Book a Makeup Session',
+          description:
+            'Get a professional makeup session for weddings, photoshoots, or events.',
+        },
+        {
+          id: 's2',
+          title: 'Request a styled look for your event or shoot',
+          description:
+            'Discuss your style goals and receive tailored fashion advice.',
+        },
+        {
+          id: 's3',
+          title: 'Schedule a personal online consultation',
+          description:
+            'Complete bridal makeup and styling package for your special day.',
+        },
+        {
+          id: 's4',
+          title: 'Enroll in her makeup basics mini-course',
+          description:
+            'Complete bridal makeup and styling package for your special day.',
+        },
+      ],
+      availability: [
+        { date: '2024-08-01', isAvailable: false },
+        { date: '2024-08-04', isAvailable: true },
+        { date: '2024-08-06', isAvailable: true },
+      ],
+      reviews: [
+        {
+          id: 'r1',
+          userName: 'Olena',
+          comment: 'Amazing creativity and fast delivery!',
+          rating: 5,
+        },
+      ],
+
+      testimonials: [
+        {
+          text: 'Elena is a magician. I didn’t just look beautiful — I felt confident every minute of my wedding. Everything looked natural and classy.',
+          name: 'Maria',
+          role: 'Bride',
+          image: '/src/assets/testimonials1.png',
+        },
+        {
+          text: 'Working with Elena is easy and efficient. She instantly understands the creative vision and always makes clients feel comfortable on set.',
+          name: 'Inna',
+          role: 'Photographer',
+          image: '/src/assets/testimonials2.png',
+        },
+        {
+          text: 'I booked a consultation to improve my skincare and presentation for meetings — and it turned into a complete transformation. I’m truly grateful!',
+          name: 'Daria',
+          role: 'Marketing Manager',
+          image: '/src/assets/testimonials3.png',
+        },
+      ],
     },
     {
       id: '7',
@@ -125,6 +618,88 @@ export const getSpecialists = async (filters: SearchFilters) => {
       price: '$25-$60',
       phone: '+380671234573',
       about: `Nazar specializes in creating and maintaining beautiful gardens, providing expert advice on plant care and seasonal maintenance.`,
+      workHistory: [
+        {
+          id: 'w1',
+          image: imageMap['specialist1-work-history1'],
+          title: 'Bridal Makeup for Destination Wedding in Tuscany',
+          description:
+            'Elena worked with an international couple planning their dream wedding in Italy. She created a natural and elegant bridal look that lasted through the ceremony, photo shoot, and evening celebration.',
+        },
+        {
+          id: 'w2',
+          image: imageMap['specialist1-work-history2'],
+          title: 'Makeup for Fashion Campaign – Modern Streetwear Brand',
+          description:
+            'Collaborated with a local streetwear brand to create bold and expressive looks for their seasonal campaign. Elena focused on edgy eyes and clean skin tones to match the brand’s aesthetic.',
+        },
+        {
+          id: 'w3',
+          image: imageMap['specialist1-work-history3'],
+          title: 'Photoshoot Makeup for Personal Branding',
+          description:
+            'Provided camera-ready makeup for a series of personal branding portraits. The goal was to emphasize professionalism and authenticity without overdoing it.',
+        },
+      ],
+      services: [
+        {
+          id: 's1',
+          title: 'Book a Makeup Session',
+          description:
+            'Get a professional makeup session for weddings, photoshoots, or events.',
+        },
+        {
+          id: 's2',
+          title: 'Request a styled look for your event or shoot',
+          description:
+            'Discuss your style goals and receive tailored fashion advice.',
+        },
+        {
+          id: 's3',
+          title: 'Schedule a personal online consultation',
+          description:
+            'Complete bridal makeup and styling package for your special day.',
+        },
+        {
+          id: 's4',
+          title: 'Enroll in her makeup basics mini-course',
+          description:
+            'Complete bridal makeup and styling package for your special day.',
+        },
+      ],
+      availability: [
+        { date: '2024-08-01', isAvailable: false },
+        { date: '2024-08-04', isAvailable: true },
+        { date: '2024-08-06', isAvailable: true },
+      ],
+      reviews: [
+        {
+          id: 'r1',
+          userName: 'Olena',
+          comment: 'Amazing creativity and fast delivery!',
+          rating: 5,
+        },
+      ],
+      testimonials: [
+        {
+          text: 'Elena is a magician. I didn’t just look beautiful — I felt confident every minute of my wedding. Everything looked natural and classy.',
+          name: 'Maria',
+          role: 'Bride',
+          image: '/src/assets/testimonials1.png',
+        },
+        {
+          text: 'Working with Elena is easy and efficient. She instantly understands the creative vision and always makes clients feel comfortable on set.',
+          name: 'Inna',
+          role: 'Photographer',
+          image: '/src/assets/testimonials2.png',
+        },
+        {
+          text: 'I booked a consultation to improve my skincare and presentation for meetings — and it turned into a complete transformation. I’m truly grateful!',
+          name: 'Daria',
+          role: 'Marketing Manager',
+          image: '/src/assets/testimonials3.png',
+        },
+      ],
     },
     {
       id: '8',
@@ -141,6 +716,88 @@ export const getSpecialists = async (filters: SearchFilters) => {
       price: '$200-$500',
       phone: '+380671234574',
       about: `Kateryna plans unforgettable events, from intimate gatherings to large-scale celebrations, ensuring every detail is perfect.`,
+      workHistory: [
+        {
+          id: 'w1',
+          image: imageMap['specialist1-work-history1'],
+          title: 'Bridal Makeup for Destination Wedding in Tuscany',
+          description:
+            'Elena worked with an international couple planning their dream wedding in Italy. She created a natural and elegant bridal look that lasted through the ceremony, photo shoot, and evening celebration.',
+        },
+        {
+          id: 'w2',
+          image: imageMap['specialist1-work-history2'],
+          title: 'Makeup for Fashion Campaign – Modern Streetwear Brand',
+          description:
+            'Collaborated with a local streetwear brand to create bold and expressive looks for their seasonal campaign. Elena focused on edgy eyes and clean skin tones to match the brand’s aesthetic.',
+        },
+        {
+          id: 'w3',
+          image: imageMap['specialist1-work-history3'],
+          title: 'Photoshoot Makeup for Personal Branding',
+          description:
+            'Provided camera-ready makeup for a series of personal branding portraits. The goal was to emphasize professionalism and authenticity without overdoing it.',
+        },
+      ],
+      services: [
+        {
+          id: 's1',
+          title: 'Book a Makeup Session',
+          description:
+            'Get a professional makeup session for weddings, photoshoots, or events.',
+        },
+        {
+          id: 's2',
+          title: 'Request a styled look for your event or shoot',
+          description:
+            'Discuss your style goals and receive tailored fashion advice.',
+        },
+        {
+          id: 's3',
+          title: 'Schedule a personal online consultation',
+          description:
+            'Complete bridal makeup and styling package for your special day.',
+        },
+        {
+          id: 's4',
+          title: 'Enroll in her makeup basics mini-course',
+          description:
+            'Complete bridal makeup and styling package for your special day.',
+        },
+      ],
+      availability: [
+        { date: '2024-08-01', isAvailable: false },
+        { date: '2024-08-04', isAvailable: true },
+        { date: '2024-08-06', isAvailable: true },
+      ],
+      reviews: [
+        {
+          id: 'r1',
+          userName: 'Olena',
+          comment: 'Amazing creativity and fast delivery!',
+          rating: 5,
+        },
+      ],
+      testimonials: [
+        {
+          text: 'Elena is a magician. I didn’t just look beautiful — I felt confident every minute of my wedding. Everything looked natural and classy.',
+          name: 'Maria',
+          role: 'Bride',
+          image: '/src/assets/testimonials1.png',
+        },
+        {
+          text: 'Working with Elena is easy and efficient. She instantly understands the creative vision and always makes clients feel comfortable on set.',
+          name: 'Inna',
+          role: 'Photographer',
+          image: '/src/assets/testimonials2.png',
+        },
+        {
+          text: 'I booked a consultation to improve my skincare and presentation for meetings — and it turned into a complete transformation. I’m truly grateful!',
+          name: 'Daria',
+          role: 'Marketing Manager',
+          image: '/src/assets/testimonials3.png',
+        },
+      ],
     },
     {
       id: '9',
@@ -157,6 +814,88 @@ export const getSpecialists = async (filters: SearchFilters) => {
       price: '$45-$70',
       phone: '+380671234575',
       about: `Maksym combines traditional and modern massage techniques to help clients recover from injuries, relieve pain, and relax.`,
+      workHistory: [
+        {
+          id: 'w1',
+          image: imageMap['specialist1-work-history1'],
+          title: 'Bridal Makeup for Destination Wedding in Tuscany',
+          description:
+            'Elena worked with an international couple planning their dream wedding in Italy. She created a natural and elegant bridal look that lasted through the ceremony, photo shoot, and evening celebration.',
+        },
+        {
+          id: 'w2',
+          image: imageMap['specialist1-work-history2'],
+          title: 'Makeup for Fashion Campaign – Modern Streetwear Brand',
+          description:
+            'Collaborated with a local streetwear brand to create bold and expressive looks for their seasonal campaign. Elena focused on edgy eyes and clean skin tones to match the brand’s aesthetic.',
+        },
+        {
+          id: 'w3',
+          image: imageMap['specialist1-work-history3'],
+          title: 'Photoshoot Makeup for Personal Branding',
+          description:
+            'Provided camera-ready makeup for a series of personal branding portraits. The goal was to emphasize professionalism and authenticity without overdoing it.',
+        },
+      ],
+      services: [
+        {
+          id: 's1',
+          title: 'Book a Makeup Session',
+          description:
+            'Get a professional makeup session for weddings, photoshoots, or events.',
+        },
+        {
+          id: 's2',
+          title: 'Request a styled look for your event or shoot',
+          description:
+            'Discuss your style goals and receive tailored fashion advice.',
+        },
+        {
+          id: 's3',
+          title: 'Schedule a personal online consultation',
+          description:
+            'Complete bridal makeup and styling package for your special day.',
+        },
+        {
+          id: 's4',
+          title: 'Enroll in her makeup basics mini-course',
+          description:
+            'Complete bridal makeup and styling package for your special day.',
+        },
+      ],
+      availability: [
+        { date: '2024-08-01', isAvailable: false },
+        { date: '2024-08-04', isAvailable: true },
+        { date: '2024-08-06', isAvailable: true },
+      ],
+      reviews: [
+        {
+          id: 'r1',
+          userName: 'Olena',
+          comment: 'Amazing creativity and fast delivery!',
+          rating: 5,
+        },
+      ],
+      testimonials: [
+        {
+          text: 'Elena is a magician. I didn’t just look beautiful — I felt confident every minute of my wedding. Everything looked natural and classy.',
+          name: 'Maria',
+          role: 'Bride',
+          image: '/src/assets/testimonials1.png',
+        },
+        {
+          text: 'Working with Elena is easy and efficient. She instantly understands the creative vision and always makes clients feel comfortable on set.',
+          name: 'Inna',
+          role: 'Photographer',
+          image: '/src/assets/testimonials2.png',
+        },
+        {
+          text: 'I booked a consultation to improve my skincare and presentation for meetings — and it turned into a complete transformation. I’m truly grateful!',
+          name: 'Daria',
+          role: 'Marketing Manager',
+          image: '/src/assets/testimonials3.png',
+        },
+      ],
     },
     {
       id: '10',
@@ -173,6 +912,88 @@ export const getSpecialists = async (filters: SearchFilters) => {
       price: '$30-$70',
       phone: '+380671234576',
       about: `Dmytro creates stylish, personalized haircuts and event hairstyles to match each client's look and occasion.`,
+      workHistory: [
+        {
+          id: 'w1',
+          image: imageMap['specialist1-work-history1'],
+          title: 'Bridal Makeup for Destination Wedding in Tuscany',
+          description:
+            'Elena worked with an international couple planning their dream wedding in Italy. She created a natural and elegant bridal look that lasted through the ceremony, photo shoot, and evening celebration.',
+        },
+        {
+          id: 'w2',
+          image: imageMap['specialist1-work-history2'],
+          title: 'Makeup for Fashion Campaign – Modern Streetwear Brand',
+          description:
+            'Collaborated with a local streetwear brand to create bold and expressive looks for their seasonal campaign. Elena focused on edgy eyes and clean skin tones to match the brand’s aesthetic.',
+        },
+        {
+          id: 'w3',
+          image: imageMap['specialist1-work-history3'],
+          title: 'Photoshoot Makeup for Personal Branding',
+          description:
+            'Provided camera-ready makeup for a series of personal branding portraits. The goal was to emphasize professionalism and authenticity without overdoing it.',
+        },
+      ],
+      services: [
+        {
+          id: 's1',
+          title: 'Book a Makeup Session',
+          description:
+            'Get a professional makeup session for weddings, photoshoots, or events.',
+        },
+        {
+          id: 's2',
+          title: 'Request a styled look for your event or shoot',
+          description:
+            'Discuss your style goals and receive tailored fashion advice.',
+        },
+        {
+          id: 's3',
+          title: 'Schedule a personal online consultation',
+          description:
+            'Complete bridal makeup and styling package for your special day.',
+        },
+        {
+          id: 's4',
+          title: 'Enroll in her makeup basics mini-course',
+          description:
+            'Complete bridal makeup and styling package for your special day.',
+        },
+      ],
+      availability: [
+        { date: '2024-08-01', isAvailable: false },
+        { date: '2024-08-04', isAvailable: true },
+        { date: '2024-08-06', isAvailable: true },
+      ],
+      reviews: [
+        {
+          id: 'r1',
+          userName: 'Olena',
+          comment: 'Amazing creativity and fast delivery!',
+          rating: 5,
+        },
+      ],
+      testimonials: [
+        {
+          text: 'Elena is a magician. I didn’t just look beautiful — I felt confident every minute of my wedding. Everything looked natural and classy.',
+          name: 'Maria',
+          role: 'Bride',
+          image: '/src/assets/testimonials1.png',
+        },
+        {
+          text: 'Working with Elena is easy and efficient. She instantly understands the creative vision and always makes clients feel comfortable on set.',
+          name: 'Inna',
+          role: 'Photographer',
+          image: '/src/assets/testimonials2.png',
+        },
+        {
+          text: 'I booked a consultation to improve my skincare and presentation for meetings — and it turned into a complete transformation. I’m truly grateful!',
+          name: 'Daria',
+          role: 'Marketing Manager',
+          image: '/src/assets/testimonials3.png',
+        },
+      ],
     },
     {
       id: '11',
@@ -189,6 +1010,82 @@ export const getSpecialists = async (filters: SearchFilters) => {
       price: '$25-$50',
       phone: '+380671234577',
       about: `Alex provides modern and classic hair styling for everyday wear and special events, tailoring each style to the client's preferences.`,
+      workHistory: [
+        {
+          id: 'w1',
+          image: imageMap['specialist1-work-history1'],
+          title: 'Bridal Makeup for Destination Wedding in Tuscany',
+          description:
+            'Elena worked with an international couple planning their dream wedding in Italy. She created a natural and elegant bridal look that lasted through the ceremony, photo shoot, and evening celebration.',
+        },
+        {
+          id: 'w2',
+          image: imageMap['specialist1-work-history2'],
+          title: 'Makeup for Fashion Campaign – Modern Streetwear Brand',
+          description:
+            'Collaborated with a local streetwear brand to create bold and expressive looks for their seasonal campaign. Elena focused on edgy eyes and clean skin tones to match the brand’s aesthetic.',
+        },
+        {
+          id: 'w3',
+          image: imageMap['specialist1-work-history3'],
+          title: 'Photoshoot Makeup for Personal Branding',
+          description:
+            'Provided camera-ready makeup for a series of personal branding portraits. The goal was to emphasize professionalism and authenticity without overdoing it.',
+        },
+      ],
+      services: [
+        {
+          id: 's1',
+          title: 'Book a Makeup Session',
+          description:
+            'Get a professional makeup session for weddings, photoshoots, or events.',
+        },
+        {
+          id: 's2',
+          title: 'Personal Style Consultation',
+          description:
+            'Discuss your style goals and receive tailored fashion advice.',
+        },
+        {
+          id: 's3',
+          title: 'Bridal Package',
+          description:
+            'Complete bridal makeup and styling package for your special day.',
+        },
+      ],
+      availability: [
+        { date: '2024-08-01', isAvailable: false },
+        { date: '2024-08-04', isAvailable: true },
+        { date: '2024-08-06', isAvailable: true },
+      ],
+      reviews: [
+        {
+          id: 'r1',
+          userName: 'Olena',
+          comment: 'Amazing creativity and fast delivery!',
+          rating: 5,
+        },
+      ],
+      testimonials: [
+        {
+          text: 'Elena is a magician. I didn’t just look beautiful — I felt confident every minute of my wedding. Everything looked natural and classy.',
+          name: 'Maria',
+          role: 'Bride',
+          image: '/src/assets/testimonials1.png',
+        },
+        {
+          text: 'Working with Elena is easy and efficient. She instantly understands the creative vision and always makes clients feel comfortable on set.',
+          name: 'Inna',
+          role: 'Photographer',
+          image: '/src/assets/testimonials2.png',
+        },
+        {
+          text: 'I booked a consultation to improve my skincare and presentation for meetings — and it turned into a complete transformation. I’m truly grateful!',
+          name: 'Daria',
+          role: 'Marketing Manager',
+          image: '/src/assets/testimonials3.png',
+        },
+      ],
     },
     {
       id: '12',
@@ -205,6 +1102,88 @@ export const getSpecialists = async (filters: SearchFilters) => {
       price: '$20-$40',
       phone: '+380671234578',
       about: `Alex is an emerging hairstylist who focuses on delivering fresh and trendy hairstyles for special occasions.`,
+      workHistory: [
+        {
+          id: 'w1',
+          image: imageMap['specialist1-work-history1'],
+          title: 'Bridal Makeup for Destination Wedding in Tuscany',
+          description:
+            'Elena worked with an international couple planning their dream wedding in Italy. She created a natural and elegant bridal look that lasted through the ceremony, photo shoot, and evening celebration.',
+        },
+        {
+          id: 'w2',
+          image: imageMap['specialist1-work-history2'],
+          title: 'Makeup for Fashion Campaign – Modern Streetwear Brand',
+          description:
+            'Collaborated with a local streetwear brand to create bold and expressive looks for their seasonal campaign. Elena focused on edgy eyes and clean skin tones to match the brand’s aesthetic.',
+        },
+        {
+          id: 'w3',
+          image: imageMap['specialist1-work-history3'],
+          title: 'Photoshoot Makeup for Personal Branding',
+          description:
+            'Provided camera-ready makeup for a series of personal branding portraits. The goal was to emphasize professionalism and authenticity without overdoing it.',
+        },
+      ],
+      services: [
+        {
+          id: 's1',
+          title: 'Book a Makeup Session',
+          description:
+            'Get a professional makeup session for weddings, photoshoots, or events.',
+        },
+        {
+          id: 's2',
+          title: 'Request a styled look for your event or shoot',
+          description:
+            'Discuss your style goals and receive tailored fashion advice.',
+        },
+        {
+          id: 's3',
+          title: 'Schedule a personal online consultation',
+          description:
+            'Complete bridal makeup and styling package for your special day.',
+        },
+        {
+          id: 's4',
+          title: 'Enroll in her makeup basics mini-course',
+          description:
+            'Complete bridal makeup and styling package for your special day.',
+        },
+      ],
+      availability: [
+        { date: '2024-08-01', isAvailable: false },
+        { date: '2024-08-04', isAvailable: true },
+        { date: '2024-08-06', isAvailable: true },
+      ],
+      reviews: [
+        {
+          id: 'r1',
+          userName: 'Olena',
+          comment: 'Amazing creativity and fast delivery!',
+          rating: 5,
+        },
+      ],
+      testimonials: [
+        {
+          text: 'Elena is a magician. I didn’t just look beautiful — I felt confident every minute of my wedding. Everything looked natural and classy.',
+          name: 'Maria',
+          role: 'Bride',
+          image: '/src/assets/testimonials1.png',
+        },
+        {
+          text: 'Working with Elena is easy and efficient. She instantly understands the creative vision and always makes clients feel comfortable on set.',
+          name: 'Inna',
+          role: 'Photographer',
+          image: '/src/assets/testimonials2.png',
+        },
+        {
+          text: 'I booked a consultation to improve my skincare and presentation for meetings — and it turned into a complete transformation. I’m truly grateful!',
+          name: 'Daria',
+          role: 'Marketing Manager',
+          image: '/src/assets/testimonials3.png',
+        },
+      ],
     },
     {
       id: '13',
@@ -221,6 +1200,88 @@ export const getSpecialists = async (filters: SearchFilters) => {
       price: '$100-$250',
       phone: '+380671234579',
       about: `Dmytro specializes in creating visual identities that help businesses stand out in competitive markets.`,
+      workHistory: [
+        {
+          id: 'w1',
+          image: imageMap['specialist1-work-history1'],
+          title: 'Bridal Makeup for Destination Wedding in Tuscany',
+          description:
+            'Elena worked with an international couple planning their dream wedding in Italy. She created a natural and elegant bridal look that lasted through the ceremony, photo shoot, and evening celebration.',
+        },
+        {
+          id: 'w2',
+          image: imageMap['specialist1-work-history2'],
+          title: 'Makeup for Fashion Campaign – Modern Streetwear Brand',
+          description:
+            'Collaborated with a local streetwear brand to create bold and expressive looks for their seasonal campaign. Elena focused on edgy eyes and clean skin tones to match the brand’s aesthetic.',
+        },
+        {
+          id: 'w3',
+          image: imageMap['specialist1-work-history3'],
+          title: 'Photoshoot Makeup for Personal Branding',
+          description:
+            'Provided camera-ready makeup for a series of personal branding portraits. The goal was to emphasize professionalism and authenticity without overdoing it.',
+        },
+      ],
+      services: [
+        {
+          id: 's1',
+          title: 'Book a Makeup Session',
+          description:
+            'Get a professional makeup session for weddings, photoshoots, or events.',
+        },
+        {
+          id: 's2',
+          title: 'Request a styled look for your event or shoot',
+          description:
+            'Discuss your style goals and receive tailored fashion advice.',
+        },
+        {
+          id: 's3',
+          title: 'Schedule a personal online consultation',
+          description:
+            'Complete bridal makeup and styling package for your special day.',
+        },
+        {
+          id: 's4',
+          title: 'Enroll in her makeup basics mini-course',
+          description:
+            'Complete bridal makeup and styling package for your special day.',
+        },
+      ],
+      availability: [
+        { date: '2024-08-01', isAvailable: false },
+        { date: '2024-08-04', isAvailable: true },
+        { date: '2024-08-06', isAvailable: true },
+      ],
+      reviews: [
+        {
+          id: 'r1',
+          userName: 'Olena',
+          comment: 'Amazing creativity and fast delivery!',
+          rating: 5,
+        },
+      ],
+      testimonials: [
+        {
+          text: 'Elena is a magician. I didn’t just look beautiful — I felt confident every minute of my wedding. Everything looked natural and classy.',
+          name: 'Maria',
+          role: 'Bride',
+          image: '/src/assets/testimonials1.png',
+        },
+        {
+          text: 'Working with Elena is easy and efficient. She instantly understands the creative vision and always makes clients feel comfortable on set.',
+          name: 'Inna',
+          role: 'Photographer',
+          image: '/src/assets/testimonials2.png',
+        },
+        {
+          text: 'I booked a consultation to improve my skincare and presentation for meetings — and it turned into a complete transformation. I’m truly grateful!',
+          name: 'Daria',
+          role: 'Marketing Manager',
+          image: '/src/assets/testimonials3.png',
+        },
+      ],
     },
     {
       id: '14',
@@ -237,6 +1298,10 @@ export const getSpecialists = async (filters: SearchFilters) => {
       price: '$30-$60',
       phone: '+380671234580',
       about: `Alex delivers personalized haircuts and color treatments to suit each client’s style and occasion.`,
+      workHistory: [],
+      services: [],
+      availability: [],
+      reviews: [],
     },
   ];
 

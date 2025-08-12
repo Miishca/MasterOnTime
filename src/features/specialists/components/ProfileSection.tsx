@@ -1,29 +1,13 @@
-import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
 import type { Specialist } from '../../../types';
-import { getSpecialists } from '../services/specialistsApi';
 import imageMap from '../../../utils/imageLoader';
 import styles from './ProfileSection.module.scss';
 
-const ProfileSection = () => {
-  const { id } = useParams();
-  const [specialist, setSpecialist] = useState<Specialist | null>(null);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const { data } = await getSpecialists({});
-      const found = data.find((s) => s.id === id);
-      setSpecialist(found || null);
-    };
-    fetchData();
-  }, [id]);
+interface ProfileSectionProps {
+  specialist: Specialist;
+}
 
-  if (!specialist)
-    return (
-      <div className={styles.loaderContainer}>
-        <div className={styles.spinner}></div>
-      </div>
-    );
+const ProfileSection: React.FC<ProfileSectionProps> = ({ specialist }) => {
 
   return (
     <div className={styles.profile}>

@@ -18,7 +18,11 @@ export interface Specialist {
   price: string;
   phone: string;
   about: string;
-
+  workHistory?: WorkHistoryItem[];
+  services?: ServiceItem[];
+  availability?: AvailabilityDay[];
+  reviews?: ReviewItem[];
+  testimonials?: Testimonial[];
 }
 
 export interface SearchBarProps {
@@ -57,4 +61,38 @@ export interface Landing {
 export interface Service {
   image: string;
   title?: string;
+}
+
+export interface WorkHistoryItem {
+  id: string;
+  image: string;
+  title: string;
+  description: string;
+}
+
+export interface ServiceItem {
+  id: string;
+  title: string;
+  description?: string;
+  price?: string;
+}
+
+export interface AvailabilityDay {
+  date: string;
+  isAvailable: boolean;
+}
+
+export interface ReviewItem {
+  id: string;
+  userName: string;
+  userImage?: string;
+  comment: string;
+  rating: number;
+}
+
+export interface Testimonial {
+  text: string;
+  name: string;
+  role: string;
+  image: string;
 }
