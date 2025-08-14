@@ -24,9 +24,40 @@
   nav {
     display: flex;
     gap: 10px;
+
+    .active {
+      button {
+        color: var(--primary-color);
+      }
+    }
   }
 
   button {
     width: 82px;
   }
 }
+
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px 0;
+
+    .logo {
+      font-size: 24px;
+    }
+
+    nav {
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 5px;
+    }
+
+    button {
+      width: auto;
+      font-size: 14px;
+      padding: 6px 12px;
+    }
+  }
+}
+

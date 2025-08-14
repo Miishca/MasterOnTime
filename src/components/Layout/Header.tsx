@@ -3,6 +3,7 @@ import styles from './Header.module.scss';
 import Button from '../Button/Button';
 import { Link } from 'react-router-dom';
 import imageMap from '../../utils/imageLoader';
+import { NavLink } from 'react-router-dom';
 
 const Header: React.FC = () => (
   <header className={styles.header}>
@@ -11,18 +12,30 @@ const Header: React.FC = () => (
       <div className={styles.logo}>MasterOnTime</div>
     </Link>
     <nav>
-      <Link to="/services">
+      <NavLink
+        to="/services"
+        className={({ isActive }) => (isActive ? styles.active : '')}
+      >
         <Button label="services" variant="secondary" />
-      </Link>
-      <Link to="/people">
+      </NavLink>
+      <NavLink
+        to="/people"
+        className={({ isActive }) => (isActive ? styles.active : '')}
+      >
         <Button label="people" variant="secondary" />
-      </Link>
-      <Link to="/profile">
+      </NavLink>
+      <NavLink
+        to="/profile"
+        className={({ isActive }) => (isActive ? styles.active : '')}
+      >
         <Button label="profile" variant="secondary" />
-      </Link>
-      <Link to="/book">
+      </NavLink>
+      <NavLink
+        to="/book"
+        className={({ isActive }) => (isActive ? styles.active : '')}
+      >
         <Button label="Book" variant="primary" />
-      </Link>
+      </NavLink>
     </nav>
   </header>
 );

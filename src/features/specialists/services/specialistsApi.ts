@@ -1305,6 +1305,10 @@ export const getSpecialists = async (filters: SearchFilters) => {
     },
   ];
 
+  if (filters.id) {
+        data = data.filter(specialist => specialist.id === filters.id);
+    }
+
   if (filters.category) {
     data = data.filter((s) => s.category === filters.category);
   }

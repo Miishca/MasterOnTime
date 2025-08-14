@@ -20,7 +20,7 @@ const SpecialistCard: React.FC<SpecialistCardProps> = ({
 }) => {
   const navigate = useNavigate();
   const handleCardClick = () => {
-    navigate(`/profile/${id}`, { state: { scrollToTop: true } });
+    navigate(`/people/${id}`, { state: { scrollToTop: true } });
   };
 
   return (

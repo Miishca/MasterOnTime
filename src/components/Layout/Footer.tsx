@@ -4,6 +4,7 @@ import { FaFacebookF, FaInstagram } from 'react-icons/fa';
 import Button from '../Button/Button';
 import { Link } from 'react-router-dom';
 import imageMap from '../../utils/imageLoader';
+import { NavLink } from 'react-router-dom';
 
 const Footer: React.FC = () => {
   return (
@@ -38,18 +39,18 @@ const Footer: React.FC = () => {
             <div className={styles.logo}>MasterOnTime</div>
           </Link>
           <nav>
-            <Link to="/">
+            <NavLink to="/" className={({ isActive }) => (isActive ? styles.active : '')}>
               <Button label="home" variant="secondaryFooter" />
-            </Link>
-            <Link to="/services">
+            </NavLink>
+            <NavLink to="/services" className={({ isActive }) => (isActive ? styles.active : '')}>
               <Button label="services" variant="secondaryFooter" />
-            </Link>
-            <Link to="/people">
+            </NavLink>
+            <NavLink to="/people" className={({ isActive }) => (isActive ? styles.active : '')}>
              <Button label="people" variant="secondaryFooter" />
-            </Link>
-            <Link to="/profile">
+            </NavLink>
+            <NavLink to="/profile" className={({ isActive }) => (isActive ? styles.active : '')}>
               <Button label="profile" variant="secondaryFooter" />
-            </Link>
+            </NavLink>
           </nav>
         </div>
       </div>

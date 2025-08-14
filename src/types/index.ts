@@ -37,6 +37,7 @@ export interface SearchFilters {
   experience?: string;
   rating?: string;
   tags?: string;
+  id?: string;
 }
 export interface PaginationProps {
   currentPage: number;

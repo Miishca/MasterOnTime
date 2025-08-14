@@ -1,8 +1,8 @@
 .footer {
-  margin: 100px 20px 20px;
+  margin: 60px 15px 20px;
   color: var(--text-color-footer);
   padding: 40px 20px;
-  
+
   border-radius: 10px;
   background-color: var(--footer-background-color);
 }
@@ -67,6 +67,12 @@ nav {
   display: flex;
   gap: 10px;
   justify-self: end;
+
+  .active {
+    button {
+      color: var(--primary-color);
+    }
+  }
 }
 
 .footerBottom {
@@ -91,14 +97,54 @@ nav {
 }
 
 @media (max-width: 768px) {
+  .footer {
+    padding: 20px;
+    margin: 30px 10px 10px;
+  }
+
   .footerContent {
     h1 {
-      font-size: 50px;
+      font-size: 42px;
+    }
+
+    h4 {
+      font-size: 20px;
+      margin-bottom: 20px;
+    }
+
+    button {
+      width: 200px;
+      font-size: 16px;
+      margin-bottom: 20px;
     }
   }
+
+  .footerLinks {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    padding-top: 80px;
+  }
+
+  .footerSocial {
+    display: flex;
+    justify-content: center;
+  }
+
+  .logoContainer {
+    justify-content: center;
+  }
+
   nav {
     display: flex;
-    gap: 2px;
-    justify-self: end;
+    gap: 10px;
+    justify-content: center;
+
+    .active {
+      button {
+        color: var(--primary-color);
+      }
+    }
   }
 }
