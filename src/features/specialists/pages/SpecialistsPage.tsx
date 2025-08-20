@@ -4,22 +4,27 @@ import Header from '../../../components/Layout/Header';
 import Footer from '../../../components/Layout/Footer';
 import LandingCarousel from '../components/LandingCarousel';
 import imageMap from '../../../utils/imageLoader';
-import { type Specialist } from '../../../types';
+import { type UserProfile } from '../../../types';
 import { getSpecialists } from '../services/specialistsApi';
 import SpecialistCard from '../components/SpecialistCard';
 
 const SpecialistsPage: React.FC = () => {
-  const [topSpecialists, setTopSpecialists] = useState<Specialist[]>([]);
+  const [topSpecialists, setTopSpecialists] = useState<UserProfile[]>([]);
   useEffect(() => {
     const fetchSpecialists = async () => {
       try {
-        const { data } = await getSpecialists({});
-        const top3 = [...data]
+        const specialists = await getSpecialists({});
+        const top3 = [...specialists]
           .sort((a, b) => {
-            if (b.rating === a.rating) {
-              return (b.experience || 0) - (a.experience || 0);
+            const ratingA = a.rating ?? 0;
+            const ratingB = b.rating ?? 0;
+            const experienceA = a.experience ?? 0;
+            const experienceB = b.experience ?? 0;
+
+            if (ratingB === ratingA) {
+              return experienceB - experienceA;
             }
-            return b.rating - a.rating;
+            return ratingB - ratingA;
           })
           .slice(0, 3);
         setTopSpecialists(top3);
@@ -123,12 +128,11 @@ const SpecialistsPage: React.FC = () => {
           {topSpecialists.map((spec) => (
             <SpecialistCard
               key={spec.id}
-              id={spec.id}
-              name={`${spec.name} ${spec.lastname}`}
-              profession={spec.profession}
-              city={spec.city}
-              tags={spec.tags}
-              image={spec.image}
+              id={spec.id.toString()}
+              tags={(spec as any).tags || []}
+              name={`${spec.firstName ?? ''} ${spec.lastName ?? ''}`}
+              city={spec.address?.city}
+              image={spec.profileImageUrl || 'specialist-1'}
             />
           ))}
         </div>

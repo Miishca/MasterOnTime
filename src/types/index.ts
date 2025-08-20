@@ -1,9 +1,23 @@
 export interface Specialist {
   id: string;
-  name: string;
-  lastname: string;
   profession: string;
   city: string;
+  dob?: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone?: string;
+  location?: string;
+  serviceType?: string;
+  sex?: string;
+  address?: string;
+  country?: string;
+  zip?: string;
+  cardType?: string;
+  cardHolder?: string;
+  expire?: string;
+  cardNumber?: string;
+  balance?: string;
   tags: string[];
   issues: string[];
   category:
@@ -16,13 +30,27 @@ export interface Specialist {
   experience: number;
   rating: number;
   price: string;
-  phone: string;
   about: string;
   workHistory?: WorkHistoryItem[];
   services?: ServiceItem[];
   availability?: AvailabilityDay[];
   reviews?: ReviewItem[];
   testimonials?: Testimonial[];
+}
+
+export interface UserProfile {
+  id: number;
+  email: string;
+  firstName?: string;
+  lastName?: string;
+  address?: {
+    country: string;
+    city: string;
+    street: string;
+    zip: string;
+  };
+  phoneNumber?: string;
+  profileImageUrl?: string;
 }
 
 export interface SearchBarProps {
@@ -34,11 +62,14 @@ export interface SearchFilters {
   category?: string;
   name?: string;
   city?: string;
+  serviceType?: string;
+  location?: string;
   experience?: string;
   rating?: string;
   tags?: string;
   id?: string;
 }
+
 export interface PaginationProps {
   currentPage: number;
   totalPages: number;

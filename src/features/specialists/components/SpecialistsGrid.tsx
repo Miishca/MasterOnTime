@@ -45,7 +45,7 @@ const SpecialistsGrid: React.FC<SpecialistsGridProps> = ({
           <SpecialistCard
             key={specialist.id}
             id={specialist.id}
-            name={specialist.name}
+            name={specialist.firstName}
             profession={specialist.profession}
             city={specialist.city}
             tags={specialist.tags}

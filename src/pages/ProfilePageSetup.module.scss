@@ -2,6 +2,24 @@
   padding: 20px;
 }
 
+.logoutButton {
+  background: #ff4d4f;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-size: 18px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  margin-bottom: 20px;
+
+  &:hover {
+    background: #ff7875;
+  }
+}
+
+
 .avatarContainer {
   width: 308px;
   height: 308px;
@@ -148,8 +166,10 @@
 .editIcon {
   background: transparent;
   border: none;
-  cursor: pointer;
-  font-size: 18px;
+  img {
+    height: 28px;
+    width: 28px;
+  }
 }
 
 .detailsRow {
