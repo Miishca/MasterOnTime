@@ -13,7 +13,7 @@
 
 ## Overview
 
-MasterOnTime enables users to search for specialists by category and city, view their profiles (including name, lastname, profession, category, and tags), and book services.
+MasterOnTime enables users to search for specialists by category and city, view their profiles (including firstName, lastName, profession, category, and tags), and book services.
 
 ## Technologies
 

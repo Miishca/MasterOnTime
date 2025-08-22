@@ -7,7 +7,7 @@ import Button from '../../../components/Button/Button';
 
 const SearchBar: React.FC<SearchBarProps> = ({ onSearch, pageType }) => {
   const [category, setCategory] = useState('');
-  const [name, setName] = useState('');
+  const [firstName, setName] = useState('');
   const [city, setCity] = useState('');
   const [experience, setExperience] = useState('');
   const [rating, setRating] = useState('');
@@ -15,7 +15,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch, pageType }) => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const trimmedCategory = category.trim();
-    const trimmedName = name.trim();
+    const trimmedName = firstName.trim();
     const trimmedCity = city.trim();
     const trimmedExperience = experience.trim();
     const trimmedRating = rating.trim();
@@ -27,7 +27,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch, pageType }) => {
     }
 
     const filters: SearchFilters = {
-      ...(pageType === 'services' ? { category: trimmedCategory } : { name: trimmedName }),
+      ...(pageType === 'services' ? { category: trimmedCategory } : { firstName: trimmedName }),
       city: trimmedCity,
       experience: trimmedExperience,
       rating: trimmedRating,
@@ -50,7 +50,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch, pageType }) => {
           ) : (
             <Input
               placeholder="Name"
-              value={name}
+              value={firstName}
               onChange={(e) => setName(e.target.value)}
               icon={<FiUser />}
             />

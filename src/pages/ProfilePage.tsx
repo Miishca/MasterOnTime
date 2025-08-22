@@ -15,8 +15,8 @@ const ProfilePage: React.FC = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const { data } = await getSpecialists({});
-      const found = data.find((s) => s.id === id);
+      const data  = await getSpecialists();
+      const found = data.find((s) => s.id.toString() === id);
       setSpecialist(found || null);
     };
     fetchData();

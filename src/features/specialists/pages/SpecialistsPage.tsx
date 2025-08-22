@@ -4,16 +4,16 @@ import Header from '../../../components/Layout/Header';
 import Footer from '../../../components/Layout/Footer';
 import LandingCarousel from '../components/LandingCarousel';
 import imageMap from '../../../utils/imageLoader';
-import { type UserProfile } from '../../../types';
+import { type Specialist } from '../../../types';
 import { getSpecialists } from '../services/specialistsApi';
 import SpecialistCard from '../components/SpecialistCard';
 
 const SpecialistsPage: React.FC = () => {
-  const [topSpecialists, setTopSpecialists] = useState<UserProfile[]>([]);
+  const [topSpecialists, setTopSpecialists] = useState<Specialist[]>([]);
   useEffect(() => {
     const fetchSpecialists = async () => {
       try {
-        const specialists = await getSpecialists({});
+        const specialists = await getSpecialists();
         const top3 = [...specialists]
           .sort((a, b) => {
             const ratingA = a.rating ?? 0;
@@ -130,9 +130,9 @@ const SpecialistsPage: React.FC = () => {
               key={spec.id}
               id={spec.id.toString()}
               tags={(spec as any).tags || []}
-              name={`${spec.firstName ?? ''} ${spec.lastName ?? ''}`}
-              city={spec.address?.city}
-              image={spec.profileImageUrl || 'specialist-1'}
+              firstName={`${spec.firstName ?? ''} ${spec.lastName ?? ''}`}
+              city={spec.city}
+              image={spec.image || 'specialist-1'}
             />
           ))}
         </div>

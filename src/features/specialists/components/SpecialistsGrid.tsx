@@ -17,8 +17,8 @@ const SpecialistsGrid: React.FC<SpecialistsGridProps> = ({
   useEffect(() => {
     setCurrentPage(1);
     const fetchSpecialists = async () => {
-      const response = await getSpecialists(filters);
-      const filteredSpecialists = response.data || [];
+      const response = await getSpecialists();
+      const filteredSpecialists = response || [];
       setSpecialists(filteredSpecialists);
       setTotalPages(Math.ceil(filteredSpecialists.length / itemsPerPage));
     };
@@ -45,7 +45,7 @@ const SpecialistsGrid: React.FC<SpecialistsGridProps> = ({
           <SpecialistCard
             key={specialist.id}
             id={specialist.id}
-            name={specialist.firstName}
+            firstName={specialist.firstName}
             profession={specialist.profession}
             city={specialist.city}
             tags={specialist.tags}
