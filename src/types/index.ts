@@ -53,6 +53,23 @@ export interface UserProfile {
   profileImageUrl?: string;
 }
 
+export interface RegisterRequest {
+  email: string;
+  password: string;
+  repeatPassword: string;
+  firstName: string;
+  lastName: string;
+  phoneNumber?: string;
+  profileImageUrl?: string;
+  address: {
+    city: string;
+    street: string;
+    zip: string;
+    country: string;
+  };
+  role: 'USER' | 'SPECIALIST' | 'ADMIN';
+}
+
 export interface SearchBarProps {
   onSearch: (filters: SearchFilters) => void;
   pageType: 'services' | 'people';

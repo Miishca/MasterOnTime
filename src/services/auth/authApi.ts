@@ -1,4 +1,4 @@
-import type { UserProfile } from '../../types';
+import type { RegisterRequest, UserProfile } from '../../types';
 
 const AUTH_API_BASE = 'http://localhost:8080/auth';
 const USER_API_BASE = 'http://localhost:8080/api/users';
@@ -19,22 +19,7 @@ export const login = async (email: string, password: string) => {
   return data.token;
 };
 
-export const register = async (userData: {
-  email: string;
-  password: string;
-  repeatPassword: string;
-  firstName: string;
-  lastName: string;
-  phoneNumber?: string;
-  profileImageUrl?: string;
-  address: {
-    city: string;
-    street: string;
-    zip: string;
-    country: string;
-  };
-  role: 'USER' | 'SPECIALIST' | 'ADMIN';
-}) => {
+export const register = async (userData: RegisterRequest) => {
   const res = await fetch(`${AUTH_API_BASE}/registration`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },

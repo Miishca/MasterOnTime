@@ -44,10 +44,8 @@ const RegisterPage: React.FC = () => {
     try {
       const res = await register(form);
       console.log('Registered:', res);
-      if (res.token) {
-        localStorage.setItem('token', res.token);
-        navigate('/profile');
-      }
+
+      navigate('/login');
     } catch (err: any) {
       console.error(err);
       alert(err.message || 'Registration failed');
