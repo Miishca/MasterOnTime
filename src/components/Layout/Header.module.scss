@@ -26,8 +26,12 @@
     gap: 10px;
 
     .active {
-      button {
+      button.secondary {
         color: var(--primary-color);
+      }
+
+      button.primary {
+        color: var(--text-color-footer);
       }
     }
   }
@@ -60,4 +64,3 @@
     }
   }
 }
-
