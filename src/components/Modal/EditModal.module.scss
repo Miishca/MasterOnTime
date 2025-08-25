@@ -1,7 +1,7 @@
 .overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.5);
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -14,6 +14,11 @@
   border-radius: 12px;
   max-width: 500px;
   width: 100%;
+
+  h2 {
+    font-size: 30px;
+    font-weight: 400;
+  }
 }
 
 .formGroup {
@@ -22,8 +27,8 @@
 
 label {
   display: block;
-  font-weight: bold;
   margin-bottom: 4px;
+  font-size: 20px;
 }
 
 input {

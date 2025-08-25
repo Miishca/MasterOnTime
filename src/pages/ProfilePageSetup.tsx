@@ -50,17 +50,43 @@ const ProfilePageSetup: React.FC = () => {
     setIsModalOpen(true);
   };
 
-  const handleSave = async (updatedData: Partial<UserProfile>) => {
-    if (!userProfile) return;
-    try {
-      const updated = await updateProfile(updatedData);
-      setUserProfile(updated);
-    } catch (err) {
-      setError('Failed to save profile changes. Please try again.');
-    } finally {
-      setIsModalOpen(false);
+  const handleSave = async (updatedData: Record<string, any>) => {
+  if (!userProfile) return;
+
+  try {
+    const payload: Partial<UserProfile> = {
+      ...userProfile,
+      ...updatedData,
+    };
+
+    const hasAddressFields =
+      'country' in updatedData ||
+      'city' in updatedData ||
+      'street' in updatedData ||
+      'zip' in updatedData;
+
+    if (hasAddressFields) {
+      payload.address = {
+        country: updatedData.country ?? userProfile.address?.country ?? '',
+        city: updatedData.city ?? userProfile.address?.city ?? '',
+        street: updatedData.street ?? userProfile.address?.street ?? '',
+        zip: updatedData.zip ?? userProfile.address?.zip ?? '',
+      };
+
+      delete (payload as any).country;
+      delete (payload as any).city;
+      delete (payload as any).street;
+      delete (payload as any).zip;
     }
-  };
+
+    const updated = await updateProfile(payload);
+    setUserProfile(updated);
+  } catch (err) {
+    setError('Failed to save profile changes. Please try again.');
+  } finally {
+    setIsModalOpen(false);
+  }
+};
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -154,14 +180,14 @@ const ProfilePageSetup: React.FC = () => {
               <span>Last name</span>
               <p>{userProfile.lastName}</p>
             </div>
-            {/* <div className={styles.detailsRow}>
+            <div className={styles.detailsRow}>
               <span>Date of birth</span>
-              <p>24 February, 20??</p>
+              <p>24 February, 2002</p>
             </div>
             <div className={styles.detailsRow}>
               <span>Sex</span>
-              <p>Fema??</p>
-            </div> */}
+              <p>Female</p>
+            </div>
           </div>
 
           <div className={`${styles.card} ${styles.cardMedium}`}>
@@ -171,7 +197,10 @@ const ProfilePageSetup: React.FC = () => {
                 className={styles.editIcon}
                 onClick={() =>
                   openEditModal({
-                    address: userProfile.address,
+                    country: userProfile.address?.country,
+                    city: userProfile.address?.city,
+                    street: userProfile.address?.street,
+                    zip: userProfile.address?.zip,
                   })
                 }
               >

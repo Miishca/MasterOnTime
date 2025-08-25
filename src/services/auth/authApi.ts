@@ -65,21 +65,13 @@ export const updateProfile = async (
   const token = getToken();
   if (!token) throw new Error('No authentication token found.');
 
-  const payload = {
-    firstName: userData.firstName || '',
-    lastName: userData.lastName || '',
-    email: userData.email || '',
-    phoneNumber: userData.phoneNumber || '',
-    address: userData.address || {},
-  };
-
   const res = await fetch(`${USER_API_BASE}/me`, {
     method: 'PUT',
     headers: {
       Authorization: `Bearer ${token}`,
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify(payload),
+    body: JSON.stringify(userData),
   });
 
   if (!res.ok) {
