@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Header from '../components/Layout/Header';
 import Footer from '../components/Layout/Footer';
 import styles from './ProfilePageSetup.module.scss';
@@ -6,44 +6,17 @@ import type { UserProfile } from '../types';
 import imageMap from '../utils/imageLoader';
 import { useNavigate } from 'react-router-dom';
 import EditModal from '../components/Modal/EditModal';
-import {
-  getMyProfile,
-  getToken,
-  updateProfile,
-} from '../services/auth/authApi';
+import { updateProfile } from '../services/auth/authApi';
+import { useUserProfile } from '../hooks/useUserProfile';
+import Loader from '../components/Loader/Loader';
+import useScrollToTop from '../hooks/useScrollToTop';
 
 const ProfilePageSetup: React.FC = () => {
-  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+  useScrollToTop();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalData, setModalData] = useState<Record<string, any>>({});
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const fetchProfile = async () => {
-      setLoading(true);
-      setError(null);
-
-      const token = getToken();
-      if (!token) {
-        navigate('/login');
-        return;
-      }
-
-      try {
-        const profileData = await getMyProfile();
-        setUserProfile(profileData);
-      } catch (err) {
-        setError('Failed to load profile data. Please try again.');
-        navigate('/login');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProfile();
-  }, [navigate]);
+  const { userProfile, setUserProfile, loading, error } = useUserProfile();
 
   const openEditModal = (data: Record<string, any>) => {
     setModalData(data);
@@ -51,42 +24,42 @@ const ProfilePageSetup: React.FC = () => {
   };
 
   const handleSave = async (updatedData: Record<string, any>) => {
-  if (!userProfile) return;
+    if (!userProfile) return;
 
-  try {
-    const payload: Partial<UserProfile> = {
-      ...userProfile,
-      ...updatedData,
-    };
-
-    const hasAddressFields =
-      'country' in updatedData ||
-      'city' in updatedData ||
-      'street' in updatedData ||
-      'zip' in updatedData;
-
-    if (hasAddressFields) {
-      payload.address = {
-        country: updatedData.country ?? userProfile.address?.country ?? '',
-        city: updatedData.city ?? userProfile.address?.city ?? '',
-        street: updatedData.street ?? userProfile.address?.street ?? '',
-        zip: updatedData.zip ?? userProfile.address?.zip ?? '',
+    try {
+      const payload: Partial<UserProfile> = {
+        ...userProfile,
+        ...updatedData,
       };
 
-      delete (payload as any).country;
-      delete (payload as any).city;
-      delete (payload as any).street;
-      delete (payload as any).zip;
-    }
+      const hasAddressFields =
+        'country' in updatedData ||
+        'city' in updatedData ||
+        'street' in updatedData ||
+        'zip' in updatedData;
 
-    const updated = await updateProfile(payload);
-    setUserProfile(updated);
-  } catch (err) {
-    setError('Failed to save profile changes. Please try again.');
-  } finally {
-    setIsModalOpen(false);
-  }
-};
+      if (hasAddressFields) {
+        payload.address = {
+          country: updatedData.country ?? userProfile.address?.country ?? '',
+          city: updatedData.city ?? userProfile.address?.city ?? '',
+          street: updatedData.street ?? userProfile.address?.street ?? '',
+          zip: updatedData.zip ?? userProfile.address?.zip ?? '',
+        };
+
+        delete (payload as any).country;
+        delete (payload as any).city;
+        delete (payload as any).street;
+        delete (payload as any).zip;
+      }
+
+      const updated = await updateProfile(payload);
+      setUserProfile(updated);
+    } catch (err) {
+      console.error('Failed to save profile changes', err);
+    } finally {
+      setIsModalOpen(false);
+    }
+  };
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -97,9 +70,7 @@ const ProfilePageSetup: React.FC = () => {
     return (
       <div className={styles.container}>
         <Header />
-        <div className={styles.loaderContainer}>
-          <div className={styles.spinner}></div>
-        </div>
+        <Loader />
         <Footer />
       </div>
     );

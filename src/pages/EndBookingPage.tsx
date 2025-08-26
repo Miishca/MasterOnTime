@@ -4,10 +4,40 @@ import Header from '../components/Layout/Header';
 import Footer from '../components/Layout/Footer';
 import imageMap from '../utils/imageLoader';
 import styles from './EndBookingPage.module.scss';
+import { useUserProfile } from '../hooks/useUserProfile';
+import { updateProfile } from '../services/auth/authApi';
+import Loader from '../components/Loader/Loader';
+import useScrollToTop from '../hooks/useScrollToTop';
 
 const EndBookingPage: React.FC = () => {
+  useScrollToTop();
+  const { userProfile, setUserProfile, loading, error } = useUserProfile();
   const navigate = useNavigate();
-  const [paymentMethod, setPaymentMethod] = useState<'card' | 'apple' | 'wallet'>('card');
+  const [paymentMethod, setPaymentMethod] = useState<
+    'card' | 'apple' | 'wallet'
+  >('card');
+
+  const handleConfirm = async () => {
+    if (!userProfile) return;
+    try {
+      const updated = await updateProfile(userProfile);
+      setUserProfile(updated);
+      navigate('/profile', { state: { scrollToTop: true } });
+    } catch (err) {
+      console.error('Failed to save profile', err);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className={styles.container}>
+        <Header />
+        <Loader />
+        <Footer />
+      </div>
+    );
+  }
+  if (error || !userProfile) return <div>{error || 'No profile found'}</div>;
 
   return (
     <div className={styles.container}>
@@ -30,19 +60,56 @@ const EndBookingPage: React.FC = () => {
 
               <div className={styles.formGrid}>
                 <div className={styles.field}>
-                  <input type="text" placeholder="First Name" />
+                  <input
+                    type="text"
+                    placeholder="First Name"
+                    value={userProfile.firstName || ''}
+                    onChange={(e) =>
+                      setUserProfile({
+                        ...userProfile,
+                        firstName: e.target.value,
+                      })
+                    }
+                  />
                 </div>
 
                 <div className={styles.field}>
-                  <input type="text" placeholder="Last Name" />
+                  <input
+                    type="text"
+                    placeholder="Last Name"
+                    value={userProfile.lastName || ''}
+                    onChange={(e) =>
+                      setUserProfile({
+                        ...userProfile,
+                        lastName: e.target.value,
+                      })
+                    }
+                  />
                 </div>
 
                 <div className={styles.field}>
-                  <input type="tel" placeholder="Phone number" />
+                  <input
+                    type="tel"
+                    placeholder="Phone number"
+                    value={userProfile.phoneNumber || ''}
+                    onChange={(e) =>
+                      setUserProfile({
+                        ...userProfile,
+                        phoneNumber: e.target.value,
+                      })
+                    }
+                  />
                 </div>
 
                 <div className={styles.field}>
-                  <input type="email" placeholder="Email" />
+                  <input
+                    type="email"
+                    placeholder="Email"
+                    value={userProfile.email || ''}
+                    onChange={(e) =>
+                      setUserProfile({ ...userProfile, email: e.target.value })
+                    }
+                  />
                 </div>
               </div>
             </section>
@@ -82,19 +149,28 @@ const EndBookingPage: React.FC = () => {
 
                   <div className={styles.field}>
                     <div className={styles.inputWithIcon}>
-                     <input type="text" placeholder="Card Number" />
+                      <input type="text" placeholder="Card Number" />
                     </div>
                   </div>
 
                   <div className={styles.row3}>
                     <div className={styles.field}>
                       <div className={styles.row}>
-                        <div className={styles.selectLike}><span>MM</span><span className={styles.chev} /></div>
-                        <div className={styles.selectLike}><span>YYYY</span><span className={styles.chev} /></div>
+                        <div className={styles.selectLike}>
+                          <span>MM</span>
+                          <span className={styles.chev} />
+                        </div>
+                        <div className={styles.selectLike}>
+                          <span>YYYY</span>
+                          <span className={styles.chev} />
+                        </div>
                       </div>
                     </div>
                     <div className={styles.field}>
-                      <div className={styles.selectLike}><span>CVV</span><span className={styles.chev} /></div>
+                      <div className={styles.selectLike}>
+                        <span>CVV</span>
+                        <span className={styles.chev} />
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -119,7 +195,9 @@ const EndBookingPage: React.FC = () => {
 
               <div className={styles.summaryItem}>
                 <div className={styles.label}>Location</div>
-                <div className={styles.value}>Lot 7, Industrial Street, Kyiv</div>
+                <div className={styles.value}>
+                  Lot 7, Industrial Street, Kyiv
+                </div>
               </div>
 
               <div className={styles.summaryItem}>
@@ -138,7 +216,11 @@ const EndBookingPage: React.FC = () => {
               </div>
             </div>
 
-            <button type="button" className={styles.confirmButton}>
+            <button
+              type="button"
+              className={styles.confirmButton}
+              onClick={handleConfirm}
+            >
               Confirm Booking
             </button>
           </aside>
