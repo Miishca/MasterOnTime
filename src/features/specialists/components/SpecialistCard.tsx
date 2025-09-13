@@ -2,21 +2,14 @@ import React from 'react';
 import styles from './SpecialistCard.module.scss';
 import imageMap from '../../../utils/imageLoader';
 import { useNavigate } from 'react-router-dom';
+import type { Specialist } from '../../../types';
 
-interface SpecialistCardProps {
-  id: string;
-  firstName: string;
-  profession?: string;
-  city?: string;
-  tags?: string[];
-  image?: string;
-}
-
-const SpecialistCard: React.FC<SpecialistCardProps> = ({
+const SpecialistCard: React.FC<Specialist> = ({
   id,
-  firstName: firstName,
+  firstName,
+  lastName,
+  image,
   tags,
-  image = 'specialist-1',
 }) => {
   const navigate = useNavigate();
   const handleCardClick = () => {
@@ -26,8 +19,8 @@ const SpecialistCard: React.FC<SpecialistCardProps> = ({
   return (
     <div className={styles.card} onClick={handleCardClick}>
       <img
-        src={imageMap[image]}
-        alt={`${firstName}'s profile`}
+        src={image || imageMap['default']}
+        alt={`${firstName} ${lastName}'s profile`}
         className={styles.cardImage}
       />
       <h3 className={styles.cardName}>{firstName}</h3>

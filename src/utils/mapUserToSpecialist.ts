@@ -1,13 +1,15 @@
 import type { Specialist, UserProfile } from '../types';
 
-export function mapUserToSpecialist(user: UserProfile): Specialist {
+export function mapUserToSpecialist(
+  user: UserProfile & { username?: string }
+): Specialist {
   return {
     id: user.id.toString(),
-    firstName: user.firstName || 'Unknown',
+    firstName: user.firstName || user.username || 'Unknown',
     lastName: user.lastName || '',
     email: user.email,
     profession: 'General Specialist',
-    city: user.address?.city || 'Kyiv',
+    city: user.address?.city || 'Unknown city',
     tags: ['service', 'help'],
     issues: ['experience needed'],
     category: 'Business Services',

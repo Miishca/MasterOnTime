@@ -1,22 +1,37 @@
 import React, { useState } from 'react';
 import styles from './SearchBar.module.scss';
-import { FiSearch, FiMapPin, FiBriefcase, FiStar, FiUser } from 'react-icons/fi';
+// import {
+//   FiSearch,
+//   FiMapPin,
+//   FiBriefcase,
+//   FiStar,
+//   FiUser,
+// } from 'react-icons/fi';
 import type { SearchBarProps, SearchFilters } from '../../../types';
 import Input from '../../../components/Input/Input';
 import Button from '../../../components/Button/Button';
 
-const SearchBar: React.FC<SearchBarProps> = ({ onSearch, pageType }) => {
-  const [category, setCategory] = useState('');
-  const [firstName, setName] = useState('');
-  const [city, setCity] = useState('');
-  const [experience, setExperience] = useState('');
-  const [rating, setRating] = useState('');
+const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
+  const [serviceType, setServiceType] = useState('');
+  const [location, setLocation] = useState('');
+  // const [category, setCategory] = useState('');
+  // const [firstName, setName] = useState('');
+  // const [experience, setExperience] = useState('');
+  // const [rating, setRating] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+ const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
+    const trimmedServiceType = serviceType.trim();
+    const trimmedLocation = location.trim();
+
+    const filters: SearchFilters = {
+      serviceType: trimmedServiceType,
+      location: trimmedLocation,
+    };
+    /*
     const trimmedCategory = category.trim();
     const trimmedName = firstName.trim();
-    const trimmedCity = city.trim();
     const trimmedExperience = experience.trim();
     const trimmedRating = rating.trim();
 
@@ -26,12 +41,15 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch, pageType }) => {
       return;
     }
 
-    const filters: SearchFilters = {
-      ...(pageType === 'services' ? { category: trimmedCategory } : { firstName: trimmedName }),
-      city: trimmedCity,
-      experience: trimmedExperience,
-      rating: trimmedRating,
-    };
+    if (pageType === 'services') {
+      filters.category = trimmedCategory;
+    } else if (pageType === 'people') {
+      filters.name = trimmedName;
+    }
+
+    filters.experience = trimmedExperience;
+    filters.rating = trimmedRating;
+    */
 
     onSearch(filters);
   };
@@ -40,7 +58,20 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch, pageType }) => {
     <div className={styles.container}>
       <form onSubmit={handleSubmit} className={styles.searchBar}>
         <div className={styles.inputGroup}>
-          {pageType === 'services' ? (
+          <Input
+            placeholder="Service type (e.g. Plumbing)"
+            value={serviceType}
+            onChange={(e) => setServiceType(e.target.value)}
+            // icon={<FiBriefcase />}
+          />
+          <span className={styles.divider}></span>
+          <Input
+            placeholder="Location (e.g. Kyiv)"
+            value={location}
+            onChange={(e) => setLocation(e.target.value)}
+            // icon={<FiMapPin />}
+          />
+          {/* {pageType === 'services' ? (
             <Input
               placeholder="Category"
               value={category}
@@ -75,7 +106,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch, pageType }) => {
             value={rating}
             onChange={(e) => setRating(e.target.value)}
             icon={<FiStar />}
-          />
+          /> */}
         </div>
         <Button label="Search" variant="searchButton" />
       </form>

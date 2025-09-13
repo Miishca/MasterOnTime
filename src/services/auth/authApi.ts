@@ -1,7 +1,9 @@
 import type { RegisterRequest, UserProfile } from '../../types';
 
-const AUTH_API_BASE = 'http://localhost:8080/auth';
-const USER_API_BASE = 'http://localhost:8080/api/users';
+const API_BASE = import.meta.env.VITE_API_BASE;
+
+const AUTH_API_BASE = `${API_BASE}/auth`;
+const USER_API_BASE = `${API_BASE}/api/users`;
 
 export const getToken = () => localStorage.getItem('token');
 
@@ -35,7 +37,6 @@ export const register = async (userData: RegisterRequest) => {
   if (data.token) localStorage.setItem('token', data.token);
   return data;
 };
-
 
 export const getMyProfile = async (): Promise<UserProfile> => {
   const token = getToken();

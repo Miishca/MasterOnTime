@@ -15,12 +15,11 @@ const SpecialistsGrid: React.FC<SpecialistsGridProps> = ({
   const gridRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    setCurrentPage(1);
     const fetchSpecialists = async () => {
       const response = await getSpecialists();
-      const filteredSpecialists = response || [];
-      setSpecialists(filteredSpecialists);
-      setTotalPages(Math.ceil(filteredSpecialists.length / itemsPerPage));
+      setSpecialists(response);
+      setTotalPages(Math.ceil(response.length / itemsPerPage));
+      setCurrentPage(1);
     };
     fetchSpecialists();
   }, [filters, itemsPerPage]);
@@ -41,15 +40,10 @@ const SpecialistsGrid: React.FC<SpecialistsGridProps> = ({
   return (
     <div className={styles.gridContainer} ref={gridRef}>
       <div className={styles.grid}>
-        {paginatedSpecialists.map((specialist) => (
+        {paginatedSpecialists.map((spec) => (
           <SpecialistCard
-            key={specialist.id}
-            id={specialist.id}
-            firstName={specialist.firstName}
-            profession={specialist.profession}
-            city={specialist.city}
-            tags={specialist.tags}
-            image={specialist.image}
+            key={spec.id}
+            {...spec}
           />
         ))}
       </div>

@@ -1,13 +1,46 @@
-
 // const API_BASE = 'http://localhost:8080/api/specialists';
+// const ADMIN_API = 'http://localhost:8080/api/admin/users/search';
 
-import type { UserProfile, Specialist } from "../../../types";
+const API_BASE = import.meta.env.VITE_API_BASE;
+
+// const SPECIALISTS_API = `${API_BASE}/api/specialists`;
+const ADMIN_API = `${API_BASE}/api/admin/users/search`;
+
+
+import type { UserProfile, Specialist, SearchFilters } from '../../../types';
 import { mapUserToSpecialist } from '../../../utils/mapUserToSpecialist';
 
-export const getSpecialists = async (): Promise<Specialist[]> => {
+export const getSpecialists = async (
+  filters: SearchFilters = {}
+): Promise<Specialist[]> => {
   try {
-    const res = await fetch("http://localhost:8080/api/users");
-    if (!res.ok) throw new Error("Failed to fetch specialists");
+    const hasFilters = filters.serviceType || filters.location;
+
+    let res: Response;
+
+    if (hasFilters) {
+      const params = new URLSearchParams();
+      if (filters.serviceType) params.append('serviceType', filters.serviceType);
+      if (filters.location) params.append('location', filters.location);
+
+      res = await fetch(`${API_BASE}/search?${params.toString()}`, {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token') || ''}`,
+          'Content-Type': 'application/json',
+        },
+      });
+    } else {
+      res = await fetch(ADMIN_API, {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token') || ''}`,
+          'Content-Type': 'application/json',
+        },
+      });
+    }
+
+    if (!res.ok) throw new Error('Failed to fetch specialists');
 
     const data: UserProfile[] = await res.json();
 
@@ -17,7 +50,6 @@ export const getSpecialists = async (): Promise<Specialist[]> => {
     return [];
   }
 };
-
 
 // export const getSpecialists = async (filters: SearchFilters): Promise<UserProfile[]> => {
 //   const token = getToken();

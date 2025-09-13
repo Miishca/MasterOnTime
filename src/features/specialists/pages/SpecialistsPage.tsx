@@ -128,11 +128,7 @@ const SpecialistsPage: React.FC = () => {
           {topSpecialists.map((spec) => (
             <SpecialistCard
               key={spec.id}
-              id={spec.id.toString()}
-              tags={(spec as any).tags || []}
-              firstName={`${spec.firstName ?? ''} ${spec.lastName ?? ''}`}
-              city={spec.city}
-              image={spec.image || 'specialist-1'}
+              {...spec}
             />
           ))}
         </div>
