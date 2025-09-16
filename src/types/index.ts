@@ -51,6 +51,8 @@ export interface UserProfile {
   };
   phoneNumber?: string;
   profileImageUrl?: string;
+  dateOfBirth?: string;
+  gender?: 'MALE' | 'FEMALE' | 'OTHER';
 }
 
 export interface RegisterRequest {
@@ -85,6 +87,22 @@ export interface SearchFilters {
   rating?: string;
   tags?: string;
   id?: string;
+}
+export interface SpecialistsSearchFilters {
+  serviceName?: string;
+  firstName?: string;
+  city?: string;
+  categories?: string[];
+  minExperience?: number;
+  minRating?: number;
+}
+export interface SearchFiltersUI {
+  serviceName?: string;
+  firstName?: string;
+  city?: string;
+  categories?: string;
+  minExperience?: string;
+  minRating?: string;
 }
 
 export interface PaginationProps {

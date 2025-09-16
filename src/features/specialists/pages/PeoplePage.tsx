@@ -46,7 +46,7 @@ const PeoplePage: React.FC = () => {
   return (
     <div className={styles.container}>
       <Header />
-      <SearchBar onSearch={handleSearch} pageType="people" />
+      <SearchBar onSearch={handleSearch} />
       <h1>Meet Our Professionals</h1>
       <p className={styles.textContent}>
         Browse a diverse community of trusted specialists ready to help you.

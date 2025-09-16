@@ -1,6 +1,6 @@
 import type { RegisterRequest, UserProfile } from '../../types';
 
-const API_BASE = import.meta.env.VITE_API_BASE;
+const API_BASE = import.meta.env.DEV ? '' : (import.meta.env.VITE_API_BASE || '');
 
 const AUTH_API_BASE = `${API_BASE}/auth`;
 const USER_API_BASE = `${API_BASE}/api/users`;
@@ -14,9 +14,12 @@ export const login = async (email: string, password: string) => {
     body: JSON.stringify({ email, password }),
   });
 
-  if (!res.ok) throw new Error('Login failed');
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(`Login failed: ${res.status} ${text}`);
+  }
 
-  const data = await res.json();
+  const data: { token: string } = await res.json();
   localStorage.setItem('token', data.token);
   return data.token;
 };
@@ -30,11 +33,10 @@ export const register = async (userData: RegisterRequest) => {
 
   if (!res.ok) {
     const errorText = await res.text();
-    throw new Error(`Registration failed: ${errorText}`);
+    throw new Error(`Registration failed: ${res.status} ${errorText}`);
   }
 
-  const data = await res.json();
-  if (data.token) localStorage.setItem('token', data.token);
+  const data: UserProfile = await res.json();
   return data;
 };
 
@@ -45,23 +47,21 @@ export const getMyProfile = async (): Promise<UserProfile> => {
   const res = await fetch(`${USER_API_BASE}/me`, {
     method: 'GET',
     headers: {
-      Authorization: `Bearer ${token}`,
-      'Content-Type': 'application/json',
-    },
+      Authorization: `Bearer ${token}` },
   });
 
   if (!res.ok) {
     const errorText = await res.text();
+    // eslint-disable-next-line no-console
     console.error('API Error Response:', errorText);
     throw new Error(`Failed to fetch profile: ${res.status} ${errorText}`);
   }
 
-  const data: UserProfile = await res.json();
-  return data;
+  return res.json();
 };
 
 export const updateProfile = async (
-  userData: Partial<UserProfile>
+  userData: Partial<UserProfile> & { profileImageBase64?: string }
 ): Promise<UserProfile> => {
   const token = getToken();
   if (!token) throw new Error('No authentication token found.');
@@ -80,6 +80,5 @@ export const updateProfile = async (
     throw new Error(`Failed to update user profile: ${res.status} ${text}`);
   }
 
-  const updatedProfile: UserProfile = await res.json();
-  return updatedProfile;
+  return res.json();
 };

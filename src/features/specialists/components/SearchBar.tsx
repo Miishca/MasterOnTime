@@ -1,55 +1,65 @@
 import React, { useState } from 'react';
 import styles from './SearchBar.module.scss';
-// import {
-//   FiSearch,
-//   FiMapPin,
-//   FiBriefcase,
-//   FiStar,
-//   FiUser,
-// } from 'react-icons/fi';
-import type { SearchBarProps, SearchFilters } from '../../../types';
+import {
+  FiSearch,
+  FiMapPin,
+  FiBriefcase,
+  FiStar,
+  FiUser,
+} from 'react-icons/fi';
+import type { SearchFiltersUI, SpecialistsSearchFilters } from '../../../types';
 import Input from '../../../components/Input/Input';
 import Button from '../../../components/Button/Button';
 
-const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
-  const [serviceType, setServiceType] = useState('');
-  const [location, setLocation] = useState('');
-  // const [category, setCategory] = useState('');
-  // const [firstName, setName] = useState('');
-  // const [experience, setExperience] = useState('');
-  // const [rating, setRating] = useState('');
+type Props = {
+  onSearch: (filters: SpecialistsSearchFilters) => void;
+};
+const SearchBar: React.FC<Props> = ({ onSearch }) => {
+  const [form, setForm] = useState<SearchFiltersUI>({
+    serviceName: '',
+    firstName: '',
+    city: '',
+    categories: '',
+    minExperience: '',
+    minRating: '',
+  });
 
- const handleSubmit = (e: React.FormEvent) => {
+  const handleChange = (key: keyof SearchFiltersUI, value: string) =>
+    setForm((s) => ({ ...s, [key]: value }));
+
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    const trimmedServiceType = serviceType.trim();
-    const trimmedLocation = location.trim();
+    const filters: SpecialistsSearchFilters = {};
 
-    const filters: SearchFilters = {
-      serviceType: trimmedServiceType,
-      location: trimmedLocation,
-    };
-    /*
-    const trimmedCategory = category.trim();
-    const trimmedName = firstName.trim();
-    const trimmedExperience = experience.trim();
-    const trimmedRating = rating.trim();
+    if (form.serviceName?.trim()) filters.serviceName = form.serviceName.trim();
+    if (form.firstName?.trim()) filters.firstName = form.firstName.trim();
+    if (form.city?.trim()) filters.city = form.city.trim();
 
-    const parsedRating = trimmedRating ? parseFloat(trimmedRating) : undefined;
-    if (trimmedRating && (isNaN(parsedRating!) || parsedRating! < 1 || parsedRating! > 5)) {
-      alert('Rating must be a number between 1 and 5');
-      return;
+    if (form.categories?.trim()) {
+      filters.categories = form.categories
+        .split(',')
+        .map((s) => s.trim())
+        .filter(Boolean);
     }
 
-    if (pageType === 'services') {
-      filters.category = trimmedCategory;
-    } else if (pageType === 'people') {
-      filters.name = trimmedName;
+    if (form.minExperience?.trim()) {
+      const n = Number(form.minExperience);
+      if (!Number.isFinite(n) || n < 0) {
+        alert('Min experience must be a non-negative number');
+        return;
+      }
+      filters.minExperience = n;
     }
 
-    filters.experience = trimmedExperience;
-    filters.rating = trimmedRating;
-    */
+    if (form.minRating?.trim()) {
+      const r = Number(form.minRating);
+      if (!Number.isFinite(r) || r < 0 || r > 5) {
+        alert('Min rating must be between 0 and 5');
+        return;
+      }
+      filters.minRating = r;
+    }
 
     onSearch(filters);
   };
@@ -59,54 +69,50 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
       <form onSubmit={handleSubmit} className={styles.searchBar}>
         <div className={styles.inputGroup}>
           <Input
-            placeholder="Service type (e.g. Plumbing)"
-            value={serviceType}
-            onChange={(e) => setServiceType(e.target.value)}
-            // icon={<FiBriefcase />}
-          />
-          <span className={styles.divider}></span>
-          <Input
-            placeholder="Location (e.g. Kyiv)"
-            value={location}
-            onChange={(e) => setLocation(e.target.value)}
-            // icon={<FiMapPin />}
-          />
-          {/* {pageType === 'services' ? (
-            <Input
-              placeholder="Category"
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-              icon={<FiSearch />}
-            />
-          ) : (
-            <Input
-              placeholder="Name"
-              value={firstName}
-              onChange={(e) => setName(e.target.value)}
-              icon={<FiUser />}
-            />
-          )}
-          <span className={styles.divider}></span>
-          <Input
-            placeholder="City"
-            value={city}
-            onChange={(e) => setCity(e.target.value)}
-            icon={<FiMapPin />}
-          />
-          <span className={styles.divider}></span>
-          <Input
-            placeholder="Experience"
-            value={experience}
-            onChange={(e) => setExperience(e.target.value)}
+            placeholder="Service"
+            value={form.serviceName ?? ''}
+            onChange={(e) => handleChange('serviceName', e.target.value)}
             icon={<FiBriefcase />}
           />
           <span className={styles.divider}></span>
           <Input
-            placeholder="1-5 Rating"
-            value={rating}
-            onChange={(e) => setRating(e.target.value)}
+            placeholder="First name"
+            value={form.firstName ?? ''}
+            onChange={(e) => handleChange('firstName', e.target.value)}
+            icon={<FiUser />}
+          />
+          <span className={styles.divider} />
+
+          <Input
+            placeholder="City"
+            value={form.city ?? ''}
+            onChange={(e) => handleChange('city', e.target.value)}
+            icon={<FiMapPin />}
+          />
+          <span className={styles.divider} />
+
+          <Input
+            placeholder="Categories"
+            value={form.categories ?? ''}
+            onChange={(e) => handleChange('categories', e.target.value)}
+            icon={<FiSearch />}
+          />
+          <span className={styles.divider} />
+
+          <Input
+            placeholder="Experience"
+            value={form.minExperience ?? ''}
+            onChange={(e) => handleChange('minExperience', e.target.value)}
+            icon={<FiBriefcase />}
+          />
+          <span className={styles.divider} />
+
+          <Input
+            placeholder="Rating"
+            value={form.minRating ?? ''}
+            onChange={(e) => handleChange('minRating', e.target.value)}
             icon={<FiStar />}
-          /> */}
+          />
         </div>
         <Button label="Search" variant="searchButton" />
       </form>
