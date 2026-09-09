@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import Header from '../components/Layout/Header';
 import Footer from '../components/Layout/Footer';
 import styles from './ProfilePageSetup.module.scss';
@@ -7,6 +7,11 @@ import imageMap from '../utils/imageLoader';
 import { useNavigate } from 'react-router-dom';
 import EditModal from '../components/Modal/EditModal';
 import { updateProfile } from '../services/auth/authApi';
+import {
+  ACCEPTED_IMAGE_TYPES,
+  readImageAsBase64,
+  validateImageFile,
+} from '../utils/imageFile';
 import { useUserProfile } from '../hooks/useUserProfile';
 import Loader from '../components/Loader/Loader';
 import useScrollToTop from '../hooks/useScrollToTop';
@@ -15,8 +20,36 @@ const ProfilePageSetup: React.FC = () => {
   useScrollToTop();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalData, setModalData] = useState<Record<string, any>>({});
+  const [photoBusy, setPhotoBusy] = useState(false);
+  const [photoError, setPhotoError] = useState<string | null>(null);
+  const photoInputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
   const { userProfile, setUserProfile, loading, error } = useUserProfile();
+
+  const handlePhotoSelected = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    e.target.value = '';
+    if (!file || !userProfile) return;
+
+    setPhotoError(null);
+    const problem = validateImageFile(file);
+    if (problem) {
+      setPhotoError(problem);
+      return;
+    }
+
+    setPhotoBusy(true);
+    try {
+      const profileImageBase64 = await readImageAsBase64(file);
+      const updated = await updateProfile({ ...userProfile, profileImageBase64 });
+      setUserProfile(updated);
+    } catch (err) {
+      console.error('Failed to update profile photo', err);
+      setPhotoError('Could not update the photo. Please try again.');
+    } finally {
+      setPhotoBusy(false);
+    }
+  };
 
   const openEditModal = (data: Record<string, any>) => {
     setModalData(data);
@@ -105,6 +138,26 @@ const ProfilePageSetup: React.FC = () => {
               className={styles.avatar}
             />
           </div>
+          <input
+            ref={photoInputRef}
+            type="file"
+            accept={ACCEPTED_IMAGE_TYPES.join(',')}
+            onChange={handlePhotoSelected}
+            hidden
+          />
+          <button
+            type="button"
+            className={styles.changePhoto}
+            onClick={() => photoInputRef.current?.click()}
+            disabled={photoBusy}
+          >
+            {photoBusy ? 'Uploading…' : 'Change photo'}
+          </button>
+          {photoError && (
+            <p className={styles.photoError} role="alert">
+              {photoError}
+            </p>
+          )}
 
           <div className={styles.leftInfoCard}>
             <h3 className={styles.name}>

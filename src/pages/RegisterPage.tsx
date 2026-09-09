@@ -1,6 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ApiError, isAuthenticated, register } from '../services/auth/authApi';
+import {
+  ACCEPTED_IMAGE_TYPES,
+  readImageAsBase64,
+  validateImageFile,
+} from '../utils/imageFile';
 import styles from './RegisterPage.module.scss';
 
 const INITIAL_FORM = {
@@ -10,24 +15,27 @@ const INITIAL_FORM = {
   firstName: '',
   lastName: '',
   phoneNumber: '',
-  profileImageUrl: '',
   address: { street: '', city: '', zip: '', country: '' },
-  role: 'USER' as 'USER' | 'SPECIALIST',
 };
 
 const RegisterPage: React.FC = () => {
   const navigate = useNavigate();
   const [form, setForm] = useState(INITIAL_FORM);
+  const [photo, setPhoto] = useState<{ file: File; preview: string } | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (isAuthenticated()) navigate('/', { replace: true });
   }, [navigate]);
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
+  // Revoke the object URL when the preview changes or the page unmounts.
+  useEffect(() => () => {
+    if (photo) URL.revokeObjectURL(photo.preview);
+  }, [photo]);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   };
@@ -35,6 +43,31 @@ const RegisterPage: React.FC = () => {
   const handleAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, address: { ...prev.address, [name]: value } }));
+  };
+
+  const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setError(null);
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const problem = validateImageFile(file);
+    if (problem) {
+      setError(problem);
+      e.target.value = '';
+      return;
+    }
+    setPhoto((prev) => {
+      if (prev) URL.revokeObjectURL(prev.preview);
+      return { file, preview: URL.createObjectURL(file) };
+    });
+  };
+
+  const clearPhoto = () => {
+    setPhoto((prev) => {
+      if (prev) URL.revokeObjectURL(prev.preview);
+      return null;
+    });
+    if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -49,10 +82,11 @@ const RegisterPage: React.FC = () => {
 
     setSubmitting(true);
     try {
+      const profileImageBase64 = photo ? await readImageAsBase64(photo.file) : undefined;
       await register({
         ...form,
         phoneNumber: form.phoneNumber || undefined,
-        profileImageUrl: form.profileImageUrl || undefined,
+        profileImageBase64,
       });
       navigate('/login', { replace: true, state: { registered: true } });
     } catch (err) {
@@ -108,11 +142,26 @@ const RegisterPage: React.FC = () => {
             value={form.phoneNumber} onChange={handleChange} />
         </label>
 
-        <label className={styles.field}>
-          <span>Profile image URL <em>(optional)</em></span>
-          <input name="profileImageUrl" type="url" inputMode="url"
-            value={form.profileImageUrl} onChange={handleChange} />
-        </label>
+        <div className={styles.field}>
+          <span>Profile photo <em>(optional)</em></span>
+          <div className={styles.photoRow}>
+            {photo && (
+              <img src={photo.preview} alt="Selected profile" className={styles.photoPreview} />
+            )}
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept={ACCEPTED_IMAGE_TYPES.join(',')}
+              onChange={handlePhotoChange}
+            />
+            {photo && (
+              <button type="button" className={styles.linkButton} onClick={clearPhoto}>
+                Remove
+              </button>
+            )}
+          </div>
+          <small className={styles.hint}>PNG, JPEG or WebP, up to 2 MB.</small>
+        </div>
 
         <fieldset className={styles.fieldset}>
           <legend>Address</legend>
@@ -139,14 +188,6 @@ const RegisterPage: React.FC = () => {
               value={form.address.country} onChange={handleAddressChange} />
           </label>
         </fieldset>
-
-        <label className={styles.field}>
-          <span>I am registering as</span>
-          <select name="role" value={form.role} onChange={handleChange}>
-            <option value="USER">Client</option>
-            <option value="SPECIALIST">Specialist</option>
-          </select>
-        </label>
 
         {error && (
           <p className={styles.error} role="alert">

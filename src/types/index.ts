@@ -62,15 +62,16 @@ export interface RegisterRequest {
   firstName: string;
   lastName: string;
   phoneNumber?: string;
-  profileImageUrl?: string;
+  // base64 payload without the "data:<mime>;base64," prefix
+  profileImageBase64?: string;
   address: {
     city: string;
     street: string;
     zip: string;
     country: string;
   };
-  role: 'USER' | 'SPECIALIST' | 'ADMIN';
 }
+// Роль призначає лише адмін (PATCH /api/admin/users/:id/role) — не при реєстрації.
 
 export interface SearchBarProps {
   onSearch: (filters: SearchFilters) => void;
