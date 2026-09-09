@@ -6,7 +6,7 @@ import ProfileSection from '../features/specialists/components/ProfileSection';
 import { useEffect, useState } from 'react';
 import ProfileContent from '../features/specialists/components/ProfileContent';
 import type { Specialist } from '../types';
-import { getSpecialists } from '../features/specialists/services/specialistsApi';
+import { getSpecialistById } from '../features/specialists/services/specialistsApi';
 
 const ProfilePage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -14,12 +14,14 @@ const ProfilePage: React.FC = () => {
   const location = useLocation();
 
   useEffect(() => {
-    const fetchData = async () => {
-      const data  = await getSpecialists();
-      const found = data.find((s) => s.id.toString() === id);
-      setSpecialist(found || null);
+    if (!id) return;
+    let cancelled = false;
+    getSpecialistById(id).then((data) => {
+      if (!cancelled) setSpecialist(data);
+    });
+    return () => {
+      cancelled = true;
     };
-    fetchData();
   }, [id]);
 
   useEffect(() => {

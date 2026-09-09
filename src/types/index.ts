@@ -38,6 +38,22 @@ export interface Specialist {
   testimonials?: Testimonial[];
 }
 
+// Публічна проєкція спеціаліста з бекенду (GET /api/specialists*).
+// Навмисно без email / телефону / точної адреси / дати народження.
+export interface PublicSpecialist {
+  id: number;
+  firstName: string;
+  lastName: string;
+  city: string | null;
+  profession: string;
+  about: string;
+  rating: number;
+  experience: number;
+  tags: string[];
+  price: string;
+  profileImageUrl: string | null;
+}
+
 export interface UserProfile {
   id: number;
   email: string;

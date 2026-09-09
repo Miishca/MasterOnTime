@@ -15,8 +15,8 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({ specialist }) => {
       <div className={styles.left}>
         <div className={styles.avatarContainer}>
           <img
-            src={imageMap[specialist.image ?? 'default']}
-            alt={specialist.firstName}
+            src={specialist.image || imageMap['default']}
+            alt={fullName(specialist)}
             className={styles.avatar}
           />
         </div>
