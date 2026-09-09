@@ -3,6 +3,7 @@ import styles from './SpecialistCard.module.scss';
 import imageMap from '../../../utils/imageLoader';
 import { useNavigate } from 'react-router-dom';
 import type { Specialist } from '../../../types';
+import { fullName } from '../../../utils/fullName';
 
 const SpecialistCard: React.FC<Specialist> = ({
   id,
@@ -16,14 +17,16 @@ const SpecialistCard: React.FC<Specialist> = ({
     navigate(`/people/${id}`, { state: { scrollToTop: true } });
   };
 
+  const name = fullName({ firstName, lastName });
+
   return (
     <div className={styles.card} onClick={handleCardClick}>
       <img
         src={image || imageMap['default']}
-        alt={`${firstName} ${lastName}'s profile`}
+        alt={`${name}'s profile`}
         className={styles.cardImage}
       />
-      <h3 className={styles.cardName}>{firstName}</h3>
+      <h3 className={styles.cardName}>{name}</h3>
       <div className={styles.cardTags}>
         {tags?.map((tag, index) => (
           <span key={index} className={styles.cardTag}>

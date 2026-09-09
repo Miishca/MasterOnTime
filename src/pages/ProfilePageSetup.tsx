@@ -12,6 +12,7 @@ import {
   readImageAsBase64,
   validateImageFile,
 } from '../utils/imageFile';
+import { fullName } from '../utils/fullName';
 import { useUserProfile } from '../hooks/useUserProfile';
 import Loader from '../components/Loader/Loader';
 import useScrollToTop from '../hooks/useScrollToTop';
@@ -134,7 +135,7 @@ const ProfilePageSetup: React.FC = () => {
           <div className={styles.avatarContainer}>
             <img
               src={userProfile.profileImageUrl || imageMap['default']}
-              alt={`${userProfile.firstName} ${userProfile.lastName}`}
+              alt={fullName(userProfile)}
               className={styles.avatar}
             />
           </div>
@@ -160,9 +161,7 @@ const ProfilePageSetup: React.FC = () => {
           )}
 
           <div className={styles.leftInfoCard}>
-            <h3 className={styles.name}>
-              {userProfile.firstName} {userProfile.lastName}
-            </h3>
+            <h3 className={styles.name}>{fullName(userProfile)}</h3>
             <p className={styles.balance}>Balance: 100$</p>
             <p className={styles.contact}>
               <span className={styles.icon}>📍</span>{' '}

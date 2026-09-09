@@ -1,5 +1,6 @@
 import type { Specialist } from '../../../types';
 import imageMap from '../../../utils/imageLoader';
+import { fullName } from '../../../utils/fullName';
 import styles from './ProfileSection.module.scss';
 
 
@@ -31,9 +32,7 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({ specialist }) => {
         <button className={styles.book}>Book consultation</button>
       </div>
       <div className={styles.right}>
-        <h1>
-          {specialist.firstName} {specialist.lastName}
-        </h1>
+        <h1>{fullName(specialist)}</h1>
         <span className={styles.elements}>{specialist.profession}</span>
 
         <section>
