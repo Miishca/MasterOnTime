@@ -1,61 +1,86 @@
 import type { RegisterRequest, UserProfile } from '../../types';
 
-const API_BASE = import.meta.env.DEV ? '' : (import.meta.env.VITE_API_BASE || '');
+const API_BASE = import.meta.env.DEV ? '' : import.meta.env.VITE_API_BASE || '';
 
 const AUTH_API_BASE = `${API_BASE}/auth`;
 const USER_API_BASE = `${API_BASE}/api/users`;
 
-export const getToken = () => localStorage.getItem('token');
+const TOKEN_KEY = 'token';
 
-export const login = async (email: string, password: string) => {
+export const getToken = () => localStorage.getItem(TOKEN_KEY);
+export const setToken = (token: string) => localStorage.setItem(TOKEN_KEY, token);
+export const clearToken = () => localStorage.removeItem(TOKEN_KEY);
+export const isAuthenticated = () => Boolean(getToken());
+
+/**
+ * Thrown for any non-2xx API response. Carries the HTTP status and the
+ * human-readable message the backend sends as `{ message }`, plus optional
+ * Zod `issues` for form-level validation errors.
+ */
+export class ApiError extends Error {
+  status: number;
+  issues?: unknown;
+
+  constructor(status: number, message: string, issues?: unknown) {
+    super(message);
+    this.name = 'ApiError';
+    this.status = status;
+    this.issues = issues;
+  }
+}
+
+async function toApiError(res: Response): Promise<ApiError> {
+  let message = res.statusText || 'Request failed';
+  let issues: unknown;
+  try {
+    const body = await res.json();
+    if (typeof body?.message === 'string') message = body.message;
+    if (body?.issues) issues = body.issues;
+  } catch {
+    // non-JSON error body — keep the status text
+  }
+  return new ApiError(res.status, message, issues);
+}
+
+function authHeader(): Record<string, string> {
+  const token = getToken();
+  if (!token) throw new ApiError(401, 'You are not signed in');
+  return { Authorization: `Bearer ${token}` };
+}
+
+export const login = async (email: string, password: string): Promise<string> => {
   const res = await fetch(`${AUTH_API_BASE}/login`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ email, password }),
   });
 
-  if (!res.ok) {
-    const text = await res.text();
-    throw new Error(`Login failed: ${res.status} ${text}`);
-  }
+  if (!res.ok) throw await toApiError(res);
 
   const data: { token: string } = await res.json();
-  localStorage.setItem('token', data.token);
+  setToken(data.token);
   return data.token;
 };
 
-export const register = async (userData: RegisterRequest) => {
+export const register = async (userData: RegisterRequest): Promise<UserProfile> => {
   const res = await fetch(`${AUTH_API_BASE}/registration`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(userData),
   });
 
-  if (!res.ok) {
-    const errorText = await res.text();
-    throw new Error(`Registration failed: ${res.status} ${errorText}`);
-  }
+  if (!res.ok) throw await toApiError(res);
 
-  const data: UserProfile = await res.json();
-  return data;
+  return res.json();
 };
 
 export const getMyProfile = async (): Promise<UserProfile> => {
-  const token = getToken();
-  if (!token) throw new Error('No token found');
-
   const res = await fetch(`${USER_API_BASE}/me`, {
     method: 'GET',
-    headers: {
-      Authorization: `Bearer ${token}` },
+    headers: authHeader(),
   });
 
-  if (!res.ok) {
-    const errorText = await res.text();
-    // eslint-disable-next-line no-console
-    console.error('API Error Response:', errorText);
-    throw new Error(`Failed to fetch profile: ${res.status} ${errorText}`);
-  }
+  if (!res.ok) throw await toApiError(res);
 
   return res.json();
 };
@@ -63,22 +88,13 @@ export const getMyProfile = async (): Promise<UserProfile> => {
 export const updateProfile = async (
   userData: Partial<UserProfile> & { profileImageBase64?: string }
 ): Promise<UserProfile> => {
-  const token = getToken();
-  if (!token) throw new Error('No authentication token found.');
-
   const res = await fetch(`${USER_API_BASE}/me`, {
     method: 'PUT',
-    headers: {
-      Authorization: `Bearer ${token}`,
-      'Content-Type': 'application/json',
-    },
+    headers: { ...authHeader(), 'Content-Type': 'application/json' },
     body: JSON.stringify(userData),
   });
 
-  if (!res.ok) {
-    const text = await res.text();
-    throw new Error(`Failed to update user profile: ${res.status} ${text}`);
-  }
+  if (!res.ok) throw await toApiError(res);
 
   return res.json();
 };
