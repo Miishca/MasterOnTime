@@ -31,6 +31,9 @@ const EndBookingPage: React.FC = () => {
               <p className={styles.line}>
                 <strong>{booking.specialistName}</strong>
               </p>
+              {booking.serviceName && (
+                <p className={styles.line}>{booking.serviceName}</p>
+              )}
               <p className={styles.line}>{when}</p>
               {Number(booking.price) > 0 && (
                 <p className={styles.line}>Price: {booking.price}</p>

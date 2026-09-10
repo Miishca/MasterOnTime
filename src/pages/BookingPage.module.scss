@@ -19,9 +19,30 @@
 }
 
 .sub {
-  margin: 6px 0 28px;
+  margin: 6px 0 20px;
   color: var(--text-color-secondary);
   font-size: 18px;
+}
+
+.servicePicker {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0 0 24px;
+  max-width: 420px;
+  font-size: 14px;
+
+  span {
+    color: var(--text-color-secondary);
+  }
+
+  select {
+    padding: 9px 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: inherit;
+  }
 }
 
 .layout {

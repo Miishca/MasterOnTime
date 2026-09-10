@@ -8,6 +8,10 @@ import Loader from '../components/Loader/Loader';
 import { ApiError, isAuthenticated } from '../services/auth/authApi';
 import { getSpecialistById } from '../features/specialists/services/specialistsApi';
 import { createBooking, getAvailableSlots } from '../features/booking/bookingApi';
+import {
+  getSpecialistServices,
+  type ServiceItem,
+} from '../features/services/servicesApi';
 import type { Specialist } from '../types';
 import styles from './BookingPage.module.scss';
 
@@ -35,6 +39,10 @@ const BookingPage: React.FC = () => {
   const [booking, setBooking] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
+  // Services offered by this specialist. `serviceId === null` = generic 60-min consult.
+  const [services, setServices] = useState<ServiceItem[]>([]);
+  const [serviceId, setServiceId] = useState<number | null>(null);
+
   useEffect(() => {
     if (!isAuthenticated()) {
       navigate('/login', {
@@ -50,13 +58,16 @@ const BookingPage: React.FC = () => {
       if (s) setSpecialist(s);
       else setNotFound(true);
     });
+    getSpecialistServices(specialistId).then((cats) =>
+      setServices(cats.flatMap((c) => c.items))
+    );
   }, [specialistId]);
 
   useEffect(() => {
     if (!specialistId) return;
     setSlotsLoading(true);
     setError(null);
-    getAvailableSlots(Number(specialistId), localDate(date))
+    getAvailableSlots(Number(specialistId), localDate(date), serviceId ?? undefined)
       .then(setSlots)
       .catch((err) =>
         setError(
@@ -66,14 +77,18 @@ const BookingPage: React.FC = () => {
         )
       )
       .finally(() => setSlotsLoading(false));
-  }, [specialistId, date]);
+  }, [specialistId, date, serviceId]);
 
   const book = async (startTime: string) => {
     if (!specialistId) return;
     setBooking(startTime);
     setError(null);
     try {
-      const created = await createBooking(Number(specialistId), startTime);
+      const created = await createBooking(
+        Number(specialistId),
+        startTime,
+        serviceId ?? undefined
+      );
       navigate('/book/confirmation', { state: { booking: created } });
     } catch (err) {
       setError(
@@ -117,6 +132,25 @@ const BookingPage: React.FC = () => {
           {specialist.profession}
           {Number(specialist.price) > 0 && ` · ${specialist.price}`}
         </p>
+
+        {services.length > 0 && (
+          <label className={styles.servicePicker}>
+            <span>Service</span>
+            <select
+              value={serviceId ?? ''}
+              onChange={(e) =>
+                setServiceId(e.target.value ? Number(e.target.value) : null)
+              }
+            >
+              <option value="">General consultation (60 min)</option>
+              {services.map((s) => (
+                <option key={s.id} value={s.id}>
+                  {s.name} — {s.durationMinutes} min · {s.price}
+                </option>
+              ))}
+            </select>
+          </label>
+        )}
 
         <div className={styles.layout}>
           <div className={styles.calendarWrap}>

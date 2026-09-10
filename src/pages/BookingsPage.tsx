@@ -112,7 +112,10 @@ const BookingsPage: React.FC = () => {
                   <div className={styles.row}>
                     <div>
                       <p className={styles.name}>{b.specialistName}</p>
-                      <p className={styles.when}>{fmt(b.startTime)}</p>
+                      <p className={styles.when}>
+                        {b.serviceName ? `${b.serviceName} · ` : ''}
+                        {fmt(b.startTime)}
+                      </p>
                     </div>
                     <div className={styles.right}>
                       <span

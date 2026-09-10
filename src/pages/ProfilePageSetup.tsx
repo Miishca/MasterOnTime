@@ -18,6 +18,7 @@ import {
 } from '../utils/imageFile';
 import { fullName } from '../utils/fullName';
 import { useUserProfile } from '../hooks/useUserProfile';
+import ServicesManager from '../features/services/ServicesManager';
 import Loader from '../components/Loader/Loader';
 import useScrollToTop from '../hooks/useScrollToTop';
 
@@ -466,6 +467,15 @@ const ProfilePageSetup: React.FC = () => {
               </div>
             </form>
           )}
+        </section>
+      )}
+
+      {isSpecialist && (
+        <section className={styles.specialistSection}>
+          <div className={styles.specialistHeader}>
+            <h3>Services &amp; pricing</h3>
+          </div>
+          <ServicesManager />
         </section>
       )}
 

@@ -28,24 +28,31 @@ async function unwrap<T>(res: Response): Promise<T> {
  */
 export const getAvailableSlots = async (
   specialistId: number,
-  date: string
+  date: string,
+  serviceItemId?: number
 ): Promise<string[]> => {
-  const res = await fetch(
-    `${BOOKINGS_API}/available-slots?specialistId=${specialistId}&date=${date}`,
-    { headers: authHeaders() }
-  );
+  const params = new URLSearchParams({ specialistId: String(specialistId), date });
+  if (serviceItemId) params.set('serviceItemId', String(serviceItemId));
+  const res = await fetch(`${BOOKINGS_API}/available-slots?${params.toString()}`, {
+    headers: authHeaders(),
+  });
   return unwrap<string[]>(res);
 };
 
 /** Book a slot. `specialistId` is the specialist's USER id; startTime is an ISO string. */
 export const createBooking = async (
   specialistId: number,
-  startTime: string
+  startTime: string,
+  serviceItemId?: number
 ): Promise<Booking> => {
   const res = await fetch(BOOKINGS_API, {
     method: 'POST',
     headers: authHeaders(),
-    body: JSON.stringify({ specialistId, startTime }),
+    body: JSON.stringify(
+      serviceItemId
+        ? { specialistId, startTime, serviceItemId }
+        : { specialistId, startTime }
+    ),
   });
   return unwrap<Booking>(res);
 };
