@@ -1,30 +1,102 @@
-import { useState } from 'react';
-import Footer from '../components/Layout/Footer';
+import React, { useEffect, useState } from 'react';
+import Calendar from 'react-calendar';
+import 'react-calendar/dist/Calendar.css';
+import { useNavigate, useParams } from 'react-router-dom';
 import Header from '../components/Layout/Header';
-import styles from './BookingPage.module.scss';
-import { useNavigate } from 'react-router-dom';
-import { useUserProfile } from '../hooks/useUserProfile';
-import { updateProfile } from '../services/auth/authApi';
+import Footer from '../components/Layout/Footer';
 import Loader from '../components/Loader/Loader';
-import useScrollToTop from '../hooks/useScrollToTop';
+import { ApiError, isAuthenticated } from '../services/auth/authApi';
+import { getSpecialistById } from '../features/specialists/services/specialistsApi';
+import { createBooking, getAvailableSlots } from '../features/booking/bookingApi';
+import type { Specialist } from '../types';
+import styles from './BookingPage.module.scss';
 
-const BookingPage = () => {
-  useScrollToTop();
-  const { userProfile, setUserProfile, loading, error } = useUserProfile();
-  const [paymentMethod, setPaymentMethod] = useState('card');
+const localDate = (d: Date) =>
+  `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(
+    d.getDate()
+  ).padStart(2, '0')}`;
+
+const timeLabel = (iso: string) =>
+  new Date(iso).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+const BookingPage: React.FC = () => {
+  const { specialistId } = useParams<{ specialistId: string }>();
   const navigate = useNavigate();
 
-  const handleConfirm = async () => {
-    if (!userProfile) return;
+  const [specialist, setSpecialist] = useState<Specialist | null>(null);
+  const [notFound, setNotFound] = useState(false);
+  const [date, setDate] = useState<Date>(() => {
+    const t = new Date();
+    t.setDate(t.getDate() + 1);
+    return t;
+  });
+  const [slots, setSlots] = useState<string[]>([]);
+  const [slotsLoading, setSlotsLoading] = useState(false);
+  const [booking, setBooking] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!isAuthenticated()) {
+      navigate('/login', {
+        replace: true,
+        state: { from: `/book/${specialistId}` },
+      });
+    }
+  }, [navigate, specialistId]);
+
+  useEffect(() => {
+    if (!specialistId) return;
+    getSpecialistById(specialistId).then((s) => {
+      if (s) setSpecialist(s);
+      else setNotFound(true);
+    });
+  }, [specialistId]);
+
+  useEffect(() => {
+    if (!specialistId) return;
+    setSlotsLoading(true);
+    setError(null);
+    getAvailableSlots(Number(specialistId), localDate(date))
+      .then(setSlots)
+      .catch((err) =>
+        setError(
+          err instanceof ApiError
+            ? err.message
+            : 'Could not load available times.'
+        )
+      )
+      .finally(() => setSlotsLoading(false));
+  }, [specialistId, date]);
+
+  const book = async (startTime: string) => {
+    if (!specialistId) return;
+    setBooking(startTime);
+    setError(null);
     try {
-      const updated = await updateProfile(userProfile);
-      setUserProfile(updated);
-      navigate('/book/confirmation', { state: { scrollToTop: true } });
+      const created = await createBooking(Number(specialistId), startTime);
+      navigate('/book/confirmation', { state: { booking: created } });
     } catch (err) {
-      console.error('Failed to save profile', err);
+      setError(
+        err instanceof ApiError ? err.message : 'Could not book this slot.'
+      );
+      setBooking(null);
     }
   };
-  if (loading) {
+
+  if (notFound) {
+    return (
+      <div className={styles.container}>
+        <Header />
+        <main className={styles.main}>
+          <p>Specialist not found.</p>
+          <button onClick={() => navigate('/people')}>Back to browse</button>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
+  if (!specialist) {
     return (
       <div className={styles.container}>
         <Header />
@@ -33,114 +105,68 @@ const BookingPage = () => {
       </div>
     );
   }
-  if (error || !userProfile) return <div>{error || 'No profile found'}</div>;
 
   return (
     <div className={styles.container}>
       <Header />
-      <button
-        type="button"
-        className={styles.backLink}
-        onClick={() => navigate(-1)}
-        aria-label="Back"
-      >
-        ‹ Back
-      </button>
-      <div className={styles.formWrapper}>
-        <div className={styles.card}>
-          <h3>Clients Details</h3>
-          <div className={styles.formGrid}>
-            <input
-              type="text"
-              placeholder="First Name"
-              value={userProfile.firstName || ''}
-              onChange={(e) =>
-                setUserProfile({ ...userProfile, firstName: e.target.value })
-              }
-            />
-            <input
-              type="text"
-              placeholder="Last Name"
-              value={userProfile.lastName || ''}
-              onChange={(e) =>
-                setUserProfile({ ...userProfile, lastName: e.target.value })
-              }
-            />
-            <input
-              type="tel"
-              placeholder="Phone number"
-              value={userProfile.phoneNumber || ''}
-              onChange={(e) =>
-                setUserProfile({ ...userProfile, phoneNumber: e.target.value })
-              }
-            />
-            <input
-              type="email"
-              placeholder="Email"
-              value={userProfile.email || ''}
-              onChange={(e) =>
-                setUserProfile({ ...userProfile, email: e.target.value })
-              }
-            />
-            <select>
-              <option>Choose service</option>
-              <option>Barbershop</option>
-              <option>Massage</option>
-              <option>Manicure</option>
-            </select>
-          </div>
-        </div>
+      <main className={styles.main}>
+        <h1>
+          Book {specialist.firstName} {specialist.lastName}
+        </h1>
+        <p className={styles.sub}>
+          {specialist.profession}
+          {Number(specialist.price) > 0 && ` · ${specialist.price}`}
+        </p>
 
-        <div className={styles.card}>
-          <h3>Payment and Confirmation</h3>
-
-          <div className={styles.paymentOptions}>
-            <button
-              className={paymentMethod === 'card' ? styles.active : ''}
-              onClick={() => setPaymentMethod('card')}
-            >
-              💳 Card
-            </button>
-            <button
-              className={paymentMethod === 'apple' ? styles.active : ''}
-              onClick={() => setPaymentMethod('apple')}
-            >
-              🍏 Apple Pay
-            </button>
-            <button
-              className={paymentMethod === 'wallet' ? styles.active : ''}
-              onClick={() => setPaymentMethod('wallet')}
-            >
-              👛 Wallet
-            </button>
+        <div className={styles.layout}>
+          <div className={styles.calendarWrap}>
+            <Calendar
+              onChange={(value) => value instanceof Date && setDate(value)}
+              value={date}
+              minDate={new Date()}
+              locale="en-GB"
+            />
           </div>
 
-          {paymentMethod === 'card' && (
-            <div className={styles.cardDetails}>
-              <input type="text" placeholder="Name on Card" />
-              <input type="text" placeholder="Card Number" />
-              <div className={styles.cardRow}>
-                <input type="text" placeholder="MM" />
-                <input type="text" placeholder="YYYY" />
-                <input type="text" placeholder="CVV" />
+          <div className={styles.slots}>
+            <h3>
+              {date.toLocaleDateString([], {
+                weekday: 'long',
+                day: 'numeric',
+                month: 'long',
+              })}
+            </h3>
+
+            {error && (
+              <p className={styles.error} role="alert">
+                {error}
+              </p>
+            )}
+
+            {slotsLoading ? (
+              <p className={styles.muted}>Loading times…</p>
+            ) : slots.length === 0 ? (
+              <p className={styles.muted}>No free slots on this day.</p>
+            ) : (
+              <div className={styles.slotGrid}>
+                {slots.map((iso) => (
+                  <button
+                    key={iso}
+                    className={styles.slot}
+                    disabled={booking !== null}
+                    onClick={() => book(iso)}
+                  >
+                    {booking === iso ? 'Booking…' : timeLabel(iso)}
+                  </button>
+                ))}
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
-
-        <div className={styles.totalWrapper}>
-          <p className={styles.total}>Total: $0</p>
-          <p className={styles.note}>
-            Total includes recovery charges and service fees. Full payment will
-            be charged to your card after you visit the specialist.
-          </p>
-          <button className={styles.confirmButton} onClick={handleConfirm}>
-            Confirm Booking
-          </button>
-        </div>
-      </div>
+      </main>
       <Footer />
     </div>
   );
 };
+
 export default BookingPage;

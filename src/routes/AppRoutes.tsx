@@ -9,6 +9,7 @@ import ProfilePageSetup from '../pages/ProfilePageSetup';
 import RegisterPage from '../pages/RegisterPage';
 import BookingPage from '../pages/BookingPage';
 import EndBookingPage from '../pages/EndBookingPage';
+import BookingsPage from '../pages/BookingsPage';
 import AdminPage from '../pages/AdminPage';
 
 const AppRoutes: React.FC = () => (
@@ -21,11 +22,10 @@ const AppRoutes: React.FC = () => (
       <Route path="/people" element={<PeoplePage />} />
        <Route path="/people/:id" element={<ProfilePage />} />
        <Route path="/profile" element={<ProfilePageSetup />} />
-      <Route path="/book" element={<BookingPage />} />
       <Route path="/book/confirmation" element={<EndBookingPage />} />
+      <Route path="/book/:specialistId" element={<BookingPage />} />
+      <Route path="/bookings" element={<BookingsPage />} />
       <Route path="/admin" element={<AdminPage />} />
-      {/* <Route path="/specialist/:id" element={<SpecialistProfile />} />
-      <Route path="/booking/:specialistId" element={<BookingPage />} /> */}
     </Routes>
   </BrowserRouter>
 );

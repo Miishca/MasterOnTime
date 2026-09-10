@@ -54,6 +54,36 @@ export interface PublicSpecialist {
   profileImageUrl: string | null;
 }
 
+// GET /api/bookings/* — BookingResponseDto from the backend
+export interface Booking {
+  id: number;
+  clientId: number | null;
+  serviceItemId: number | null;
+  specialistId: number; // SpecialistProfile id
+  specialistName: string;
+  serviceName: string | null;
+  price: string;
+  startTime: string;
+  endTime: string;
+  rescheduleMessage: string | null;
+  status:
+    | 'PENDING'
+    | 'CONFIRMED'
+    | 'CANCELLED'
+    | 'COMPLETED'
+    | 'BLOCKED'
+    | 'RESCHEDULE_REQUESTED';
+}
+
+// GET /api/specialists/:id/reviews
+export interface SpecialistReview {
+  id: number;
+  rating: number;
+  comment: string | null;
+  createdAt: string;
+  authorName: string;
+}
+
 export interface UserProfile {
   id: number;
   email: string;

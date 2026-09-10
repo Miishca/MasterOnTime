@@ -34,6 +34,11 @@ const Header: React.FC = () => {
           <NavLink to="/people" className={navClass}>
             <Button label="People" variant="secondary" />
           </NavLink>
+          {authed && (
+            <NavLink to="/bookings" className={navClass}>
+              <Button label="Bookings" variant="secondary" />
+            </NavLink>
+          )}
           {authed && admin && (
             <NavLink to="/admin" className={navClass}>
               <Button label="Admin" variant="secondary" />
