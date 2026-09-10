@@ -14,6 +14,13 @@ export interface AdminUser {
   isDeleted: boolean;
   createdAt: string;
   hasSpecialistProfile: boolean;
+  specialistProfile: {
+    profession: string;
+    price: string;
+    about: string;
+    experience: number;
+    tags: string[];
+  } | null;
 }
 
 export interface SpecialistProfileInput {
@@ -59,6 +66,19 @@ export const setUserRole = async (
     method: 'PATCH',
     headers: authHeaders(),
     body: JSON.stringify(profile ? { role, profile } : { role }),
+  });
+  return unwrap(res);
+};
+
+/** PATCH /api/admin/users/:id/specialist-profile — ADMIN edits a specialist's professional profile. */
+export const updateSpecialistProfile = async (
+  id: number,
+  profile: SpecialistProfileInput
+): Promise<unknown> => {
+  const res = await fetch(`${ADMIN_API}/users/${id}/specialist-profile`, {
+    method: 'PATCH',
+    headers: authHeaders(),
+    body: JSON.stringify(profile),
   });
   return unwrap(res);
 };

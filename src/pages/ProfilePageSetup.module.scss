@@ -61,6 +61,127 @@
   text-align: center;
 }
 
+.specialistSection {
+  max-width: calc(308px + 534px + 421px + 66px);
+  margin: 0 auto 70px;
+  padding: 24px;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+}
+
+.specialistHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  h3 {
+    margin: 0;
+    font-weight: 500;
+  }
+}
+
+.specEditBtn {
+  padding: 7px 16px;
+  border: 1px solid var(--primary-color);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--primary-color);
+  cursor: pointer;
+
+  &:hover {
+    background: var(--primary-color);
+    color: #fff;
+  }
+}
+
+.specNote {
+  margin: 8px 0 20px;
+  color: #999;
+  font-size: 13px;
+}
+
+.specView {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px 24px;
+
+  span {
+    display: block;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #999;
+    margin-bottom: 4px;
+  }
+
+  p {
+    margin: 0;
+    font-size: 15px;
+  }
+}
+
+.specWide {
+  grid-column: 1 / -1;
+}
+
+.specForm {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+
+  label {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 12px;
+    color: #666;
+
+    input,
+    textarea {
+      padding: 9px 11px;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-family: inherit;
+      resize: vertical;
+    }
+  }
+}
+
+.specActions {
+  grid-column: 1 / -1;
+  display: flex;
+  gap: 10px;
+
+  button {
+    padding: 10px 22px;
+    border-radius: 8px;
+    border: none;
+    background: var(--primary-color);
+    color: #fff;
+    cursor: pointer;
+
+    &:disabled {
+      opacity: 0.55;
+      cursor: progress;
+    }
+  }
+}
+
+.specCancel {
+  background: #eee !important;
+  color: #444 !important;
+}
+
+@media (max-width: 900px) {
+  .specView,
+  .specForm {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+
 .avatar {
   width: 100%;
   height: 100%;

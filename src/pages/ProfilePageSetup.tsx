@@ -1,12 +1,16 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Header from '../components/Layout/Header';
 import Footer from '../components/Layout/Footer';
 import styles from './ProfilePageSetup.module.scss';
-import type { UserProfile } from '../types';
+import type { PublicSpecialist, UserProfile } from '../types';
 import imageMap from '../utils/imageLoader';
 import { useNavigate } from 'react-router-dom';
 import EditModal from '../components/Modal/EditModal';
-import { updateProfile } from '../services/auth/authApi';
+import { ApiError, getRole, updateProfile } from '../services/auth/authApi';
+import {
+  getMyProfile,
+  updateMyProfile,
+} from '../features/specialists/services/specialistsApi';
 import {
   ACCEPTED_IMAGE_TYPES,
   readImageAsBase64,
@@ -26,6 +30,60 @@ const ProfilePageSetup: React.FC = () => {
   const photoInputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
   const { userProfile, setUserProfile, loading, error } = useUserProfile();
+
+  const isSpecialist = getRole() === 'SPECIALIST';
+  const [spec, setSpec] = useState<PublicSpecialist | null>(null);
+  const [specEditing, setSpecEditing] = useState(false);
+  const [specBusy, setSpecBusy] = useState(false);
+  const [specError, setSpecError] = useState<string | null>(null);
+  const [specForm, setSpecForm] = useState({
+    profession: '',
+    price: '',
+    experience: '',
+    about: '',
+    tags: '',
+  });
+
+  useEffect(() => {
+    if (!isSpecialist) return;
+    getMyProfile()
+      .then((p) => {
+        setSpec(p);
+        setSpecForm({
+          profession: p.profession,
+          price: Number(p.price) > 0 ? String(Number(p.price)) : '',
+          experience: p.experience > 0 ? String(p.experience) : '',
+          about: p.about,
+          tags: p.tags.join(', '),
+        });
+      })
+      .catch(() => setSpecError('Could not load your specialist profile.'));
+  }, [isSpecialist]);
+
+  const saveSpecProfile = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSpecBusy(true);
+    setSpecError(null);
+    try {
+      const updated = await updateMyProfile({
+        profession: specForm.profession.trim() || undefined,
+        about: specForm.about.trim() || undefined,
+        price: specForm.price === '' ? undefined : Number(specForm.price),
+        experience: specForm.experience === '' ? undefined : Number(specForm.experience),
+        tags: specForm.tags
+          ? specForm.tags.split(',').map((t) => t.trim()).filter(Boolean)
+          : undefined,
+      });
+      setSpec(updated);
+      setSpecEditing(false);
+    } catch (err) {
+      setSpecError(
+        err instanceof ApiError ? err.message : 'Could not save. Please try again.'
+      );
+    } finally {
+      setSpecBusy(false);
+    }
+  };
 
   const handlePhotoSelected = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -301,6 +359,124 @@ const ProfilePageSetup: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {isSpecialist && (
+        <section className={styles.specialistSection}>
+          <div className={styles.specialistHeader}>
+            <h3>Professional profile</h3>
+            {!specEditing && (
+              <button
+                className={styles.specEditBtn}
+                onClick={() => setSpecEditing(true)}
+              >
+                Edit
+              </button>
+            )}
+          </div>
+          <p className={styles.specNote}>
+            Shown on your public specialist card. Your rating is calculated from reviews.
+          </p>
+
+          {specError && (
+            <p className={styles.photoError} role="alert">
+              {specError}
+            </p>
+          )}
+
+          {!specEditing ? (
+            <div className={styles.specView}>
+              <div>
+                <span>Profession</span>
+                <p>{spec?.profession || '—'}</p>
+              </div>
+              <div>
+                <span>Price</span>
+                <p>{spec && Number(spec.price) > 0 ? spec.price : '—'}</p>
+              </div>
+              <div>
+                <span>Experience</span>
+                <p>{spec && spec.experience > 0 ? `${spec.experience} years` : '—'}</p>
+              </div>
+              <div>
+                <span>Rating</span>
+                <p>{spec ? spec.rating.toFixed(1) : '—'}</p>
+              </div>
+              <div className={styles.specWide}>
+                <span>Tags</span>
+                <p>{spec && spec.tags.length ? spec.tags.join(', ') : '—'}</p>
+              </div>
+              <div className={styles.specWide}>
+                <span>About</span>
+                <p>{spec?.about || '—'}</p>
+              </div>
+            </div>
+          ) : (
+            <form className={styles.specForm} onSubmit={saveSpecProfile}>
+              <label>
+                <span>Profession</span>
+                <input
+                  type="text"
+                  value={specForm.profession}
+                  onChange={(e) =>
+                    setSpecForm((f) => ({ ...f, profession: e.target.value }))
+                  }
+                />
+              </label>
+              <label>
+                <span>Price</span>
+                <input
+                  type="number"
+                  min={0}
+                  value={specForm.price}
+                  onChange={(e) => setSpecForm((f) => ({ ...f, price: e.target.value }))}
+                />
+              </label>
+              <label>
+                <span>Experience (years)</span>
+                <input
+                  type="number"
+                  min={0}
+                  value={specForm.experience}
+                  onChange={(e) =>
+                    setSpecForm((f) => ({ ...f, experience: e.target.value }))
+                  }
+                />
+              </label>
+              <label className={styles.specWide}>
+                <span>Tags (comma-separated)</span>
+                <input
+                  type="text"
+                  placeholder="wiring, repair"
+                  value={specForm.tags}
+                  onChange={(e) => setSpecForm((f) => ({ ...f, tags: e.target.value }))}
+                />
+              </label>
+              <label className={styles.specWide}>
+                <span>About</span>
+                <textarea
+                  rows={4}
+                  value={specForm.about}
+                  onChange={(e) => setSpecForm((f) => ({ ...f, about: e.target.value }))}
+                />
+              </label>
+              <div className={styles.specActions}>
+                <button type="submit" disabled={specBusy}>
+                  {specBusy ? 'Saving…' : 'Save'}
+                </button>
+                <button
+                  type="button"
+                  className={styles.specCancel}
+                  onClick={() => setSpecEditing(false)}
+                  disabled={specBusy}
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
+          )}
+        </section>
+      )}
+
       <EditModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}

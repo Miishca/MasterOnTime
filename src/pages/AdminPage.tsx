@@ -7,11 +7,42 @@ import { ApiError, isAdmin } from '../services/auth/authApi';
 import {
   listUsers,
   setUserRole,
+  updateSpecialistProfile,
   type AdminUser,
-  type SpecialistProfileInput,
 } from '../features/admin/adminApi';
+import type { SpecialistProfileInput } from '../features/specialists/services/specialistsApi';
 import { fullName } from '../utils/fullName';
 import styles from './AdminPage.module.scss';
+
+type ProfileForm = {
+  profession: string;
+  price: string;
+  experience: string;
+  tags: string;
+};
+
+const emptyForm: ProfileForm = { profession: '', price: '', experience: '', tags: '' };
+
+function toForm(u: AdminUser): ProfileForm {
+  const p = u.specialistProfile;
+  return {
+    profession: p?.profession ?? '',
+    price: p && Number(p.price) > 0 ? String(Number(p.price)) : '',
+    experience: p && p.experience > 0 ? String(p.experience) : '',
+    tags: p?.tags.join(', ') ?? '',
+  };
+}
+
+function toPayload(f: ProfileForm): SpecialistProfileInput {
+  return {
+    profession: f.profession.trim() || undefined,
+    price: f.price === '' ? undefined : Number(f.price),
+    experience: f.experience === '' ? undefined : Number(f.experience),
+    tags: f.tags
+      ? f.tags.split(',').map((t) => t.trim()).filter(Boolean)
+      : undefined,
+  };
+}
 
 const AdminPage: React.FC = () => {
   const navigate = useNavigate();
@@ -20,8 +51,8 @@ const AdminPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [busyId, setBusyId] = useState<number | null>(null);
-  const [promoting, setPromoting] = useState<number | null>(null);
-  const [form, setForm] = useState<SpecialistProfileInput>({});
+  const [editingId, setEditingId] = useState<number | null>(null);
+  const [form, setForm] = useState<ProfileForm>(emptyForm);
 
   const load = useCallback(
     async (term: string) => {
@@ -50,22 +81,36 @@ const AdminPage: React.FC = () => {
     load('');
   }, [navigate, load]);
 
-  const runRoleChange = async (
-    id: number,
-    role: AdminUser['role'],
-    profile?: SpecialistProfileInput
-  ) => {
+  const openEditor = (u: AdminUser) => {
+    if (editingId === u.id) {
+      setEditingId(null);
+      return;
+    }
+    setEditingId(u.id);
+    setForm(toForm(u));
+    setError(null);
+  };
+
+  const run = async (fn: () => Promise<unknown>, id: number) => {
     setBusyId(id);
     setError(null);
     try {
-      await setUserRole(id, role, profile);
-      setPromoting(null);
-      setForm({});
+      await fn();
+      setEditingId(null);
       await load(search);
     } catch (err) {
       setError(err instanceof ApiError ? err.message : 'Could not update the user.');
     } finally {
       setBusyId(null);
+    }
+  };
+
+  const submitForm = (u: AdminUser) => {
+    const payload = toPayload(form);
+    if (u.role === 'USER') {
+      run(() => setUserRole(u.id, 'SPECIALIST', payload), u.id);
+    } else {
+      run(() => updateSpecialistProfile(u.id, payload), u.id);
     }
   };
 
@@ -121,7 +166,7 @@ const AdminPage: React.FC = () => {
                   <th>Email</th>
                   <th>City</th>
                   <th>Role</th>
-                  <th>Action</th>
+                  <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -144,59 +189,53 @@ const AdminPage: React.FC = () => {
                           {u.role}
                         </span>
                       </td>
-                      <td>
+                      <td className={styles.actions}>
                         {u.role === 'USER' && (
                           <button
                             className={styles.primaryBtn}
                             disabled={busyId === u.id}
-                            onClick={() =>
-                              setPromoting(promoting === u.id ? null : u.id)
-                            }
+                            onClick={() => openEditor(u)}
                           >
-                            {promoting === u.id ? 'Cancel' : 'Make specialist'}
+                            {editingId === u.id ? 'Cancel' : 'Make specialist'}
                           </button>
                         )}
                         {u.role === 'SPECIALIST' && (
-                          <button
-                            className={styles.dangerBtn}
-                            disabled={busyId === u.id}
-                            onClick={() => runRoleChange(u.id, 'USER')}
-                          >
-                            {busyId === u.id ? 'Working…' : 'Demote to user'}
-                          </button>
+                          <>
+                            <button
+                              className={styles.primaryBtn}
+                              disabled={busyId === u.id}
+                              onClick={() => openEditor(u)}
+                            >
+                              {editingId === u.id ? 'Cancel' : 'Edit profile'}
+                            </button>
+                            <button
+                              className={styles.dangerBtn}
+                              disabled={busyId === u.id}
+                              onClick={() => run(() => setUserRole(u.id, 'USER'), u.id)}
+                            >
+                              {busyId === u.id ? 'Working…' : 'Demote'}
+                            </button>
+                          </>
                         )}
                         {u.role === 'ADMIN' && <span className={styles.muted}>—</span>}
                       </td>
                     </tr>
 
-                    {promoting === u.id && (
+                    {editingId === u.id && (
                       <tr className={styles.promoteRow}>
                         <td colSpan={6}>
                           <form
                             className={styles.promoteForm}
                             onSubmit={(e) => {
                               e.preventDefault();
-                              runRoleChange(u.id, 'SPECIALIST', {
-                                profession: form.profession || undefined,
-                                about: form.about || undefined,
-                                price:
-                                  form.price !== undefined && !Number.isNaN(form.price)
-                                    ? form.price
-                                    : undefined,
-                                experience:
-                                  form.experience !== undefined &&
-                                  !Number.isNaN(form.experience)
-                                    ? form.experience
-                                    : undefined,
-                                tags: form.tags,
-                              });
+                              submitForm(u);
                             }}
                           >
                             <label>
                               <span>Profession</span>
                               <input
                                 type="text"
-                                value={form.profession ?? ''}
+                                value={form.profession}
                                 onChange={(e) =>
                                   setForm((f) => ({ ...f, profession: e.target.value }))
                                 }
@@ -207,12 +246,9 @@ const AdminPage: React.FC = () => {
                               <input
                                 type="number"
                                 min={0}
-                                value={form.price ?? ''}
+                                value={form.price}
                                 onChange={(e) =>
-                                  setForm((f) => ({
-                                    ...f,
-                                    price: e.target.value === '' ? undefined : Number(e.target.value),
-                                  }))
+                                  setForm((f) => ({ ...f, price: e.target.value }))
                                 }
                               />
                             </label>
@@ -221,13 +257,9 @@ const AdminPage: React.FC = () => {
                               <input
                                 type="number"
                                 min={0}
-                                value={form.experience ?? ''}
+                                value={form.experience}
                                 onChange={(e) =>
-                                  setForm((f) => ({
-                                    ...f,
-                                    experience:
-                                      e.target.value === '' ? undefined : Number(e.target.value),
-                                  }))
+                                  setForm((f) => ({ ...f, experience: e.target.value }))
                                 }
                               />
                             </label>
@@ -236,23 +268,24 @@ const AdminPage: React.FC = () => {
                               <input
                                 type="text"
                                 placeholder="wiring, repair"
+                                value={form.tags}
                                 onChange={(e) =>
-                                  setForm((f) => ({
-                                    ...f,
-                                    tags: e.target.value
-                                      .split(',')
-                                      .map((t) => t.trim())
-                                      .filter(Boolean),
-                                  }))
+                                  setForm((f) => ({ ...f, tags: e.target.value }))
                                 }
                               />
                             </label>
                             <button type="submit" disabled={busyId === u.id}>
-                              {busyId === u.id ? 'Saving…' : 'Promote'}
+                              {busyId === u.id
+                                ? 'Saving…'
+                                : u.role === 'USER'
+                                  ? 'Promote'
+                                  : 'Save'}
                             </button>
-                            <span className={styles.hint}>
-                              All fields optional — you can fill them later.
-                            </span>
+                            {u.role === 'USER' && (
+                              <span className={styles.hint}>
+                                All fields optional — the specialist can fill them later.
+                              </span>
+                            )}
                           </form>
                         </td>
                       </tr>

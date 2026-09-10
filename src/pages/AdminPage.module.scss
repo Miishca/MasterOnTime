@@ -170,6 +170,12 @@
   color: #bbb;
 }
 
+.actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
 .promoteRow td {
   background: #f7f9fb;
 }
