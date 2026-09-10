@@ -153,11 +153,6 @@ const ProfilePageSetup: React.FC = () => {
     }
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    navigate('/login');
-  };
-
   if (loading) {
     return (
       <div className={styles.container}>
@@ -184,9 +179,6 @@ const ProfilePageSetup: React.FC = () => {
   return (
     <div className={styles.container}>
       <Header />
-      <button className={styles.logoutButton} onClick={handleLogout}>
-        Logout
-      </button>
 
       <div className={styles.profileWrapper}>
         <div className={styles.leftColumn}>

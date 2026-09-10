@@ -2,25 +2,6 @@
   padding: 20px;
 }
 
-.logoutButton {
-  background: var(--primary-color);
-  color: #fff;
-  border: none;
-  border-radius: 12px;
-  padding: 12px 20px;
-  font-size: 14px;
-  cursor: pointer;
-  position: absolute;
-  right: 20px;
-  top: 80px;
-  transition: background 0.2s ease;
-
-  &:hover {
-    background: var(--primary-color-light);
-  }
-}
-
-
 .avatarContainer {
   width: 308px;
   height: 308px;
