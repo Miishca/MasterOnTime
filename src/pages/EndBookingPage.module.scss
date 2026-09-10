@@ -11,6 +11,7 @@
 
 .main {
   max-width: 1329px;
+  width: 100%;
   gap: 145px;
   margin: 24px auto 48px;
 }
@@ -27,8 +28,9 @@
 
 .grid {
   display: grid;
-  grid-template-columns: 648px 535px;
-  gap: 145px;
+  grid-template-columns: minmax(0, 648px) minmax(0, 460px);
+  gap: 60px;
+  justify-content: center;
 }
 
 .leftCol {
@@ -226,9 +228,12 @@
   background: var(--primary-color-light);
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1180px) {
   .grid {
     grid-template-columns: 1fr;
+    gap: 32px;
+    max-width: 640px;
+    margin: 0 auto;
   }
 
   .summaryCard {

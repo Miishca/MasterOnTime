@@ -1,16 +1,15 @@
 .card {
-  width: 421px;
-  height: 649px;
+  width: 100%;
+  max-width: 421px;
   text-align: center;
   border-radius: 8px;
   cursor: pointer;
 
   .cardImage {
-    width: 421px;
+    width: 100%;
+    aspect-ratio: 421 / 500;
     object-fit: cover;
     border-radius: 4px;
-    position: relative;
-    right: 12px;
   }
 
   .cardName {

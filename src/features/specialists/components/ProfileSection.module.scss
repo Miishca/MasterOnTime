@@ -1,12 +1,15 @@
 .profile {
   padding: 40px;
   display: flex;
-  gap: 120px;
+  flex-wrap: wrap;
+  gap: 60px;
+  max-width: 1360px;
+  margin: 0 auto;
 }
 
 .left {
-  flex: 0 0 535px;
-  height: 926px;
+  flex: 1 1 480px;
+  max-width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -17,8 +20,9 @@
 }
 
 .avatarContainer {
-  width: 452px;
-  height: 452px;
+  width: 100%;
+  max-width: 452px;
+  aspect-ratio: 1;
   border-radius: 50%;
   overflow: hidden;
   display: flex;
@@ -48,7 +52,8 @@
 .buttons {
   display: flex;
   justify-content: space-evenly;
-  width: 450px;
+  width: 100%;
+  max-width: 450px;
   gap: 32px;
 
   a {
@@ -76,7 +81,8 @@
 }
 
 .book {
-  width: 450px;
+  width: 100%;
+  max-width: 450px;
   font-size: 24px;
   background-color: var(--primary-color);
   color: #fff;
@@ -87,8 +93,8 @@
 }
 
 .right {
-  flex: 0 0 650px;
-  height: 908px;
+  flex: 1 1 500px;
+  max-width: 100%;
   display: flex;
   flex-direction: column;
 

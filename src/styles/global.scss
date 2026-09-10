@@ -7,8 +7,20 @@
   scroll-behavior: smooth;
 }
 
+html,
+body {
+  // The page body must never scroll horizontally. Wide content (carousels,
+  // tables) scrolls inside its own container instead.
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
 body {
   font-family: var(--font-family);
   color: var(--text-color);
   background-color: var(--background-color);
+}
+
+img {
+  max-width: 100%;
 }

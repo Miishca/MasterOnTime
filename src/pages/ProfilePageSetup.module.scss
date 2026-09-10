@@ -333,6 +333,33 @@
   gap: 8px;
 }
 
+// The 3-column desktop layout is ~1329px wide — collapse it before it can
+// push the page sideways on laptops.
+@media (max-width: 1400px) {
+  .profileWrapper {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+    gap: 28px;
+    height: auto;
+    max-width: 640px;
+    padding: 0 16px;
+  }
+
+  .leftColumn,
+  .centerColumn,
+  .paymentColumn {
+    width: 100%;
+    height: auto;
+  }
+
+  .leftInfoCard,
+  .cardMedium,
+  .cardLarge {
+    width: 100%;
+    height: auto;
+  }
+}
+
 @media (max-width: 768px) {
   .profileWrapper {
     grid-template-columns: 1fr;

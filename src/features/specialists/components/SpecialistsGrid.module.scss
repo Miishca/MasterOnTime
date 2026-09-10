@@ -1,11 +1,12 @@
 .gridContainer {
   margin: 40px auto;
-  padding-left: 20px;
+  padding: 0 20px;
+  max-width: 1400px;
 }
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 30px;
   width: 100%;
 }
