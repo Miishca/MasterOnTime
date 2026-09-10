@@ -118,7 +118,7 @@ const AdminPage: React.FC = () => {
     <div className={styles.container}>
       <Header />
       <main className={styles.main}>
-        <h1>Users</h1>
+        <h1>admin dashboard</h1>
 
         <form
           className={styles.searchRow}
