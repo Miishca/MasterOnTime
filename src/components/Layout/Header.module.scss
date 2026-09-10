@@ -4,6 +4,7 @@
   align-items: center;
   background-color: var(--background-color);
   color: var(--primary-color);
+
   a {
     text-decoration: none;
     color: var(--primary-color);
@@ -14,6 +15,7 @@
     align-items: center;
     gap: 8px;
   }
+
   .logo {
     font-size: 32px;
     line-height: 150%;
@@ -21,9 +23,17 @@
     font-weight: 900;
   }
 
-  nav {
+  .nav {
     display: flex;
-    gap: 10px;
+    align-items: center;
+    gap: 28px;
+
+    .navPrimary,
+    .navAccount {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
 
     .active {
       button.secondary {
@@ -51,10 +61,17 @@
       font-size: 24px;
     }
 
-    nav {
+    .nav {
       flex-wrap: wrap;
       justify-content: center;
-      gap: 5px;
+      gap: 12px;
+
+      .navPrimary,
+      .navAccount {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 5px;
+      }
     }
 
     button {

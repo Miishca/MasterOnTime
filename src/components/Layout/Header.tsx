@@ -25,40 +25,42 @@ const Header: React.FC = () => {
         <div className={styles.logo}>MasterOnTime</div>
       </Link>
 
-      <nav>
-        <NavLink to="/services" className={navClass}>
-          <Button label="services" variant="secondary" />
-        </NavLink>
-        <NavLink to="/people" className={navClass}>
-          <Button label="people" variant="secondary" />
-        </NavLink>
+      <nav className={styles.nav}>
+        {/* Primary — where you go in the product */}
+        <div className={styles.navPrimary}>
+          <NavLink to="/services" className={navClass}>
+            <Button label="Services" variant="secondary" />
+          </NavLink>
+          <NavLink to="/people" className={navClass}>
+            <Button label="People" variant="secondary" />
+          </NavLink>
+          {authed && admin && (
+            <NavLink to="/admin" className={navClass}>
+              <Button label="Admin" variant="secondary" />
+            </NavLink>
+          )}
+        </div>
 
-        {authed ? (
-          <>
-            {admin && (
-              <NavLink to="/admin" className={navClass}>
-                <Button label="admin" variant="secondary" />
+        {/* Account — who you are */}
+        <div className={styles.navAccount}>
+          {authed ? (
+            <>
+              <NavLink to="/profile" className={navClass}>
+                <Button label="Profile" variant="secondary" />
               </NavLink>
-            )}
-            <NavLink to="/profile" className={navClass}>
-              <Button label="profile" variant="secondary" />
-            </NavLink>
-            <Button label="log out" variant="secondary" onClick={handleLogout} />
-          </>
-        ) : (
-          <>
-            <NavLink to="/login" className={navClass}>
-              <Button label="log in" variant="secondary" />
-            </NavLink>
-            <NavLink to="/register" className={navClass}>
-              <Button label="register" variant="secondary" />
-            </NavLink>
-          </>
-        )}
-
-        <NavLink to="/book" className={navClass}>
-          <Button label="Book" variant="primary" />
-        </NavLink>
+              <Button label="Log out" variant="secondary" onClick={handleLogout} />
+            </>
+          ) : (
+            <>
+              <NavLink to="/login" className={navClass}>
+                <Button label="Log in" variant="secondary" />
+              </NavLink>
+              <NavLink to="/register" className={navClass}>
+                <Button label="Sign up" variant="primary" />
+              </NavLink>
+            </>
+          )}
+        </div>
       </nav>
     </header>
   );
