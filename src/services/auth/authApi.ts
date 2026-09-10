@@ -1,3 +1,4 @@
+import { jwtDecode } from 'jwt-decode';
 import type { RegisterRequest, UserProfile } from '../../types';
 
 const API_BASE = import.meta.env.DEV ? '' : import.meta.env.VITE_API_BASE || '';
@@ -7,10 +8,33 @@ const USER_API_BASE = `${API_BASE}/api/users`;
 
 const TOKEN_KEY = 'token';
 
+export type Role = 'USER' | 'SPECIALIST' | 'ADMIN';
+interface TokenPayload {
+  sub: string;
+  role: Role;
+  email: string;
+  exp: number;
+}
+
 export const getToken = () => localStorage.getItem(TOKEN_KEY);
 export const setToken = (token: string) => localStorage.setItem(TOKEN_KEY, token);
 export const clearToken = () => localStorage.removeItem(TOKEN_KEY);
 export const isAuthenticated = () => Boolean(getToken());
+
+/** The role carried in the JWT, or null if there's no valid, unexpired token. */
+export const getRole = (): Role | null => {
+  const token = getToken();
+  if (!token) return null;
+  try {
+    const payload = jwtDecode<TokenPayload>(token);
+    if (payload.exp * 1000 < Date.now()) return null;
+    return payload.role;
+  } catch {
+    return null;
+  }
+};
+
+export const isAdmin = () => getRole() === 'ADMIN';
 
 /**
  * Thrown for any non-2xx API response. Carries the HTTP status and the

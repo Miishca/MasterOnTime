@@ -9,6 +9,7 @@ import ProfilePageSetup from '../pages/ProfilePageSetup';
 import RegisterPage from '../pages/RegisterPage';
 import BookingPage from '../pages/BookingPage';
 import EndBookingPage from '../pages/EndBookingPage';
+import AdminPage from '../pages/AdminPage';
 
 const AppRoutes: React.FC = () => (
   <BrowserRouter>
@@ -22,6 +23,7 @@ const AppRoutes: React.FC = () => (
        <Route path="/profile" element={<ProfilePageSetup />} />
       <Route path="/book" element={<BookingPage />} />
       <Route path="/book/confirmation" element={<EndBookingPage />} />
+      <Route path="/admin" element={<AdminPage />} />
       {/* <Route path="/specialist/:id" element={<SpecialistProfile />} />
       <Route path="/booking/:specialistId" element={<BookingPage />} /> */}
     </Routes>

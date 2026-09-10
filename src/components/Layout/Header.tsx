@@ -3,7 +3,7 @@ import { Link, NavLink, useNavigate } from 'react-router-dom';
 import styles from './Header.module.scss';
 import Button from '../Button/Button';
 import imageMap from '../../utils/imageLoader';
-import { clearToken, isAuthenticated } from '../../services/auth/authApi';
+import { clearToken, isAdmin, isAuthenticated } from '../../services/auth/authApi';
 
 const navClass = ({ isActive }: { isActive: boolean }) =>
   isActive ? styles.active : '';
@@ -11,6 +11,7 @@ const navClass = ({ isActive }: { isActive: boolean }) =>
 const Header: React.FC = () => {
   const navigate = useNavigate();
   const authed = isAuthenticated();
+  const admin = isAdmin();
 
   const handleLogout = () => {
     clearToken();
@@ -34,6 +35,11 @@ const Header: React.FC = () => {
 
         {authed ? (
           <>
+            {admin && (
+              <NavLink to="/admin" className={navClass}>
+                <Button label="admin" variant="secondary" />
+              </NavLink>
+            )}
             <NavLink to="/profile" className={navClass}>
               <Button label="profile" variant="secondary" />
             </NavLink>
