@@ -4,13 +4,20 @@ import Footer from '../components/Layout/Footer';
 import styles from './ProfilePageSetup.module.scss';
 import { INDUSTRIES, INDUSTRY_LABELS, type Industry, type PublicSpecialist, type UserProfile } from '../types';
 import imageMap from '../utils/imageLoader';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import EditModal from '../components/Modal/EditModal';
 import { ApiError, getRole, updateProfile } from '../services/auth/authApi';
 import {
   getMyProfile,
   updateMyProfile,
 } from '../features/specialists/services/specialistsApi';
+import {
+  confirmCardSave,
+  getSavedCard,
+  redirectToCardCheckout,
+  removeSavedCard,
+  type SavedCard,
+} from '../features/payments/paymentsApi';
 import {
   ACCEPTED_IMAGE_TYPES,
   readImageAsBase64,
@@ -32,6 +39,66 @@ const ProfilePageSetup: React.FC = () => {
   const photoInputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
   const { userProfile, setUserProfile, loading, error } = useUserProfile();
+
+  const [savedCard, setSavedCard] = useState<SavedCard | null>(null);
+  const [cardBusy, setCardBusy] = useState(false);
+  const [cardError, setCardError] = useState<string | null>(null);
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  useEffect(() => {
+    getSavedCard()
+      .then(setSavedCard)
+      .catch(() => setSavedCard(null));
+  }, []);
+
+  // LiqPay redirects the browser back here after the hosted card-entry page —
+  // pick up ?cardSaveOrderId=... exactly once and ask our backend to confirm it.
+  useEffect(() => {
+    const orderId = searchParams.get('cardSaveOrderId');
+    if (!orderId) return;
+
+    setCardBusy(true);
+    confirmCardSave(orderId)
+      .then((card) => {
+        setSavedCard(card);
+        setCardError(null);
+      })
+      .catch((err) => {
+        setCardError(err instanceof ApiError ? err.message : 'Could not confirm the card.');
+      })
+      .finally(() => {
+        setCardBusy(false);
+        const next = new URLSearchParams(searchParams);
+        next.delete('cardSaveOrderId');
+        setSearchParams(next, { replace: true });
+      });
+    // Дивись лише на mount — LiqPay кладе ?cardSaveOrderId= в URL один раз,
+    // після редіректу з їхньої hosted-сторінки, не при кожній зміні searchParams.
+  }, []);
+
+  const handleAddCard = async () => {
+    setCardError(null);
+    setCardBusy(true);
+    try {
+      await redirectToCardCheckout(); // navigates away on success
+    } catch (err) {
+      setCardError(err instanceof ApiError ? err.message : 'Could not start card checkout.');
+      setCardBusy(false);
+    }
+  };
+
+  const handleRemoveCard = async () => {
+    setCardBusy(true);
+    setCardError(null);
+    try {
+      await removeSavedCard();
+      setSavedCard(null);
+    } catch (err) {
+      setCardError(err instanceof ApiError ? err.message : 'Could not remove the card.');
+    } finally {
+      setCardBusy(false);
+    }
+  };
 
   const isSpecialist = getRole() === 'SPECIALIST';
   const [spec, setSpec] = useState<PublicSpecialist | null>(null);
@@ -313,20 +380,11 @@ const ProfilePageSetup: React.FC = () => {
             <div className={`${styles.card} ${styles.cardLarge}`}>
               <div className={styles.cardHeader}>
                 <h4>Payment Methods</h4>
-                {/* <button
-                  className={styles.editIcon}
-                  onClick={() =>
-                    openEditModal({
-                      cardType: userProfile.cardType,
-                      cardHolder: userProfile.lastName,
-                      expire: userProfile.expire,
-                      cardNumber: userProfile.cardNumber,
-                      balance: userProfile.balance,
-                    })
-                  }
-                >
-                  <img src={imageMap['edit']} />
-                </button> */}
+                {savedCard && (
+                  <button className={styles.removeCardBtn} onClick={handleRemoveCard} disabled={cardBusy}>
+                    Remove
+                  </button>
+                )}
               </div>
 
               <img
@@ -335,28 +393,30 @@ const ProfilePageSetup: React.FC = () => {
                 className={styles.creditCard}
               />
 
-              {/* <div className={styles.paymentDetails}>
-                <div className={styles.detailsRow}>
-                  <span>Card Type</span>
-                  <p>{userProfile.cardType}</p>
+              {cardError && <p className={styles.cardError}>{cardError}</p>}
+
+              {savedCard ? (
+                <div className={styles.paymentDetails}>
+                  <div className={styles.detailsRow}>
+                    <span>Card</span>
+                    <p>
+                      {savedCard.cardType ? `${savedCard.cardType} ` : ''}
+                      {savedCard.cardMask}
+                    </p>
+                  </div>
+                  <div className={styles.detailsRow}>
+                    <span>Added</span>
+                    <p>{new Date(savedCard.createdAt).toLocaleDateString()}</p>
+                  </div>
+                  <p className={styles.cardNote}>
+                    Saved for faster checkout — you will not be charged automatically.
+                  </p>
                 </div>
-                <div className={styles.detailsRow}>
-                  <span>Card Holder</span>
-                  <p>{userProfile.cardHolder}</p>
-                </div>
-                <div className={styles.detailsRow}>
-                  <span>Expire</span>
-                  <p>{userProfile.expire}</p>
-                </div>
-                <div className={styles.detailsRow}>
-                  <span>Card Number</span>
-                  <p>{userProfile.cardNumber}</p>
-                </div>
-                <div className={styles.detailsRow}>
-                  <span>Balance</span>
-                  <p>{userProfile.balance}</p>
-                </div>
-              </div> */}
+              ) : (
+                <button className={styles.addCardBtn} onClick={handleAddCard} disabled={cardBusy}>
+                  {cardBusy ? 'Redirecting…' : 'Add a card'}
+                </button>
+              )}
             </div>
           </div>
         </div>
