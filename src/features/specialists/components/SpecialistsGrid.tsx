@@ -15,13 +15,21 @@ const SpecialistsGrid: React.FC<SpecialistsGridProps> = ({
   const gridRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    // Guard against out-of-order responses: if `filters` changes again (or the
+    // component unmounts) before this fetch resolves, drop its result instead
+    // of letting a stale response clobber a newer, already-applied one.
+    let cancelled = false;
     const fetchSpecialists = async () => {
       const response = await getSpecialists(filters);
+      if (cancelled) return;
       setSpecialists(response);
       setTotalPages(Math.ceil(response.length / itemsPerPage));
       setCurrentPage(1);
     };
     fetchSpecialists();
+    return () => {
+      cancelled = true;
+    };
   }, [filters, itemsPerPage]);
 
   const startIndex = (currentPage - 1) * itemsPerPage;

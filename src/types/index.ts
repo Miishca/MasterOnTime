@@ -178,9 +178,13 @@ export interface SpecialistsGridProps {
 }
 
 export interface LocationState {
-  // Значення для SpecialistsSearchFilters.serviceName, передане навігацією
-  // (напр. з картки послуги на /services) — вже реальний, робочий фільтр.
+  // Значення для SpecialistsSearchFilters.serviceName, передане навігацією.
   serviceName?: string;
+  // Значення для SpecialistsSearchFilters.industry — так навігує /services
+  // (DiscoverSection): кожна картка передає industry свого розділу, бо це
+  // надійно заповнене поле (на відміну від serviceName, який співпаде лише
+  // якщо спеціаліст додав собі послугу з буквально такою назвою).
+  industry?: Industry;
   scrollToGrid?: boolean;
 }
 export interface Landing {

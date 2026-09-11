@@ -1,18 +1,20 @@
 import { useNavigate } from 'react-router-dom';
 import imageMap from '../../../utils/imageLoader';
+import type { Industry } from '../../../types';
 import styles from './DiscoverSection.module.scss';
 
 const DiscoverSection: React.FC = () => {
   const navigate = useNavigate();
 
-  // Ідемо на /people з реальним фільтром serviceName (GET /api/specialists/search)
-  // — знайде спеціалістів, які додали собі послугу з такою назвою (Category/
-  // CategoryItem, "Services & pricing" на /profile). Якщо жоден спеціаліст ще
-  // не додав такої послуги, список буде порожній — це не баг, а відсутність
-  // даних.
-  const handleServiceClick = (slug: string) => {
-    const serviceName = slug.toLowerCase().replace(/-/g, ' ');
-    navigate('/people', { state: { serviceName, scrollToGrid: true } });
+  // Ідемо на /people з фільтром по industry (SpecialistProfile.industry) —
+  // спеціаліст обирає її сам на /profile, тож це справжня, надійна ознака.
+  // Раніше картки шукали по точній назві послуги (serviceName), але жоден
+  // спеціаліст поки не додав собі послугу з такою буквальною назвою в
+  // "Services & pricing" — список завжди виходив порожнім. industry набагато
+  // грубіший фільтр (уся "сфера", а не конкретна послуга), зате реально працює
+  // вже зараз, для будь-якого спеціаліста, що обрав собі цю сферу.
+  const handleIndustryClick = (industry: Industry) => {
+    navigate('/people', { state: { industry, scrollToGrid: true } });
   };
   return (
     <div className={styles.discover}>
@@ -48,7 +50,7 @@ const DiscoverSection: React.FC = () => {
             className={styles.serviceCard}
             onClick={(e) => {
               e.preventDefault();
-              handleServiceClick('house-cleaning');
+              handleIndustryClick('HOME_GARDEN');
             }}
           >
             <img src={imageMap['service-home1']} alt="House Cleaning" />
@@ -58,7 +60,7 @@ const DiscoverSection: React.FC = () => {
             className={styles.serviceCard}
             onClick={(e) => {
               e.preventDefault();
-              handleServiceClick('gardening');
+              handleIndustryClick('HOME_GARDEN');
             }}
           >
             <img src={imageMap['service-home2']} alt="Gardening" />
@@ -68,7 +70,7 @@ const DiscoverSection: React.FC = () => {
             className={styles.serviceCard}
             onClick={(e) => {
               e.preventDefault();
-              handleServiceClick('handyman');
+              handleIndustryClick('HOME_GARDEN');
             }}
           >
             <img src={imageMap['service-home3']} alt="Handyman Services" />
@@ -78,7 +80,7 @@ const DiscoverSection: React.FC = () => {
             className={styles.serviceCard}
             onClick={(e) => {
               e.preventDefault();
-              handleServiceClick('furniture-assembly');
+              handleIndustryClick('HOME_GARDEN');
             }}
           >
             <img src={imageMap['service-home4']} alt="Furniture Assembly" />
@@ -94,7 +96,7 @@ const DiscoverSection: React.FC = () => {
             className={styles.serviceCard}
             onClick={(e) => {
               e.preventDefault();
-              handleServiceClick('massage-therapy');
+              handleIndustryClick('HEALTH_WELLBEING');
             }}
           >
             <img src={imageMap['service-health1']} alt="Massage Therapy" />
@@ -104,7 +106,7 @@ const DiscoverSection: React.FC = () => {
             className={styles.serviceCard}
             onClick={(e) => {
               e.preventDefault();
-              handleServiceClick('personal-training');
+              handleIndustryClick('HEALTH_WELLBEING');
             }}
           >
             <img src={imageMap['service-health2']} alt="Personal Training" />
@@ -114,7 +116,7 @@ const DiscoverSection: React.FC = () => {
             className={styles.serviceCard}
             onClick={(e) => {
               e.preventDefault();
-              handleServiceClick('nutrition-consulting');
+              handleIndustryClick('HEALTH_WELLBEING');
             }}
           >
             <img src={imageMap['service-health3']} alt="Nutrition Consulting" />
@@ -124,7 +126,7 @@ const DiscoverSection: React.FC = () => {
             className={styles.serviceCard}
             onClick={(e) => {
               e.preventDefault();
-              handleServiceClick('emotional-wellness');
+              handleIndustryClick('HEALTH_WELLBEING');
             }}
           >
             <img src={imageMap['service-health4']} alt="Emotional Wellness" />
@@ -140,7 +142,7 @@ const DiscoverSection: React.FC = () => {
             className={styles.serviceCard}
             onClick={(e) => {
               e.preventDefault();
-              handleServiceClick('accounting-help');
+              handleIndustryClick('BUSINESS_SERVICES');
             }}
           >
             <img
@@ -153,7 +155,7 @@ const DiscoverSection: React.FC = () => {
             className={styles.serviceCard}
             onClick={(e) => {
               e.preventDefault();
-              handleServiceClick('it-support');
+              handleIndustryClick('BUSINESS_SERVICES');
             }}
           >
             <img src={imageMap['service-business2']} alt="IT Support" />
@@ -163,7 +165,7 @@ const DiscoverSection: React.FC = () => {
             className={styles.serviceCard}
             onClick={(e) => {
               e.preventDefault();
-              handleServiceClick('business-consulting');
+              handleIndustryClick('BUSINESS_SERVICES');
             }}
           >
             <img
@@ -176,7 +178,7 @@ const DiscoverSection: React.FC = () => {
             className={styles.serviceCard}
             onClick={(e) => {
               e.preventDefault();
-              handleServiceClick('legal-assistance');
+              handleIndustryClick('BUSINESS_SERVICES');
             }}
           >
             <img src={imageMap['service-business4']} alt="Legal Assistance" />
@@ -192,7 +194,7 @@ const DiscoverSection: React.FC = () => {
             className={styles.serviceCard}
             onClick={(e) => {
               e.preventDefault();
-              handleServiceClick('event-photography');
+              handleIndustryClick('WEDDINGS_EVENTS');
             }}
           >
             <img src={imageMap['service-events1']} alt="Event Photography" />
@@ -202,7 +204,7 @@ const DiscoverSection: React.FC = () => {
             className={styles.serviceCard}
             onClick={(e) => {
               e.preventDefault();
-              handleServiceClick('makeup-styling');
+              handleIndustryClick('WEDDINGS_EVENTS');
             }}
           >
             <img
@@ -215,7 +217,7 @@ const DiscoverSection: React.FC = () => {
             className={styles.serviceCard}
             onClick={(e) => {
               e.preventDefault();
-              handleServiceClick('event-planning');
+              handleIndustryClick('WEDDINGS_EVENTS');
             }}
           >
             <img src={imageMap['service-events3']} alt="Event Planning" />
@@ -225,7 +227,7 @@ const DiscoverSection: React.FC = () => {
             className={styles.serviceCard}
             onClick={(e) => {
               e.preventDefault();
-              handleServiceClick('catering-services');
+              handleIndustryClick('WEDDINGS_EVENTS');
             }}
           >
             <img src={imageMap['service-events4']} alt="Catering Services" />
@@ -241,7 +243,7 @@ const DiscoverSection: React.FC = () => {
             className={styles.serviceCard}
             onClick={(e) => {
               e.preventDefault();
-              handleServiceClick('language-lessons');
+              handleIndustryClick('LESSONS_TRAINING');
             }}
           >
             <img src={imageMap['service-lessons1']} alt="Language Lessons" />
@@ -251,7 +253,7 @@ const DiscoverSection: React.FC = () => {
             className={styles.serviceCard}
             onClick={(e) => {
               e.preventDefault();
-              handleServiceClick('music-lessons');
+              handleIndustryClick('LESSONS_TRAINING');
             }}
           >
             <img src={imageMap['service-lessons2']} alt="Music Lessons" />
@@ -261,7 +263,7 @@ const DiscoverSection: React.FC = () => {
             className={styles.serviceCard}
             onClick={(e) => {
               e.preventDefault();
-              handleServiceClick('online-courses');
+              handleIndustryClick('LESSONS_TRAINING');
             }}
           >
             <img src={imageMap['service-lessons3']} alt="Online Courses" />
@@ -271,7 +273,7 @@ const DiscoverSection: React.FC = () => {
             className={styles.serviceCard}
             onClick={(e) => {
               e.preventDefault();
-              handleServiceClick('coding-training');
+              handleIndustryClick('LESSONS_TRAINING');
             }}
           >
             <img src={imageMap['service-lessons4']} alt="Coding Training" />

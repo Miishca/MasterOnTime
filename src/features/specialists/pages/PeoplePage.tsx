@@ -20,9 +20,14 @@ const PeoplePage: React.FC = () => {
   const location = useLocation();
 
   useEffect(() => {
-    const { serviceName, scrollToGrid } = (location.state as LocationState) || {};
-    if (serviceName) {
-      setFilters((prev) => ({ ...prev, serviceName }));
+    const { serviceName, industry, scrollToGrid } =
+      (location.state as LocationState) || {};
+    if (serviceName || industry) {
+      setFilters((prev) => ({
+        ...prev,
+        ...(serviceName ? { serviceName } : {}),
+        ...(industry ? { industry } : {}),
+      }));
     }
 
     if (scrollToGrid && gridRef.current) {
