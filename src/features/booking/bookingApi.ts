@@ -57,19 +57,14 @@ export const createBooking = async (
   return unwrap<Booking>(res);
 };
 
-/** Bookings where the signed-in user is the client, plus upcoming appointments. */
+/**
+ * Every booking where the signed-in user is the client — any status
+ * (CONFIRMED, COMPLETED, CANCELLED, RESCHEDULE_REQUESTED). Expired CONFIRMED
+ * bookings are lazily flipped to COMPLETED by the backend on this read.
+ */
 export const getMyBookings = async (): Promise<Booking[]> => {
-  const [confirmed, upcoming] = await Promise.all([
-    fetch(`${BOOKINGS_API}/confirmed`, { headers: authHeaders() }).then((r) =>
-      unwrap<Booking[]>(r)
-    ),
-    fetch(`${BOOKINGS_API}/appointments/upcoming`, {
-      headers: authHeaders(),
-    }).then((r) => unwrap<Booking[]>(r)),
-  ]);
-  const byId = new Map<number, Booking>();
-  for (const b of [...upcoming, ...confirmed]) byId.set(b.id, b);
-  return [...byId.values()].sort((a, b) => a.startTime.localeCompare(b.startTime));
+  const res = await fetch(`${BOOKINGS_API}/history`, { headers: authHeaders() });
+  return unwrap<Booking[]>(res);
 };
 
 export const cancelBooking = async (id: number): Promise<void> => {
