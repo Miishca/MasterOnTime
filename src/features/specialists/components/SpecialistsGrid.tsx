@@ -16,7 +16,7 @@ const SpecialistsGrid: React.FC<SpecialistsGridProps> = ({
 
   useEffect(() => {
     const fetchSpecialists = async () => {
-      const response = await getSpecialists();
+      const response = await getSpecialists(filters);
       setSpecialists(response);
       setTotalPages(Math.ceil(response.length / itemsPerPage));
       setCurrentPage(1);

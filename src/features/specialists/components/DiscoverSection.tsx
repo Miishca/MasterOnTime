@@ -5,9 +5,14 @@ import styles from './DiscoverSection.module.scss';
 const DiscoverSection: React.FC = () => {
   const navigate = useNavigate();
 
-  const handleServiceClick = (tag: string) => {
-    const filterTag = tag.toLowerCase().replace(/-/g, ' ');
-    navigate('/people', { state: { filterTag, scrollToGrid: true } });
+  // Ідемо на /people з реальним фільтром serviceName (GET /api/specialists/search)
+  // — знайде спеціалістів, які додали собі послугу з такою назвою (Category/
+  // CategoryItem, "Services & pricing" на /profile). Якщо жоден спеціаліст ще
+  // не додав такої послуги, список буде порожній — це не баг, а відсутність
+  // даних.
+  const handleServiceClick = (slug: string) => {
+    const serviceName = slug.toLowerCase().replace(/-/g, ' ');
+    navigate('/people', { state: { serviceName, scrollToGrid: true } });
   };
   return (
     <div className={styles.discover}>

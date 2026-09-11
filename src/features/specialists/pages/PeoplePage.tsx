@@ -5,23 +5,33 @@ import SearchBar from '../components/SearchBar';
 import SpecialistsGrid from '../components/SpecialistsGrid';
 import styles from './PeoplePage.module.scss';
 import imageMap from '../../../utils/imageLoader';
-import { type LocationState, type SearchFilters } from '../../../types';
+import { type LocationState, type SpecialistsSearchFilters } from '../../../types';
 import { useLocation } from 'react-router-dom';
 
+// 5 фіксовані категорії з макета. Спеціалісти самі назвають свої категорії
+// довільно (через "Services & pricing" на /profile), тому збіг з цими
+// назвами станеться лише якщо хтось назве категорію так само буквально.
+// Це справжній фільтр (той самий `categories`, що й у пошуковому барі) —
+// просто поки що по ньому може нічого не знайтися, доки специалісти не
+// почнуть використовувати ці саме назви (або поки ми не введемо єдиний
+// фіксований список категорій замість вільного тексту в ServicesManager).
+const INDUSTRY_CATEGORIES = [
+  'Home & Garden',
+  'Health & Wellbeing',
+  'Weddings & Events',
+  'Business Services',
+  'Lessons & Training',
+];
+
 const PeoplePage: React.FC = () => {
-  const [filters, setFilters] = useState<SearchFilters>({
-    name: '',
-    city: '',
-    experience: '',
-    rating: '',
-  });
+  const [filters, setFilters] = useState<SpecialistsSearchFilters>({});
   const gridRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
 
   useEffect(() => {
-    const { filterTag, scrollToGrid } = (location.state as LocationState) || {};
-    if (filterTag) {
-      setFilters((prevFilters) => ({ ...prevFilters, tags: filterTag }));
+    const { serviceName, scrollToGrid } = (location.state as LocationState) || {};
+    if (serviceName) {
+      setFilters((prev) => ({ ...prev, serviceName }));
     }
 
     if (scrollToGrid && gridRef.current) {
@@ -29,15 +39,16 @@ const PeoplePage: React.FC = () => {
     }
   }, [location.state]);
 
-  const handleSearch = (filters: SearchFilters) => {
-    setFilters((prevFilters) => ({ ...prevFilters, ...filters }));
+  const handleSearch = (next: SpecialistsSearchFilters) => {
+    setFilters(next);
   };
 
   const handleCategoryClick = (category: string) => {
-    setFilters((prevFilters) => ({
-      ...prevFilters,
-      category: prevFilters.category === category ? '' : category,
-    }));
+    setFilters((prev) => {
+      const active = prev.categories?.[0] === category;
+      const { categories: _drop, ...rest } = prev;
+      return active ? rest : { ...rest, categories: [category] };
+    });
     if (gridRef.current) {
       gridRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
@@ -58,60 +69,21 @@ const PeoplePage: React.FC = () => {
         <SpecialistsGrid filters={filters} itemsPerPage={9} />
       </div>
       <div className={styles.findIndustries}>
-        <h1>Got lost in the industries?</h1>
+        <h1>Got lost in the industries?</h1>
         <div className={styles.findIndustriesContent}>
           <img src={imageMap['find-industries']} alt="Find industries" />
           <div className={styles.contentHeaders}>
-            <h2
-              onClick={() => handleCategoryClick('Home & Garden')}
-              className={
-                filters.category === 'Home & Garden'
-                  ? styles.activeCategory
-                  : ''
-              }
-            >
-              Home & Garden
-            </h2>
-            <h2
-              onClick={() => handleCategoryClick('Health & Wellbeing')}
-              className={
-                filters.category === 'Health & Wellbeing'
-                  ? styles.activeCategory
-                  : ''
-              }
-            >
-              Health & Wellbeing
-            </h2>
-            <h2
-              onClick={() => handleCategoryClick('Weddings & Events')}
-              className={
-                filters.category === 'Weddings & Events'
-                  ? styles.activeCategory
-                  : ''
-              }
-            >
-              Weddings & Events
-            </h2>
-            <h2
-              onClick={() => handleCategoryClick('Business Services')}
-              className={
-                filters.category === 'Business Services'
-                  ? styles.activeCategory
-                  : ''
-              }
-            >
-              Business Services
-            </h2>
-            <h2
-              onClick={() => handleCategoryClick('Lessons & Training')}
-              className={
-                filters.category === 'Lessons & Training'
-                  ? styles.activeCategory
-                  : ''
-              }
-            >
-              Lessons & Training
-            </h2>
+            {INDUSTRY_CATEGORIES.map((category) => (
+              <h2
+                key={category}
+                onClick={() => handleCategoryClick(category)}
+                className={
+                  filters.categories?.[0] === category ? styles.activeCategory : ''
+                }
+              >
+                {category}
+              </h2>
+            ))}
           </div>
         </div>
       </div>

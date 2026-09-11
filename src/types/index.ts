@@ -120,34 +120,30 @@ export interface RegisterRequest {
 // Роль призначає лише адмін (PATCH /api/admin/users/:id/role) — не при реєстрації.
 
 export interface SearchBarProps {
-  onSearch: (filters: SearchFilters) => void;
+  onSearch: (filters: SpecialistsSearchFilters) => void;
   pageType: 'services' | 'people';
 }
 
-export interface SearchFilters {
-  category?: string;
-  name?: string;
-  city?: string;
-  serviceType?: string;
-  location?: string;
-  experience?: string;
-  rating?: string;
-  tags?: string;
-  id?: string;
-}
+// Єдина форма фільтрів, що реально доходить до бекенду
+// (GET /api/specialists/search) — SearchBar, DiscoverSection і
+// SpecialistsGrid усі говорять цією мовою, без проміжних "UI-only" форм,
+// що раніше губилися дорогою (див. SpecialistsGrid, який їх ігнорував).
 export interface SpecialistsSearchFilters {
   serviceName?: string;
   firstName?: string;
   city?: string;
   categories?: string[];
+  tags?: string[];
   minExperience?: number;
   minRating?: number;
 }
+// Той самий набір полів, але як рядки з формених інпутів — до парсингу/валідації.
 export interface SearchFiltersUI {
   serviceName?: string;
   firstName?: string;
   city?: string;
   categories?: string;
+  tags?: string;
   minExperience?: string;
   minRating?: string;
 }
@@ -158,12 +154,14 @@ export interface PaginationProps {
   onPageChange: (page: number) => void;
 }
 export interface SpecialistsGridProps {
-  filters?: SearchFilters;
+  filters?: SpecialistsSearchFilters;
   itemsPerPage?: number;
 }
 
 export interface LocationState {
-  filterTag?: string;
+  // Значення для SpecialistsSearchFilters.serviceName, передане навігацією
+  // (напр. з картки послуги на /services) — вже реальний, робочий фільтр.
+  serviceName?: string;
   scrollToGrid?: boolean;
 }
 export interface Landing {

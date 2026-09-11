@@ -20,6 +20,7 @@ const SearchBar: React.FC<Props> = ({ onSearch }) => {
     firstName: '',
     city: '',
     categories: '',
+    tags: '',
     minExperience: '',
     minRating: '',
   });
@@ -38,6 +39,13 @@ const SearchBar: React.FC<Props> = ({ onSearch }) => {
 
     if (form.categories?.trim()) {
       filters.categories = form.categories
+        .split(',')
+        .map((s) => s.trim())
+        .filter(Boolean);
+    }
+
+    if (form.tags?.trim()) {
+      filters.tags = form.tags
         .split(',')
         .map((s) => s.trim())
         .filter(Boolean);
@@ -95,6 +103,14 @@ const SearchBar: React.FC<Props> = ({ onSearch }) => {
             placeholder="Categories"
             value={form.categories ?? ''}
             onChange={(e) => handleChange('categories', e.target.value)}
+            icon={<FiSearch />}
+          />
+          <span className={styles.divider} />
+
+          <Input
+            placeholder="Tags (e.g. pipes, boilers)"
+            value={form.tags ?? ''}
+            onChange={(e) => handleChange('tags', e.target.value)}
             icon={<FiSearch />}
           />
           <span className={styles.divider} />

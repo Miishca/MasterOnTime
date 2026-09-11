@@ -28,6 +28,7 @@ function buildSearchUrl(filters: SpecialistsSearchFilters): string {
     params.append('minRating', String(filters.minRating));
   if (filters.categories?.length)
     for (const c of filters.categories) params.append('categories', c);
+  if (filters.tags?.length) for (const t of filters.tags) params.append('tags', t);
 
   const qs = params.toString();
   return qs ? `${SPECIALISTS_API}/search?${qs}` : SPECIALISTS_API;
