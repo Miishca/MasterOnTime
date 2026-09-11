@@ -3,7 +3,7 @@ import { Link, NavLink, useNavigate } from 'react-router-dom';
 import styles from './Header.module.scss';
 import Button from '../Button/Button';
 import imageMap from '../../utils/imageLoader';
-import { clearToken, getRole, isAdmin, isAuthenticated } from '../../services/auth/authApi';
+import { getRole, isAdmin, isAuthenticated, logout } from '../../services/auth/authApi';
 import NotificationBell from '../../features/notifications/NotificationBell';
 
 const navClass = ({ isActive }: { isActive: boolean }) =>
@@ -16,8 +16,8 @@ const Header: React.FC = () => {
   // Favorites — лише для юзерів-клієнтів (backend: requireRole('USER')).
   const plainUser = authed && getRole() === 'USER';
 
-  const handleLogout = () => {
-    clearToken();
+  const handleLogout = async () => {
+    await logout();
     navigate('/login');
   };
 

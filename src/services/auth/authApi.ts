@@ -7,6 +7,7 @@ const AUTH_API_BASE = `${API_BASE}/auth`;
 const USER_API_BASE = `${API_BASE}/api/users`;
 
 const TOKEN_KEY = 'token';
+const REFRESH_TOKEN_KEY = 'refreshToken';
 
 export type Role = 'USER' | 'SPECIALIST' | 'ADMIN';
 interface TokenPayload {
@@ -18,7 +19,11 @@ interface TokenPayload {
 
 export const getToken = () => localStorage.getItem(TOKEN_KEY);
 export const setToken = (token: string) => localStorage.setItem(TOKEN_KEY, token);
-export const clearToken = () => localStorage.removeItem(TOKEN_KEY);
+export const getRefreshToken = () => localStorage.getItem(REFRESH_TOKEN_KEY);
+export const clearToken = () => {
+  localStorage.removeItem(TOKEN_KEY);
+  localStorage.removeItem(REFRESH_TOKEN_KEY);
+};
 export const isAuthenticated = () => Boolean(getToken());
 
 /** The role carried in the JWT, or null if there's no valid, unexpired token. */
@@ -81,9 +86,32 @@ export const login = async (email: string, password: string): Promise<string> =>
 
   if (!res.ok) throw await toApiError(res);
 
-  const data: { token: string } = await res.json();
+  const data: { token: string; refreshToken: string } = await res.json();
   setToken(data.token);
+  localStorage.setItem(REFRESH_TOKEN_KEY, data.refreshToken);
   return data.token;
+};
+
+/**
+ * Revokes the current session's refresh token server-side, then clears both
+ * tokens locally. Best-effort: if the backend call fails (offline, token
+ * already gone), the local sign-out still happens — a failed revoke should
+ * never trap someone in a "logged in" state on their own device.
+ */
+export const logout = async (): Promise<void> => {
+  const refreshToken = getRefreshToken();
+  if (refreshToken) {
+    try {
+      await fetch(`${AUTH_API_BASE}/logout`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ refreshToken }),
+      });
+    } catch {
+      /* offline or already gone — still clear locally below */
+    }
+  }
+  clearToken();
 };
 
 export const register = async (userData: RegisterRequest): Promise<UserProfile> => {
