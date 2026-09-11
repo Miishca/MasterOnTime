@@ -19,6 +19,7 @@ import {
 import { fullName } from '../utils/fullName';
 import { useUserProfile } from '../hooks/useUserProfile';
 import ServicesManager from '../features/services/ServicesManager';
+import PortfolioManager from '../features/portfolio/PortfolioManager';
 import Loader from '../components/Loader/Loader';
 import useScrollToTop from '../hooks/useScrollToTop';
 
@@ -159,361 +160,375 @@ const ProfilePageSetup: React.FC = () => {
 
   if (loading) {
     return (
-      <div className={styles.container}>
+      <>
         <Header />
-        <Loader />
-        <Footer />
-      </div>
+        <div className={styles.container}>
+          <Loader />
+          <Footer />
+        </div>
+      </>
     );
   }
 
   if (error || !userProfile) {
     return (
-      <div className={styles.container}>
+      <>
         <Header />
-        <div className={styles.errorMessage}>
-          <p>{error || 'Failed to load profile data.'}</p>
-          <button onClick={() => navigate('/login')}>Go to Login</button>
+        <div className={styles.container}>
+          <div className={styles.errorMessage}>
+            <p>{error || 'Failed to load profile data.'}</p>
+            <button onClick={() => navigate('/login')}>Go to Login</button>
+          </div>
+          <Footer />
         </div>
-        <Footer />
-      </div>
+      </>
     );
   }
 
   return (
-    <div className={styles.container}>
+    <>
       <Header />
-
-      <div className={styles.profileWrapper}>
-        <div className={styles.leftColumn}>
-          <div className={styles.avatarContainer}>
-            <img
-              src={userProfile.profileImageUrl || imageMap['default']}
-              alt={fullName(userProfile)}
-              className={styles.avatar}
+      <div className={styles.container}>
+        <div className={styles.profileWrapper}>
+          <div className={styles.leftColumn}>
+            <div className={styles.avatarContainer}>
+              <img
+                src={userProfile.profileImageUrl || imageMap['default']}
+                alt={fullName(userProfile)}
+                className={styles.avatar}
+              />
+            </div>
+            <input
+              ref={photoInputRef}
+              type="file"
+              accept={ACCEPTED_IMAGE_TYPES.join(',')}
+              onChange={handlePhotoSelected}
+              hidden
             />
-          </div>
-          <input
-            ref={photoInputRef}
-            type="file"
-            accept={ACCEPTED_IMAGE_TYPES.join(',')}
-            onChange={handlePhotoSelected}
-            hidden
-          />
-          <button
-            type="button"
-            className={styles.changePhoto}
-            onClick={() => photoInputRef.current?.click()}
-            disabled={photoBusy}
-          >
-            {photoBusy ? 'Uploading…' : 'Change photo'}
-          </button>
-          {photoError && (
-            <p className={styles.photoError} role="alert">
-              {photoError}
-            </p>
-          )}
-
-          <div className={styles.leftInfoCard}>
-            <h3 className={styles.name}>{fullName(userProfile)}</h3>
-            <p className={styles.balance}>Balance: 100$</p>
-            <p className={styles.contact}>
-              <span className={styles.icon}>📍</span>{' '}
-              {userProfile.address?.city}, Ukraine
-            </p>
-            <p className={styles.contact}>
-              <span className={styles.icon}>✉️</span> {userProfile.email}
-            </p>
-            <p className={styles.contact}>
-              <span className={styles.icon}>📞</span> {userProfile.phoneNumber}
-            </p>
-          </div>
-        </div>
-
-        <div className={styles.centerColumn}>
-          <div className={`${styles.card} ${styles.cardMedium}`}>
-            <div className={styles.cardHeader}>
-              <h4>Account Details</h4>
-              <button
-                className={styles.editIcon}
-                onClick={() =>
-                  openEditModal({
-                    firstName: userProfile.firstName,
-                    lastName: userProfile.lastName,
-                    email: userProfile.email,
-                    phoneNumber: userProfile.phoneNumber,
-                  })
-                }
-              >
-                <img src={imageMap['edit']} />
-              </button>
-            </div>
-
-            <div className={styles.detailsRow}>
-              <span>First name</span>
-              <p>{userProfile.firstName}</p>
-            </div>
-            <div className={styles.detailsRow}>
-              <span>Last name</span>
-              <p>{userProfile.lastName}</p>
-            </div>
-            <div className={styles.detailsRow}>
-              <span>Date of birth</span>
-              <p>24 February, 2002</p>
-            </div>
-            <div className={styles.detailsRow}>
-              <span>Sex</span>
-              <p>Female</p>
-            </div>
-          </div>
-
-          <div className={`${styles.card} ${styles.cardMedium}`}>
-            <div className={styles.cardHeader}>
-              <h4>Shipping Address</h4>
-              <button
-                className={styles.editIcon}
-                onClick={() =>
-                  openEditModal({
-                    country: userProfile.address?.country,
-                    city: userProfile.address?.city,
-                    street: userProfile.address?.street,
-                    zip: userProfile.address?.zip,
-                  })
-                }
-              >
-                <img src={imageMap['edit']} />
-              </button>
-            </div>
-
-            <div className={styles.detailsRow}>
-              <span>Address</span>
-              <p>{userProfile.address?.street}</p>
-            </div>
-            <div className={styles.detailsRow}>
-              <span>City</span>
-              <p>{userProfile.address?.city}</p>
-            </div>
-            <div className={styles.detailsRow}>
-              <span>Country</span>
-              <p>{userProfile.address?.country}</p>
-            </div>
-            <div className={styles.detailsRow}>
-              <span>Zip Code</span>
-              <p>{userProfile.address?.zip}</p>
-            </div>
-          </div>
-        </div>
-
-        <div className={styles.paymentColumn}>
-          <div className={`${styles.card} ${styles.cardLarge}`}>
-            <div className={styles.cardHeader}>
-              <h4>Payment Methods</h4>
-              {/* <button
-                className={styles.editIcon}
-                onClick={() =>
-                  openEditModal({
-                    cardType: userProfile.cardType,
-                    cardHolder: userProfile.lastName,
-                    expire: userProfile.expire,
-                    cardNumber: userProfile.cardNumber,
-                    balance: userProfile.balance,
-                  })
-                }
-              >
-                <img src={imageMap['edit']} />
-              </button> */}
-            </div>
-
-            <img
-              src={imageMap['creditcard']}
-              alt="Credit Card"
-              className={styles.creditCard}
-            />
-
-            {/* <div className={styles.paymentDetails}>
-              <div className={styles.detailsRow}>
-                <span>Card Type</span>
-                <p>{userProfile.cardType}</p>
-              </div>
-              <div className={styles.detailsRow}>
-                <span>Card Holder</span>
-                <p>{userProfile.cardHolder}</p>
-              </div>
-              <div className={styles.detailsRow}>
-                <span>Expire</span>
-                <p>{userProfile.expire}</p>
-              </div>
-              <div className={styles.detailsRow}>
-                <span>Card Number</span>
-                <p>{userProfile.cardNumber}</p>
-              </div>
-              <div className={styles.detailsRow}>
-                <span>Balance</span>
-                <p>{userProfile.balance}</p>
-              </div>
-            </div> */}
-          </div>
-        </div>
-      </div>
-
-      {isSpecialist && (
-        <section className={styles.specialistSection}>
-          <div className={styles.specialistHeader}>
-            <h3>Professional profile</h3>
-            {!specEditing && (
-              <button
-                className={styles.specEditBtn}
-                onClick={() => setSpecEditing(true)}
-              >
-                Edit
-              </button>
+            <button
+              type="button"
+              className={styles.changePhoto}
+              onClick={() => photoInputRef.current?.click()}
+              disabled={photoBusy}
+            >
+              {photoBusy ? 'Uploading…' : 'Change photo'}
+            </button>
+            {photoError && (
+              <p className={styles.photoError} role="alert">
+                {photoError}
+              </p>
             )}
+
+            <div className={styles.leftInfoCard}>
+              <h3 className={styles.name}>{fullName(userProfile)}</h3>
+              <p className={styles.balance}>Balance: 100$</p>
+              <p className={styles.contact}>
+                <span className={styles.icon}>📍</span>{' '}
+                {userProfile.address?.city}, Ukraine
+              </p>
+              <p className={styles.contact}>
+                <span className={styles.icon}>✉️</span> {userProfile.email}
+              </p>
+              <p className={styles.contact}>
+                <span className={styles.icon}>📞</span> {userProfile.phoneNumber}
+              </p>
+            </div>
           </div>
-          <p className={styles.specNote}>
-            Shown on your public specialist card. Your rating is calculated from reviews.
-          </p>
 
-          {specError && (
-            <p className={styles.photoError} role="alert">
-              {specError}
-            </p>
-          )}
+          <div className={styles.centerColumn}>
+            <div className={`${styles.card} ${styles.cardMedium}`}>
+              <div className={styles.cardHeader}>
+                <h4>Account Details</h4>
+                <button
+                  className={styles.editIcon}
+                  onClick={() =>
+                    openEditModal({
+                      firstName: userProfile.firstName,
+                      lastName: userProfile.lastName,
+                      email: userProfile.email,
+                      phoneNumber: userProfile.phoneNumber,
+                    })
+                  }
+                >
+                  <img src={imageMap['edit']} />
+                </button>
+              </div>
 
-          {!specEditing ? (
-            <div className={styles.specView}>
-              <div>
-                <span>Profession</span>
-                <p>{spec?.profession || '—'}</p>
+              <div className={styles.detailsRow}>
+                <span>First name</span>
+                <p>{userProfile.firstName}</p>
               </div>
-              <div>
-                <span>Price</span>
-                <p>{spec && Number(spec.price) > 0 ? spec.price : '—'}</p>
+              <div className={styles.detailsRow}>
+                <span>Last name</span>
+                <p>{userProfile.lastName}</p>
               </div>
-              <div>
-                <span>Experience</span>
-                <p>{spec && spec.experience > 0 ? `${spec.experience} years` : '—'}</p>
+              <div className={styles.detailsRow}>
+                <span>Date of birth</span>
+                <p>24 February, 2002</p>
               </div>
-              <div>
-                <span>Rating</span>
-                <p>{spec ? spec.rating.toFixed(1) : '—'}</p>
-              </div>
-              <div>
-                <span>Industry</span>
-                <p>{spec?.industry ? INDUSTRY_LABELS[spec.industry] : '—'}</p>
-              </div>
-              <div className={styles.specWide}>
-                <span>Tags</span>
-                <p>{spec && spec.tags.length ? spec.tags.join(', ') : '—'}</p>
-              </div>
-              <div className={styles.specWide}>
-                <span>About</span>
-                <p>{spec?.about || '—'}</p>
+              <div className={styles.detailsRow}>
+                <span>Sex</span>
+                <p>Female</p>
               </div>
             </div>
-          ) : (
-            <form className={styles.specForm} onSubmit={saveSpecProfile}>
-              <label>
-                <span>Profession</span>
-                <input
-                  type="text"
-                  value={specForm.profession}
-                  onChange={(e) =>
-                    setSpecForm((f) => ({ ...f, profession: e.target.value }))
-                  }
-                />
-              </label>
-              <label>
-                <span>Price</span>
-                <input
-                  type="number"
-                  min={0}
-                  value={specForm.price}
-                  onChange={(e) => setSpecForm((f) => ({ ...f, price: e.target.value }))}
-                />
-              </label>
-              <label>
-                <span>Experience (years)</span>
-                <input
-                  type="number"
-                  min={0}
-                  value={specForm.experience}
-                  onChange={(e) =>
-                    setSpecForm((f) => ({ ...f, experience: e.target.value }))
-                  }
-                />
-              </label>
-              <label>
-                <span>Industry</span>
-                <select
-                  value={specForm.industry}
-                  onChange={(e) =>
-                    setSpecForm((f) => ({
-                      ...f,
-                      industry: e.target.value as Industry | '',
-                    }))
-                  }
-                >
-                  <option value="">— not set —</option>
-                  {INDUSTRIES.map((ind) => (
-                    <option key={ind} value={ind}>
-                      {INDUSTRY_LABELS[ind]}
-                    </option>
-                  ))}
-                </select>
-              </label>
-              <label className={styles.specWide}>
-                <span>Tags (comma-separated)</span>
-                <input
-                  type="text"
-                  placeholder="wiring, repair"
-                  value={specForm.tags}
-                  onChange={(e) => setSpecForm((f) => ({ ...f, tags: e.target.value }))}
-                />
-              </label>
-              <label className={styles.specWide}>
-                <span>About</span>
-                <textarea
-                  rows={4}
-                  value={specForm.about}
-                  onChange={(e) => setSpecForm((f) => ({ ...f, about: e.target.value }))}
-                />
-              </label>
-              <div className={styles.specActions}>
-                <button type="submit" disabled={specBusy}>
-                  {specBusy ? 'Saving…' : 'Save'}
-                </button>
+
+            <div className={`${styles.card} ${styles.cardMedium}`}>
+              <div className={styles.cardHeader}>
+                <h4>Shipping Address</h4>
                 <button
-                  type="button"
-                  className={styles.specCancel}
-                  onClick={() => setSpecEditing(false)}
-                  disabled={specBusy}
+                  className={styles.editIcon}
+                  onClick={() =>
+                    openEditModal({
+                      country: userProfile.address?.country,
+                      city: userProfile.address?.city,
+                      street: userProfile.address?.street,
+                      zip: userProfile.address?.zip,
+                    })
+                  }
                 >
-                  Cancel
+                  <img src={imageMap['edit']} />
                 </button>
               </div>
-            </form>
-          )}
-        </section>
-      )}
 
-      {isSpecialist && (
-        <section className={styles.specialistSection}>
-          <div className={styles.specialistHeader}>
-            <h3>Services &amp; pricing</h3>
+              <div className={styles.detailsRow}>
+                <span>Address</span>
+                <p>{userProfile.address?.street}</p>
+              </div>
+              <div className={styles.detailsRow}>
+                <span>City</span>
+                <p>{userProfile.address?.city}</p>
+              </div>
+              <div className={styles.detailsRow}>
+                <span>Country</span>
+                <p>{userProfile.address?.country}</p>
+              </div>
+              <div className={styles.detailsRow}>
+                <span>Zip Code</span>
+                <p>{userProfile.address?.zip}</p>
+              </div>
+            </div>
           </div>
-          <ServicesManager />
-        </section>
-      )}
 
-      <EditModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        initialData={modalData}
-        onSave={handleSave}
-      />
+          <div className={styles.paymentColumn}>
+            <div className={`${styles.card} ${styles.cardLarge}`}>
+              <div className={styles.cardHeader}>
+                <h4>Payment Methods</h4>
+                {/* <button
+                  className={styles.editIcon}
+                  onClick={() =>
+                    openEditModal({
+                      cardType: userProfile.cardType,
+                      cardHolder: userProfile.lastName,
+                      expire: userProfile.expire,
+                      cardNumber: userProfile.cardNumber,
+                      balance: userProfile.balance,
+                    })
+                  }
+                >
+                  <img src={imageMap['edit']} />
+                </button> */}
+              </div>
 
-      <Footer />
-    </div>
+              <img
+                src={imageMap['creditcard']}
+                alt="Credit Card"
+                className={styles.creditCard}
+              />
+
+              {/* <div className={styles.paymentDetails}>
+                <div className={styles.detailsRow}>
+                  <span>Card Type</span>
+                  <p>{userProfile.cardType}</p>
+                </div>
+                <div className={styles.detailsRow}>
+                  <span>Card Holder</span>
+                  <p>{userProfile.cardHolder}</p>
+                </div>
+                <div className={styles.detailsRow}>
+                  <span>Expire</span>
+                  <p>{userProfile.expire}</p>
+                </div>
+                <div className={styles.detailsRow}>
+                  <span>Card Number</span>
+                  <p>{userProfile.cardNumber}</p>
+                </div>
+                <div className={styles.detailsRow}>
+                  <span>Balance</span>
+                  <p>{userProfile.balance}</p>
+                </div>
+              </div> */}
+            </div>
+          </div>
+        </div>
+
+        {isSpecialist && (
+          <section className={styles.specialistSection}>
+            <div className={styles.specialistHeader}>
+              <h3>Professional profile</h3>
+              {!specEditing && (
+                <button
+                  className={styles.specEditBtn}
+                  onClick={() => setSpecEditing(true)}
+                >
+                  Edit
+                </button>
+              )}
+            </div>
+            <p className={styles.specNote}>
+              Shown on your public specialist card. Your rating is calculated from reviews.
+            </p>
+
+            {specError && (
+              <p className={styles.photoError} role="alert">
+                {specError}
+              </p>
+            )}
+
+            {!specEditing ? (
+              <div className={styles.specView}>
+                <div>
+                  <span>Profession</span>
+                  <p>{spec?.profession || '—'}</p>
+                </div>
+                <div>
+                  <span>Price</span>
+                  <p>{spec && Number(spec.price) > 0 ? spec.price : '—'}</p>
+                </div>
+                <div>
+                  <span>Experience</span>
+                  <p>{spec && spec.experience > 0 ? `${spec.experience} years` : '—'}</p>
+                </div>
+                <div>
+                  <span>Rating</span>
+                  <p>{spec ? spec.rating.toFixed(1) : '—'}</p>
+                </div>
+                <div>
+                  <span>Industry</span>
+                  <p>{spec?.industry ? INDUSTRY_LABELS[spec.industry] : '—'}</p>
+                </div>
+                <div className={styles.specWide}>
+                  <span>Tags</span>
+                  <p>{spec && spec.tags.length ? spec.tags.join(', ') : '—'}</p>
+                </div>
+                <div className={styles.specWide}>
+                  <span>About</span>
+                  <p>{spec?.about || '—'}</p>
+                </div>
+              </div>
+            ) : (
+              <form className={styles.specForm} onSubmit={saveSpecProfile}>
+                <label>
+                  <span>Profession</span>
+                  <input
+                    type="text"
+                    value={specForm.profession}
+                    onChange={(e) =>
+                      setSpecForm((f) => ({ ...f, profession: e.target.value }))
+                    }
+                  />
+                </label>
+                <label>
+                  <span>Price</span>
+                  <input
+                    type="number"
+                    min={0}
+                    value={specForm.price}
+                    onChange={(e) => setSpecForm((f) => ({ ...f, price: e.target.value }))}
+                  />
+                </label>
+                <label>
+                  <span>Experience (years)</span>
+                  <input
+                    type="number"
+                    min={0}
+                    value={specForm.experience}
+                    onChange={(e) =>
+                      setSpecForm((f) => ({ ...f, experience: e.target.value }))
+                    }
+                  />
+                </label>
+                <label>
+                  <span>Industry</span>
+                  <select
+                    value={specForm.industry}
+                    onChange={(e) =>
+                      setSpecForm((f) => ({
+                        ...f,
+                        industry: e.target.value as Industry | '',
+                      }))
+                    }
+                  >
+                    <option value="">— not set —</option>
+                    {INDUSTRIES.map((ind) => (
+                      <option key={ind} value={ind}>
+                        {INDUSTRY_LABELS[ind]}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <label className={styles.specWide}>
+                  <span>Tags (comma-separated)</span>
+                  <input
+                    type="text"
+                    placeholder="wiring, repair"
+                    value={specForm.tags}
+                    onChange={(e) => setSpecForm((f) => ({ ...f, tags: e.target.value }))}
+                  />
+                </label>
+                <label className={styles.specWide}>
+                  <span>About</span>
+                  <textarea
+                    rows={4}
+                    value={specForm.about}
+                    onChange={(e) => setSpecForm((f) => ({ ...f, about: e.target.value }))}
+                  />
+                </label>
+                <div className={styles.specActions}>
+                  <button type="submit" disabled={specBusy}>
+                    {specBusy ? 'Saving…' : 'Save'}
+                  </button>
+                  <button
+                    type="button"
+                    className={styles.specCancel}
+                    onClick={() => setSpecEditing(false)}
+                    disabled={specBusy}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            )}
+          </section>
+        )}
+
+        {isSpecialist && (
+          <section className={styles.specialistSection}>
+            <div className={styles.specialistHeader}>
+              <h3>Services &amp; pricing</h3>
+            </div>
+            <ServicesManager />
+          </section>
+        )}
+
+        {isSpecialist && (
+          <section className={styles.specialistSection}>
+            <div className={styles.specialistHeader}>
+              <h3>Portfolio</h3>
+            </div>
+            <PortfolioManager />
+          </section>
+        )}
+
+        <EditModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          initialData={modalData}
+          onSave={handleSave}
+        />
+
+        <Footer />
+      </div>
+    </>
   );
 };
 

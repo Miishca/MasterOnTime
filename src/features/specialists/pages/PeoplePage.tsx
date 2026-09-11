@@ -52,38 +52,40 @@ const PeoplePage: React.FC = () => {
   };
 
   return (
-    <div className={styles.container}>
+    <>
       <Header />
-      <SearchBar onSearch={handleSearch} />
-      <h1>Meet Our Professionals</h1>
-      <p className={styles.textContent}>
-        Browse a diverse community of trusted specialists ready to help you.
-        Whether you need a stylist, tutor, trainer, or handyman — explore
-        profiles, check reviews, and book the right person for the job in just a
-        few clicks.
-      </p>
-      <div ref={gridRef}>
-        <SpecialistsGrid filters={filters} itemsPerPage={9} />
-      </div>
-      <div className={styles.findIndustries}>
-        <h1>Got lost in the industries?</h1>
-        <div className={styles.findIndustriesContent}>
-          <img src={imageMap['find-industries']} alt="Find industries" />
-          <div className={styles.contentHeaders}>
-            {INDUSTRIES.map((industry) => (
-              <h2
-                key={industry}
-                onClick={() => handleIndustryClick(industry)}
-                className={filters.industry === industry ? styles.activeCategory : ''}
-              >
-                {INDUSTRY_LABELS[industry]}
-              </h2>
-            ))}
+      <div className={styles.container}>
+        <SearchBar onSearch={handleSearch} />
+        <h1>Meet Our Professionals</h1>
+        <p className={styles.textContent}>
+          Browse a diverse community of trusted specialists ready to help you.
+          Whether you need a stylist, tutor, trainer, or handyman — explore
+          profiles, check reviews, and book the right person for the job in just a
+          few clicks.
+        </p>
+        <div ref={gridRef}>
+          <SpecialistsGrid filters={filters} itemsPerPage={9} />
+        </div>
+        <div className={styles.findIndustries}>
+          <h1>Got lost in the industries?</h1>
+          <div className={styles.findIndustriesContent}>
+            <img src={imageMap['find-industries']} alt="Find industries" />
+            <div className={styles.contentHeaders}>
+              {INDUSTRIES.map((industry) => (
+                <h2
+                  key={industry}
+                  onClick={() => handleIndustryClick(industry)}
+                  className={filters.industry === industry ? styles.activeCategory : ''}
+                >
+                  {INDUSTRY_LABELS[industry]}
+                </h2>
+              ))}
+            </div>
           </div>
         </div>
+        <Footer />
       </div>
-      <Footer />
-    </div>
+    </>
   );
 };
 

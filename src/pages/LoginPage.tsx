@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { ApiError, isAuthenticated, login } from '../services/auth/authApi';
 import styles from './LoginPage.module.scss';
 
-type LoginLocationState = { from?: string; registered?: boolean } | null;
+type LoginLocationState = { from?: string; registered?: boolean; reset?: boolean } | null;
 
 const LoginPage: React.FC = () => {
   const navigate = useNavigate();
@@ -54,6 +54,11 @@ const LoginPage: React.FC = () => {
           Account created — please log in.
         </p>
       )}
+      {state?.reset && (
+        <p className={styles.success} role="status">
+          Password updated — please log in.
+        </p>
+      )}
 
       <form className={styles.form} onSubmit={handleSubmit}>
         <label className={styles.field}>
@@ -91,6 +96,9 @@ const LoginPage: React.FC = () => {
         </button>
       </form>
 
+      <p className={styles.switch}>
+        <Link to="/forgot-password">Forgot your password?</Link>
+      </p>
       <p className={styles.switch}>
         Don&rsquo;t have an account? <Link to="/register">Register</Link>
       </p>

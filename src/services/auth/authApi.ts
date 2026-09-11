@@ -98,6 +98,39 @@ export const register = async (userData: RegisterRequest): Promise<UserProfile> 
   return res.json();
 };
 
+/**
+ * Always resolves (backend returns 200 even for an unknown email — no
+ * user-enumeration). `devResetToken` is present only outside production,
+ * while no real email provider is wired in.
+ */
+export const forgotPassword = async (
+  email: string
+): Promise<{ message: string; devResetToken?: string }> => {
+  const res = await fetch(`${AUTH_API_BASE}/forgot-password`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email }),
+  });
+
+  if (!res.ok) throw await toApiError(res);
+
+  return res.json();
+};
+
+export const resetPassword = async (
+  token: string,
+  password: string,
+  repeatPassword: string
+): Promise<void> => {
+  const res = await fetch(`${AUTH_API_BASE}/reset-password`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ token, password, repeatPassword }),
+  });
+
+  if (!res.ok) throw await toApiError(res);
+};
+
 export const getMyProfile = async (): Promise<UserProfile> => {
   const res = await fetch(`${USER_API_BASE}/me`, {
     method: 'GET',

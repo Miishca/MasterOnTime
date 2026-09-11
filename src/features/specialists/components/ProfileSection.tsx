@@ -3,7 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import type { Specialist, SpecialistReview } from '../../../types';
 import imageMap from '../../../utils/imageLoader';
 import { fullName } from '../../../utils/fullName';
-import { getSpecialistReviews } from '../../reviews/reviewsApi';
+import { getSpecialistReviews, flagReview } from '../../reviews/reviewsApi';
+import { getSpecialistPortfolio, type PortfolioItem } from '../../portfolio/portfolioApi';
+import { addFavorite, getFavoriteIds, removeFavorite } from '../../favorites/favoritesApi';
+import { ApiError, getRole, isAuthenticated } from '../../../services/auth/authApi';
 import styles from './ProfileSection.module.scss';
 
 interface ProfileSectionProps {
@@ -13,10 +16,47 @@ interface ProfileSectionProps {
 const ProfileSection: React.FC<ProfileSectionProps> = ({ specialist }) => {
   const navigate = useNavigate();
   const [reviews, setReviews] = useState<SpecialistReview[]>([]);
+  const [flagged, setFlagged] = useState<Set<number>>(new Set());
+  const [portfolio, setPortfolio] = useState<PortfolioItem[]>([]);
+  const [favorited, setFavorited] = useState(false);
+  const [favBusy, setFavBusy] = useState(false);
+
+  const canFavorite = isAuthenticated() && getRole() === 'USER';
 
   useEffect(() => {
     getSpecialistReviews(specialist.id).then(setReviews);
+    getSpecialistPortfolio(specialist.id).then(setPortfolio);
+    if (canFavorite) {
+      getFavoriteIds().then((ids) => setFavorited(ids.includes(Number(specialist.id))));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [specialist.id]);
+
+  const toggleFavorite = async () => {
+    setFavBusy(true);
+    try {
+      if (favorited) {
+        await removeFavorite(Number(specialist.id));
+        setFavorited(false);
+      } else {
+        await addFavorite(Number(specialist.id));
+        setFavorited(true);
+      }
+    } catch {
+      /* non-fatal — button just doesn't toggle */
+    } finally {
+      setFavBusy(false);
+    }
+  };
+
+  const report = async (reviewId: number) => {
+    try {
+      await flagReview(reviewId);
+      setFlagged((prev) => new Set(prev).add(reviewId));
+    } catch (err) {
+      if (!(err instanceof ApiError)) throw err;
+    }
+  };
 
   return (
     <div className={styles.profile}>
@@ -40,6 +80,16 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({ specialist }) => {
         >
           Book consultation
         </button>
+        {canFavorite && (
+          <button
+            type="button"
+            className={favorited ? styles.favActive : styles.fav}
+            disabled={favBusy}
+            onClick={toggleFavorite}
+          >
+            {favorited ? '♥ Saved to favorites' : '♡ Save to favorites'}
+          </button>
+        )}
       </div>
 
       <div className={styles.right}>
@@ -71,6 +121,20 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({ specialist }) => {
           </section>
         )}
 
+        {portfolio.length > 0 && (
+          <section className={styles.portfolio}>
+            <h3>Portfolio</h3>
+            <div className={styles.portfolioGrid}>
+              {portfolio.map((p) => (
+                <figure key={p.id}>
+                  <img src={p.imageUrl} alt={p.caption || 'Portfolio work'} />
+                  {p.caption && <figcaption>{p.caption}</figcaption>}
+                </figure>
+              ))}
+            </div>
+          </section>
+        )}
+
         <section className={styles.reviews}>
           <h3>Reviews {reviews.length > 0 && `(${reviews.length})`}</h3>
           {reviews.length === 0 ? (
@@ -87,6 +151,16 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({ specialist }) => {
                     </span>
                   </div>
                   {r.comment && <p className={styles.reviewComment}>{r.comment}</p>}
+                  {isAuthenticated() && (
+                    <button
+                      type="button"
+                      className={styles.flagBtn}
+                      disabled={flagged.has(r.id)}
+                      onClick={() => report(r.id)}
+                    >
+                      {flagged.has(r.id) ? 'Reported' : 'Report'}
+                    </button>
+                  )}
                 </li>
               ))}
             </ul>

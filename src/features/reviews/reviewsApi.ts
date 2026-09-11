@@ -54,3 +54,41 @@ export const submitReview = async (
   });
   return unwrap<unknown>(res);
 };
+
+/** Report a review as inappropriate — any signed-in user. */
+export const flagReview = async (reviewId: number): Promise<void> => {
+  const res = await fetch(`${API_BASE}/api/reviews/${reviewId}/flag`, {
+    method: 'POST',
+    headers: authHeaders(),
+  });
+  return unwrap<void>(res);
+};
+
+export interface ModerationReview {
+  id: number;
+  clientId: number;
+  specialistId: number;
+  rating: number;
+  comment: string | null;
+  createdAt: string;
+  status: string;
+}
+
+/** ADMIN — reviews awaiting moderation (FLAGGED) or already hidden. */
+export const getModerationQueue = async (): Promise<ModerationReview[]> => {
+  const res = await fetch(`${API_BASE}/api/reviews/moderation`, { headers: authHeaders() });
+  return unwrap<ModerationReview[]>(res);
+};
+
+/** ADMIN — set a review's status. */
+export const moderateReview = async (
+  reviewId: number,
+  status: 'VISIBLE' | 'FLAGGED' | 'HIDDEN' | 'DELETED'
+): Promise<void> => {
+  const res = await fetch(`${API_BASE}/api/reviews/${reviewId}/moderate`, {
+    method: 'PUT',
+    headers: authHeaders(),
+    body: JSON.stringify({ status }),
+  });
+  return unwrap<void>(res);
+};

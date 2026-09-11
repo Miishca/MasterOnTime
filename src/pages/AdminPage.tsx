@@ -13,6 +13,7 @@ import {
 import type { SpecialistProfileInput } from '../features/specialists/services/specialistsApi';
 import { INDUSTRIES, INDUSTRY_LABELS, type Industry } from '../types';
 import { fullName } from '../utils/fullName';
+import ReviewModeration from '../features/admin/ReviewModeration';
 import styles from './AdminPage.module.scss';
 
 type ProfileForm = {
@@ -325,6 +326,9 @@ const AdminPage: React.FC = () => {
             </table>
           </div>
         )}
+
+        <h2 className={styles.sectionTitle}>Review moderation</h2>
+        <ReviewModeration />
       </main>
       <Footer />
     </div>

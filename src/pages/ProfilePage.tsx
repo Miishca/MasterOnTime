@@ -39,26 +39,30 @@ const ProfilePage: React.FC = () => {
 
   if (!specialist) {
     return (
-      <div className={styles.container}>
+      <>
         <Header />
-        <div className={styles.loaderContainer}>
-          <div className={styles.spinner}></div>
+        <div className={styles.container}>
+          <div className={styles.loaderContainer}>
+            <div className={styles.spinner}></div>
+          </div>
+          <Footer />
         </div>
-        <Footer />
-      </div>
+      </>
     );
   }
 
   return (
-    <div className={styles.container}>
+    <>
       <Header />
-      <Link to="/people" className={styles.backLink}>
-        &lt; People
-      </Link>
-      <ProfileSection specialist={specialist} />
-      <ProfileContent specialist={specialist} />
-      <Footer />
-    </div>
+      <div className={styles.container}>
+        <Link to="/people" className={styles.backLink}>
+          &lt; People
+        </Link>
+        <ProfileSection specialist={specialist} />
+        <ProfileContent specialist={specialist} />
+        <Footer />
+      </div>
+    </>
   );
 };
 

@@ -1,4 +1,4 @@
-import { ApiError, getToken } from '../../services/auth/authApi';
+import { ApiError, getRole, getToken } from '../../services/auth/authApi';
 import type { Booking } from '../../types';
 
 const API_BASE = import.meta.env.DEV ? '' : import.meta.env.VITE_API_BASE || '';
@@ -58,12 +58,15 @@ export const createBooking = async (
 };
 
 /**
- * Every booking where the signed-in user is the client — any status
- * (CONFIRMED, COMPLETED, CANCELLED, RESCHEDULE_REQUESTED). Expired CONFIRMED
- * bookings are lazily flipped to COMPLETED by the backend on this read.
+ * The signed-in user's bookings. For a USER (client): full history, any
+ * status (CONFIRMED, COMPLETED, CANCELLED, RESCHEDULE_REQUESTED) — expired
+ * CONFIRMED bookings are lazily flipped to COMPLETED by the backend on this
+ * read. `/history` is client-only on the backend, so a SPECIALIST instead
+ * gets their upcoming appointments (as the specialist side of the booking).
  */
 export const getMyBookings = async (): Promise<Booking[]> => {
-  const res = await fetch(`${BOOKINGS_API}/history`, { headers: authHeaders() });
+  const path = getRole() === 'SPECIALIST' ? 'appointments/upcoming' : 'history';
+  const res = await fetch(`${BOOKINGS_API}/${path}`, { headers: authHeaders() });
   return unwrap<Booking[]>(res);
 };
 

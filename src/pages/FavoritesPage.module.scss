@@ -1,0 +1,91 @@
+.container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.main {
+  flex: 1;
+  max-width: 1200px;
+  width: 100%;
+  margin: 32px auto 80px;
+  padding: 0 24px;
+
+  h1 {
+    font-weight: 500;
+    font-size: 28px;
+    margin: 0 0 24px;
+  }
+}
+
+.empty {
+  color: #777;
+}
+
+.error {
+  margin: 0 0 16px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: #fdeceb;
+  color: #b3261e;
+  font-size: 14px;
+}
+
+.grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.card {
+  border: 1px solid #e6e6e6;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+}
+
+.cardLink {
+  color: inherit;
+  text-decoration: none;
+  display: block;
+
+  h3 {
+    margin: 10px 14px 2px;
+    font-size: 15px;
+    font-weight: 600;
+  }
+}
+
+.cardImage {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  display: block;
+}
+
+.profession {
+  margin: 0 14px 10px;
+  color: var(--text-color-secondary);
+  font-size: 13px;
+}
+
+.removeBtn {
+  margin: 0 14px 14px;
+  padding: 6px 0;
+  border: 1px solid #c0574e;
+  border-radius: 7px;
+  background: #fff;
+  color: #c0574e;
+  font-size: 13px;
+  cursor: pointer;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: progress;
+  }
+}
