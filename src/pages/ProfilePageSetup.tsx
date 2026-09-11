@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import Header from '../components/Layout/Header';
 import Footer from '../components/Layout/Footer';
 import styles from './ProfilePageSetup.module.scss';
-import type { PublicSpecialist, UserProfile } from '../types';
+import { INDUSTRIES, INDUSTRY_LABELS, type Industry, type PublicSpecialist, type UserProfile } from '../types';
 import imageMap from '../utils/imageLoader';
 import { useNavigate } from 'react-router-dom';
 import EditModal from '../components/Modal/EditModal';
@@ -43,6 +43,7 @@ const ProfilePageSetup: React.FC = () => {
     experience: '',
     about: '',
     tags: '',
+    industry: '' as Industry | '',
   });
 
   useEffect(() => {
@@ -56,6 +57,7 @@ const ProfilePageSetup: React.FC = () => {
           experience: p.experience > 0 ? String(p.experience) : '',
           about: p.about,
           tags: p.tags.join(', '),
+          industry: p.industry ?? '',
         });
       })
       .catch(() => setSpecError('Could not load your specialist profile.'));
@@ -74,6 +76,7 @@ const ProfilePageSetup: React.FC = () => {
         tags: specForm.tags
           ? specForm.tags.split(',').map((t) => t.trim()).filter(Boolean)
           : undefined,
+        industry: specForm.industry || null,
       });
       setSpec(updated);
       setSpecEditing(false);
@@ -394,6 +397,10 @@ const ProfilePageSetup: React.FC = () => {
                 <span>Rating</span>
                 <p>{spec ? spec.rating.toFixed(1) : '—'}</p>
               </div>
+              <div>
+                <span>Industry</span>
+                <p>{spec?.industry ? INDUSTRY_LABELS[spec.industry] : '—'}</p>
+              </div>
               <div className={styles.specWide}>
                 <span>Tags</span>
                 <p>{spec && spec.tags.length ? spec.tags.join(', ') : '—'}</p>
@@ -434,6 +441,25 @@ const ProfilePageSetup: React.FC = () => {
                     setSpecForm((f) => ({ ...f, experience: e.target.value }))
                   }
                 />
+              </label>
+              <label>
+                <span>Industry</span>
+                <select
+                  value={specForm.industry}
+                  onChange={(e) =>
+                    setSpecForm((f) => ({
+                      ...f,
+                      industry: e.target.value as Industry | '',
+                    }))
+                  }
+                >
+                  <option value="">— not set —</option>
+                  {INDUSTRIES.map((ind) => (
+                    <option key={ind} value={ind}>
+                      {INDUSTRY_LABELS[ind]}
+                    </option>
+                  ))}
+                </select>
               </label>
               <label className={styles.specWide}>
                 <span>Tags (comma-separated)</span>

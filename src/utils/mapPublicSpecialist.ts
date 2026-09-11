@@ -1,10 +1,12 @@
-import type { PublicSpecialist, Specialist } from '../types';
+import { INDUSTRY_LABELS, type PublicSpecialist, type Specialist } from '../types';
 
 /**
  * Adapts the backend's PublicSpecialist onto the UI's wider `Specialist` shape.
  * Real values only — no random placeholders. Fields the public API doesn't
- * expose (email, category, portfolio, reviews) are left empty for the UI to
- * handle, not faked.
+ * expose (email, portfolio, reviews) are left empty for the UI to handle, not
+ * faked. `category` used to be hard-coded to 'Business Services' for every
+ * specialist — now it's the real industry the specialist picked, or undefined
+ * if they haven't picked one yet.
  */
 export function mapPublicSpecialist(dto: PublicSpecialist): Specialist {
   return {
@@ -16,7 +18,7 @@ export function mapPublicSpecialist(dto: PublicSpecialist): Specialist {
     city: dto.city || '',
     tags: dto.tags,
     issues: [],
-    category: 'Business Services',
+    category: dto.industry ? INDUSTRY_LABELS[dto.industry] : undefined,
     experience: dto.experience,
     rating: dto.rating,
     price: dto.price,

@@ -1,4 +1,5 @@
 import type {
+  Industry,
   PublicSpecialist,
   Specialist,
   SpecialistsSearchFilters,
@@ -15,6 +16,8 @@ export interface SpecialistProfileInput {
   price?: number;
   experience?: number;
   tags?: string[];
+  // null прибирає індустрію; undefined (поле не передане) її не чіпає.
+  industry?: Industry | null;
 }
 
 function buildSearchUrl(filters: SpecialistsSearchFilters): string {
@@ -29,6 +32,7 @@ function buildSearchUrl(filters: SpecialistsSearchFilters): string {
   if (filters.categories?.length)
     for (const c of filters.categories) params.append('categories', c);
   if (filters.tags?.length) for (const t of filters.tags) params.append('tags', t);
+  if (filters.industry) params.append('industry', filters.industry);
 
   const qs = params.toString();
   return qs ? `${SPECIALISTS_API}/search?${qs}` : SPECIALISTS_API;

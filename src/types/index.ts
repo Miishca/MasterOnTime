@@ -1,3 +1,23 @@
+// Одна з 5 фіксованих "вітринних" індустрій, які спеціаліст сам обирає собі в
+// профілі (/profile -> Professional profile). Окремо від Category/CategoryItem
+// (це конкретні бронювані послуги з довільною назвою, ціною і тривалістю).
+export const INDUSTRIES = [
+  'HOME_GARDEN',
+  'HEALTH_WELLBEING',
+  'WEDDINGS_EVENTS',
+  'BUSINESS_SERVICES',
+  'LESSONS_TRAINING',
+] as const;
+export type Industry = (typeof INDUSTRIES)[number];
+
+export const INDUSTRY_LABELS: Record<Industry, string> = {
+  HOME_GARDEN: 'Home & Garden',
+  HEALTH_WELLBEING: 'Health & Wellbeing',
+  WEDDINGS_EVENTS: 'Weddings & Events',
+  BUSINESS_SERVICES: 'Business Services',
+  LESSONS_TRAINING: 'Lessons & Training',
+};
+
 export interface Specialist {
   id: string;
   profession: string;
@@ -20,12 +40,9 @@ export interface Specialist {
   balance?: string;
   tags: string[];
   issues: string[];
-  category:
-    | 'Home & Garden'
-    | 'Health & Wellbeing'
-    | 'Weddings & Events'
-    | 'Business Services'
-    | 'Lessons & Training';
+  // Людський підпис індустрії (див. INDUSTRY_LABELS) — undefined, якщо
+  // спеціаліст ще не обрав жодну.
+  category?: string;
   image?: string;
   experience: number;
   rating: number;
@@ -52,6 +69,7 @@ export interface PublicSpecialist {
   tags: string[];
   price: string;
   profileImageUrl: string | null;
+  industry: Industry | null;
 }
 
 // GET /api/bookings/* — BookingResponseDto from the backend
@@ -134,6 +152,7 @@ export interface SpecialistsSearchFilters {
   city?: string;
   categories?: string[];
   tags?: string[];
+  industry?: Industry;
   minExperience?: number;
   minRating?: number;
 }

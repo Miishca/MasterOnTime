@@ -5,23 +5,14 @@ import SearchBar from '../components/SearchBar';
 import SpecialistsGrid from '../components/SpecialistsGrid';
 import styles from './PeoplePage.module.scss';
 import imageMap from '../../../utils/imageLoader';
-import { type LocationState, type SpecialistsSearchFilters } from '../../../types';
+import {
+  INDUSTRIES,
+  INDUSTRY_LABELS,
+  type Industry,
+  type LocationState,
+  type SpecialistsSearchFilters,
+} from '../../../types';
 import { useLocation } from 'react-router-dom';
-
-// 5 фіксовані категорії з макета. Спеціалісти самі назвають свої категорії
-// довільно (через "Services & pricing" на /profile), тому збіг з цими
-// назвами станеться лише якщо хтось назве категорію так само буквально.
-// Це справжній фільтр (той самий `categories`, що й у пошуковому барі) —
-// просто поки що по ньому може нічого не знайтися, доки специалісти не
-// почнуть використовувати ці саме назви (або поки ми не введемо єдиний
-// фіксований список категорій замість вільного тексту в ServicesManager).
-const INDUSTRY_CATEGORIES = [
-  'Home & Garden',
-  'Health & Wellbeing',
-  'Weddings & Events',
-  'Business Services',
-  'Lessons & Training',
-];
 
 const PeoplePage: React.FC = () => {
   const [filters, setFilters] = useState<SpecialistsSearchFilters>({});
@@ -43,11 +34,12 @@ const PeoplePage: React.FC = () => {
     setFilters(next);
   };
 
-  const handleCategoryClick = (category: string) => {
+  // industry — реальне поле в профілі спеціаліста (одна з 5 фіксованих
+  // "вітринних" індустрій, обирається на /profile). Клік перемикає фільтр.
+  const handleIndustryClick = (industry: Industry) => {
     setFilters((prev) => {
-      const active = prev.categories?.[0] === category;
-      const { categories: _drop, ...rest } = prev;
-      return active ? rest : { ...rest, categories: [category] };
+      const { industry: current, ...rest } = prev;
+      return current === industry ? rest : { ...rest, industry };
     });
     if (gridRef.current) {
       gridRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -73,15 +65,13 @@ const PeoplePage: React.FC = () => {
         <div className={styles.findIndustriesContent}>
           <img src={imageMap['find-industries']} alt="Find industries" />
           <div className={styles.contentHeaders}>
-            {INDUSTRY_CATEGORIES.map((category) => (
+            {INDUSTRIES.map((industry) => (
               <h2
-                key={category}
-                onClick={() => handleCategoryClick(category)}
-                className={
-                  filters.categories?.[0] === category ? styles.activeCategory : ''
-                }
+                key={industry}
+                onClick={() => handleIndustryClick(industry)}
+                className={filters.industry === industry ? styles.activeCategory : ''}
               >
-                {category}
+                {INDUSTRY_LABELS[industry]}
               </h2>
             ))}
           </div>

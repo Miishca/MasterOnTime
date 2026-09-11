@@ -1,4 +1,5 @@
 import { ApiError, getToken, type Role } from '../../services/auth/authApi';
+import type { Industry } from '../../types';
 
 const API_BASE = import.meta.env.DEV ? '' : import.meta.env.VITE_API_BASE || '';
 const ADMIN_API = `${API_BASE}/api/admin`;
@@ -20,6 +21,7 @@ export interface AdminUser {
     about: string;
     experience: number;
     tags: string[];
+    industry: Industry | null;
   } | null;
 }
 
@@ -29,6 +31,7 @@ export interface SpecialistProfileInput {
   price?: number;
   experience?: number;
   tags?: string[];
+  industry?: Industry | null;
 }
 
 function authHeaders(): Record<string, string> {

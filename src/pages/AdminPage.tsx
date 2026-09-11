@@ -11,6 +11,7 @@ import {
   type AdminUser,
 } from '../features/admin/adminApi';
 import type { SpecialistProfileInput } from '../features/specialists/services/specialistsApi';
+import { INDUSTRIES, INDUSTRY_LABELS, type Industry } from '../types';
 import { fullName } from '../utils/fullName';
 import styles from './AdminPage.module.scss';
 
@@ -19,9 +20,16 @@ type ProfileForm = {
   price: string;
   experience: string;
   tags: string;
+  industry: Industry | '';
 };
 
-const emptyForm: ProfileForm = { profession: '', price: '', experience: '', tags: '' };
+const emptyForm: ProfileForm = {
+  profession: '',
+  price: '',
+  experience: '',
+  tags: '',
+  industry: '',
+};
 
 function toForm(u: AdminUser): ProfileForm {
   const p = u.specialistProfile;
@@ -30,6 +38,7 @@ function toForm(u: AdminUser): ProfileForm {
     price: p && Number(p.price) > 0 ? String(Number(p.price)) : '',
     experience: p && p.experience > 0 ? String(p.experience) : '',
     tags: p?.tags.join(', ') ?? '',
+    industry: p?.industry ?? '',
   };
 }
 
@@ -41,6 +50,7 @@ function toPayload(f: ProfileForm): SpecialistProfileInput {
     tags: f.tags
       ? f.tags.split(',').map((t) => t.trim()).filter(Boolean)
       : undefined,
+    industry: f.industry || null,
   };
 }
 
@@ -273,6 +283,25 @@ const AdminPage: React.FC = () => {
                                   setForm((f) => ({ ...f, tags: e.target.value }))
                                 }
                               />
+                            </label>
+                            <label>
+                              <span>Industry</span>
+                              <select
+                                value={form.industry}
+                                onChange={(e) =>
+                                  setForm((f) => ({
+                                    ...f,
+                                    industry: e.target.value as Industry | '',
+                                  }))
+                                }
+                              >
+                                <option value="">— not set —</option>
+                                {INDUSTRIES.map((ind) => (
+                                  <option key={ind} value={ind}>
+                                    {INDUSTRY_LABELS[ind]}
+                                  </option>
+                                ))}
+                              </select>
                             </label>
                             <button type="submit" disabled={busyId === u.id}>
                               {busyId === u.id
