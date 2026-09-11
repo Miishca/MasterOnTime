@@ -1,4 +1,4 @@
-import { ApiError, getToken } from '../../services/auth/authApi';
+import { ApiError, apiFetch } from '../../services/auth/authApi';
 
 const API_BASE = import.meta.env.DEV ? '' : import.meta.env.VITE_API_BASE || '';
 const CATEGORIES_API = `${API_BASE}/api/specialist/categories`;
@@ -22,12 +22,6 @@ export interface ServiceItemInput {
   price: number;
 }
 
-function authHeaders(): Record<string, string> {
-  const token = getToken();
-  if (!token) throw new ApiError(401, 'You are not signed in');
-  return { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' };
-}
-
 async function unwrap<T>(res: Response): Promise<T> {
   if (res.ok) return res.status === 204 ? (undefined as T) : res.json();
   let message = res.statusText || 'Request failed';
@@ -42,14 +36,13 @@ async function unwrap<T>(res: Response): Promise<T> {
 
 /** SPECIALIST — the signed-in specialist's own categories + services. */
 export const getMyCategories = async (): Promise<ServiceCategory[]> => {
-  const res = await fetch(CATEGORIES_API, { headers: authHeaders() });
+  const res = await apiFetch(CATEGORIES_API);
   return unwrap<ServiceCategory[]>(res);
 };
 
 export const createCategory = async (name: string): Promise<ServiceCategory> => {
-  const res = await fetch(CATEGORIES_API, {
+  const res = await apiFetch(CATEGORIES_API, {
     method: 'POST',
-    headers: authHeaders(),
     body: JSON.stringify({ name }),
   });
   return unwrap<ServiceCategory>(res);
@@ -59,19 +52,15 @@ export const renameCategory = async (
   id: number,
   name: string
 ): Promise<ServiceCategory> => {
-  const res = await fetch(`${CATEGORIES_API}/${id}`, {
+  const res = await apiFetch(`${CATEGORIES_API}/${id}`, {
     method: 'PUT',
-    headers: authHeaders(),
     body: JSON.stringify({ name }),
   });
   return unwrap<ServiceCategory>(res);
 };
 
 export const deleteCategory = async (id: number): Promise<void> => {
-  const res = await fetch(`${CATEGORIES_API}/${id}`, {
-    method: 'DELETE',
-    headers: authHeaders(),
-  });
+  const res = await apiFetch(`${CATEGORIES_API}/${id}`, { method: 'DELETE' });
   return unwrap<void>(res);
 };
 
@@ -79,9 +68,8 @@ export const addServiceItem = async (
   categoryId: number,
   input: ServiceItemInput
 ): Promise<ServiceItem> => {
-  const res = await fetch(`${CATEGORIES_API}/${categoryId}/items`, {
+  const res = await apiFetch(`${CATEGORIES_API}/${categoryId}/items`, {
     method: 'POST',
-    headers: authHeaders(),
     body: JSON.stringify(input),
   });
   return unwrap<ServiceItem>(res);
@@ -91,19 +79,15 @@ export const updateServiceItem = async (
   itemId: number,
   input: ServiceItemInput
 ): Promise<ServiceItem> => {
-  const res = await fetch(`${CATEGORIES_API}/items/${itemId}`, {
+  const res = await apiFetch(`${CATEGORIES_API}/items/${itemId}`, {
     method: 'PUT',
-    headers: authHeaders(),
     body: JSON.stringify(input),
   });
   return unwrap<ServiceItem>(res);
 };
 
 export const deleteServiceItem = async (itemId: number): Promise<void> => {
-  const res = await fetch(`${CATEGORIES_API}/items/${itemId}`, {
-    method: 'DELETE',
-    headers: authHeaders(),
-  });
+  const res = await apiFetch(`${CATEGORIES_API}/items/${itemId}`, { method: 'DELETE' });
   return unwrap<void>(res);
 };
 

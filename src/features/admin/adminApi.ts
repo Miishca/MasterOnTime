@@ -1,4 +1,4 @@
-import { ApiError, getToken, type Role } from '../../services/auth/authApi';
+import { ApiError, apiFetch, type Role } from '../../services/auth/authApi';
 import type { Industry } from '../../types';
 
 const API_BASE = import.meta.env.DEV ? '' : import.meta.env.VITE_API_BASE || '';
@@ -34,12 +34,6 @@ export interface SpecialistProfileInput {
   industry?: Industry | null;
 }
 
-function authHeaders(): Record<string, string> {
-  const token = getToken();
-  if (!token) throw new ApiError(401, 'You are not signed in');
-  return { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' };
-}
-
 async function unwrap(res: Response) {
   if (res.ok) return res.json();
   let message = res.statusText || 'Request failed';
@@ -55,7 +49,7 @@ async function unwrap(res: Response) {
 /** GET /api/admin/users — ADMIN only. `search` matches email / first / last name. */
 export const listUsers = async (search?: string): Promise<AdminUser[]> => {
   const qs = search ? `?search=${encodeURIComponent(search)}` : '';
-  const res = await fetch(`${ADMIN_API}/users${qs}`, { headers: authHeaders() });
+  const res = await apiFetch(`${ADMIN_API}/users${qs}`);
   return unwrap(res);
 };
 
@@ -65,9 +59,8 @@ export const setUserRole = async (
   role: Role,
   profile?: SpecialistProfileInput
 ): Promise<AdminUser> => {
-  const res = await fetch(`${ADMIN_API}/users/${id}/role`, {
+  const res = await apiFetch(`${ADMIN_API}/users/${id}/role`, {
     method: 'PATCH',
-    headers: authHeaders(),
     body: JSON.stringify(profile ? { role, profile } : { role }),
   });
   return unwrap(res);
@@ -78,9 +71,8 @@ export const updateSpecialistProfile = async (
   id: number,
   profile: SpecialistProfileInput
 ): Promise<unknown> => {
-  const res = await fetch(`${ADMIN_API}/users/${id}/specialist-profile`, {
+  const res = await apiFetch(`${ADMIN_API}/users/${id}/specialist-profile`, {
     method: 'PATCH',
-    headers: authHeaders(),
     body: JSON.stringify(profile),
   });
   return unwrap(res);

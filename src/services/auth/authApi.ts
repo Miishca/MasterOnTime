@@ -71,10 +71,65 @@ async function toApiError(res: Response): Promise<ApiError> {
   return new ApiError(res.status, message, issues);
 }
 
-function authHeader(): Record<string, string> {
-  const token = getToken();
+// Дедуплікація: якщо кілька запитів одночасно ловлять 401, оновлюємо токен
+// ОДИН раз (не по разу на кожен) — інакше ротація refresh-токена на кожен
+// /auth/refresh миттєво "з'їсть" паралельні спроби одна в одної.
+let refreshInFlight: Promise<string> | null = null;
+
+async function performRefresh(): Promise<string> {
+  const refreshToken = getRefreshToken();
+  if (!refreshToken) throw new ApiError(401, 'You are not signed in');
+
+  const res = await fetch(`${AUTH_API_BASE}/refresh`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ refreshToken }),
+  });
+  if (!res.ok) {
+    clearToken();
+    throw new ApiError(401, 'Your session has expired. Please log in again.');
+  }
+  const data: { token: string; refreshToken: string } = await res.json();
+  setToken(data.token);
+  localStorage.setItem(REFRESH_TOKEN_KEY, data.refreshToken);
+  return data.token;
+}
+
+function refreshOnce(): Promise<string> {
+  if (!refreshInFlight) {
+    refreshInFlight = performRefresh().finally(() => {
+      refreshInFlight = null;
+    });
+  }
+  return refreshInFlight;
+}
+
+/**
+ * Authenticated fetch used by every other `*Api.ts` module. On a 401 (expired
+ * access token) it silently exchanges the refresh token for a new one via
+ * `/auth/refresh` and retries the request exactly once — the caller never
+ * sees the expiry. If there's no refresh token, or the refresh itself is
+ * rejected (revoked/expired), it throws a 401 `ApiError` same as before, so
+ * existing "redirect to /login on 401" handling keeps working unchanged.
+ *
+ * Returns the raw `Response`, same as `fetch`, so callers keep their own
+ * `unwrap<T>`-style body/error parsing.
+ */
+export async function apiFetch(url: string, init: RequestInit = {}): Promise<Response> {
+  let token = getToken();
   if (!token) throw new ApiError(401, 'You are not signed in');
-  return { Authorization: `Bearer ${token}` };
+
+  const withAuth = (t: string): RequestInit => ({
+    ...init,
+    headers: { 'Content-Type': 'application/json', ...init.headers, Authorization: `Bearer ${t}` },
+  });
+
+  let res = await fetch(url, withAuth(token));
+  if (res.status === 401) {
+    token = await refreshOnce(); // throws ApiError(401) if refresh itself fails
+    res = await fetch(url, withAuth(token));
+  }
+  return res;
 }
 
 export const login = async (email: string, password: string): Promise<string> => {
@@ -160,10 +215,7 @@ export const resetPassword = async (
 };
 
 export const getMyProfile = async (): Promise<UserProfile> => {
-  const res = await fetch(`${USER_API_BASE}/me`, {
-    method: 'GET',
-    headers: authHeader(),
-  });
+  const res = await apiFetch(`${USER_API_BASE}/me`, { method: 'GET' });
 
   if (!res.ok) throw await toApiError(res);
 
@@ -173,9 +225,8 @@ export const getMyProfile = async (): Promise<UserProfile> => {
 export const updateProfile = async (
   userData: Partial<UserProfile> & { profileImageBase64?: string }
 ): Promise<UserProfile> => {
-  const res = await fetch(`${USER_API_BASE}/me`, {
+  const res = await apiFetch(`${USER_API_BASE}/me`, {
     method: 'PUT',
-    headers: { ...authHeader(), 'Content-Type': 'application/json' },
     body: JSON.stringify(userData),
   });
 

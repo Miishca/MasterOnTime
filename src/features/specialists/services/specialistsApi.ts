@@ -4,7 +4,7 @@ import type {
   Specialist,
   SpecialistsSearchFilters,
 } from '../../../types';
-import { ApiError, getToken } from '../../../services/auth/authApi';
+import { ApiError, apiFetch } from '../../../services/auth/authApi';
 import { mapPublicSpecialist } from '../../../utils/mapPublicSpecialist';
 
 const API_BASE = import.meta.env.DEV ? '' : import.meta.env.VITE_API_BASE || '';
@@ -69,12 +69,6 @@ export const getSpecialistById = async (
   }
 };
 
-function authHeaders(): Record<string, string> {
-  const token = getToken();
-  if (!token) throw new ApiError(401, 'You are not signed in');
-  return { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' };
-}
-
 async function unwrap(res: Response): Promise<PublicSpecialist> {
   if (res.ok) return res.json();
   let message = res.statusText || 'Request failed';
@@ -89,14 +83,13 @@ async function unwrap(res: Response): Promise<PublicSpecialist> {
 
 /** SPECIALIST only — the signed-in specialist's own professional profile. */
 export const getMyProfile = (): Promise<PublicSpecialist> =>
-  fetch(`${SPECIALISTS_API}/me`, { headers: authHeaders() }).then(unwrap);
+  apiFetch(`${SPECIALISTS_API}/me`).then(unwrap);
 
 /** SPECIALIST only — edit own professional profile. Partial. */
 export const updateMyProfile = (
   input: SpecialistProfileInput
 ): Promise<PublicSpecialist> =>
-  fetch(`${SPECIALISTS_API}/me`, {
+  apiFetch(`${SPECIALISTS_API}/me`, {
     method: 'PUT',
-    headers: authHeaders(),
     body: JSON.stringify(input),
   }).then(unwrap);

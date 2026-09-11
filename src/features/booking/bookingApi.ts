@@ -1,14 +1,8 @@
-import { ApiError, getRole, getToken } from '../../services/auth/authApi';
+import { ApiError, apiFetch, getRole } from '../../services/auth/authApi';
 import type { Booking } from '../../types';
 
 const API_BASE = import.meta.env.DEV ? '' : import.meta.env.VITE_API_BASE || '';
 const BOOKINGS_API = `${API_BASE}/api/bookings`;
-
-function authHeaders(): Record<string, string> {
-  const token = getToken();
-  if (!token) throw new ApiError(401, 'You are not signed in');
-  return { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' };
-}
 
 async function unwrap<T>(res: Response): Promise<T> {
   if (res.ok) return res.status === 204 ? (undefined as T) : res.json();
@@ -33,9 +27,7 @@ export const getAvailableSlots = async (
 ): Promise<string[]> => {
   const params = new URLSearchParams({ specialistId: String(specialistId), date });
   if (serviceItemId) params.set('serviceItemId', String(serviceItemId));
-  const res = await fetch(`${BOOKINGS_API}/available-slots?${params.toString()}`, {
-    headers: authHeaders(),
-  });
+  const res = await apiFetch(`${BOOKINGS_API}/available-slots?${params.toString()}`);
   return unwrap<string[]>(res);
 };
 
@@ -45,9 +37,8 @@ export const createBooking = async (
   startTime: string,
   serviceItemId?: number
 ): Promise<Booking> => {
-  const res = await fetch(BOOKINGS_API, {
+  const res = await apiFetch(BOOKINGS_API, {
     method: 'POST',
-    headers: authHeaders(),
     body: JSON.stringify(
       serviceItemId
         ? { specialistId, startTime, serviceItemId }
@@ -66,14 +57,11 @@ export const createBooking = async (
  */
 export const getMyBookings = async (): Promise<Booking[]> => {
   const path = getRole() === 'SPECIALIST' ? 'appointments/upcoming' : 'history';
-  const res = await fetch(`${BOOKINGS_API}/${path}`, { headers: authHeaders() });
+  const res = await apiFetch(`${BOOKINGS_API}/${path}`);
   return unwrap<Booking[]>(res);
 };
 
 export const cancelBooking = async (id: number): Promise<void> => {
-  const res = await fetch(`${BOOKINGS_API}/${id}/cancel`, {
-    method: 'POST',
-    headers: authHeaders(),
-  });
+  const res = await apiFetch(`${BOOKINGS_API}/${id}/cancel`, { method: 'POST' });
   return unwrap<void>(res);
 };
